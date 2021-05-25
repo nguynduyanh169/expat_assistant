@@ -29,6 +29,10 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   convex_bottom_bar: ^3.0.0
+  line_icons: ^2.0.1
+  bloc: ^7.0.0
+  flutter_bloc: ^7.0.0
+  outline_search_bar: ^2.1.1
 
 dev_dependencies:
   flutter_test:
@@ -55,11 +59,7 @@ flutter:
     - assets/images/google_logo.png
     - assets/images/google_white_logo.png
     - assets/images/facebook_white_logo.png
-    - assets/images/call_center.png
-    - assets/images/event.png
-    - assets/images/home.png
-    - assets/images/restaurant.png
-    - assets/images/learning_vietnamese.png
+    - assets/images/profile.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

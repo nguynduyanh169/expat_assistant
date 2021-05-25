@@ -1,5 +1,4 @@
 import 'package:expat_assistant/src/configs/size_config.dart';
-import 'package:expat_assistant/src/screens/home.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -77,9 +76,7 @@ class LoginScreen extends StatelessWidget {
                     child: Text("Sign In"),
                     onPressed: () {
                       print('Login');
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) =>
-                              HomeScreen()));
+                      Navigator.pushNamed(context, '/homepage');
                     }),
               ),
               SizedBox(
