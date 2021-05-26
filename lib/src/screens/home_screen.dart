@@ -1,13 +1,14 @@
 import 'package:expat_assistant/src/configs/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:outline_search_bar/outline_search_bar.dart';
 
-class HomeScreen extends StatefulWidget{
+class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen>{
+class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -16,27 +17,27 @@ class _HomeScreenState extends State<HomeScreen>{
         backgroundColor: Color.fromRGBO(30, 193, 194, 30),
         toolbarHeight: SizeConfig.blockSizeVertical * 10,
         //leadingWidth: SizeConfig.blockSizeHorizontal * 10,
-        leading: InkWell(
-          child: Container(
-            padding: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 3),
-            width: SizeConfig.blockSizeHorizontal * 3,
-            height: SizeConfig.blockSizeVertical * 2,
-            child: Image(
-              width: SizeConfig.blockSizeHorizontal * 1,
-              height: SizeConfig.blockSizeVertical * 0.5,
-              image: AssetImage('assets/images/profile.png'),
+        automaticallyImplyLeading: false,
+        title: Text('Home', style: GoogleFonts.ubuntu(fontSize: 22),),
+        actions: [
+          InkWell(child: Icon(CupertinoIcons.news_solid, size: 30,),),
+          SizedBox(width: SizeConfig.blockSizeHorizontal * 5,),
+          InkWell(
+            child: Icon(CupertinoIcons.bell_fill, size: 30,),
+          ),
+          SizedBox(width: SizeConfig.blockSizeHorizontal * 5,),
+          InkWell(
+            child: Container(
+              child: Image(
+                width: SizeConfig.blockSizeHorizontal * 11,
+                height: SizeConfig.blockSizeVertical * 11,
+                image: AssetImage('assets/images/profile.png'),
+              ),
             ),
           ),
-        ),
-        title: OutlineSearchBar(
-          hintText: 'Search....',
-        ),
-        actions: [
-          InkWell(
-            child: Icon(CupertinoIcons.bell_fill),
-          )
+          SizedBox(width: SizeConfig.blockSizeHorizontal * 3,)
         ],
-        centerTitle: true,
+        centerTitle: false,
       ),
       body: Container(
         child: Center(
