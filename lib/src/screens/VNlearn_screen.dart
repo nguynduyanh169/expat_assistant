@@ -39,17 +39,69 @@ class _VNlearnScreenState extends State<VNlearnScreen> {
         padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
         child: ListView(
           children: <Widget>[
-            LessonCard(),
-            SizedBox(height: SizeConfig.blockSizeVertical * 2,),
-            LessonCard(),
-            SizedBox(height: SizeConfig.blockSizeVertical * 2,),
-            LessonCard(),
-            SizedBox(height: SizeConfig.blockSizeVertical * 2,),
-            LessonCard(),
-            SizedBox(height: SizeConfig.blockSizeVertical * 2,),
-            LessonCard(),
-            SizedBox(height: SizeConfig.blockSizeVertical * 2,),
-            LessonCard(),
+            LessonCard(
+              vocabularyAction: () {
+                Navigator.pushNamed(context, '/vocabularydetails');
+              },
+              conversationAction: (){
+                Navigator.pushNamed(context, '/conversationdetails');
+              },
+            ),
+            SizedBox(
+              height: SizeConfig.blockSizeVertical * 2,
+            ),
+            LessonCard(
+              vocabularyAction: () {
+                Navigator.pushNamed(context, '/vocabularydetails');
+              },
+              conversationAction: (){
+                Navigator.pushNamed(context, '/conversationdetails');
+              },
+            ),
+            SizedBox(
+              height: SizeConfig.blockSizeVertical * 2,
+            ),
+            LessonCard(
+              vocabularyAction: () {
+                Navigator.pushNamed(context, '/vocabularydetails');
+              },
+              conversationAction: (){
+                Navigator.pushNamed(context, '/conversationdetails');
+              },
+            ),
+            SizedBox(
+              height: SizeConfig.blockSizeVertical * 2,
+            ),
+            LessonCard(
+              vocabularyAction: () {
+                Navigator.pushNamed(context, '/vocabularydetails');
+              },
+              conversationAction: (){
+                Navigator.pushNamed(context, '/conversationdetails');
+              },
+            ),
+            SizedBox(
+              height: SizeConfig.blockSizeVertical * 2,
+            ),
+            LessonCard(
+              vocabularyAction: () {
+                Navigator.pushNamed(context, '/vocabularydetails');
+              },
+              conversationAction: (){
+                Navigator.pushNamed(context, '/conversationdetails');
+              },
+            ),
+            SizedBox(
+              height: SizeConfig.blockSizeVertical * 2,
+            ),
+            LessonCard(
+              vocabularyAction: () {
+                Navigator.pushNamed(context, '/vocabularydetails');
+              },
+              conversationAction: (){
+                Navigator.pushNamed(context, '/conversationdetails');
+              },
+            ),
           ],
         ),
       ),

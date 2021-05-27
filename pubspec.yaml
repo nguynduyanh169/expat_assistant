@@ -34,6 +34,8 @@ dependencies:
   flutter_bloc: ^7.0.0
   outline_search_bar: ^2.1.1
   google_fonts: ^2.1.0
+  cupertino_progress_bar: ^0.2.0
+  step_progress_indicator: ^1.0.0
 
 dev_dependencies:
   flutter_test:
@@ -64,6 +66,7 @@ flutter:
     - assets/images/conversation_icon.png
     - assets/images/vocabulary_icon.png
     - assets/images/demo_lesson.png
+    - assets/images/demo_vocabulary.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

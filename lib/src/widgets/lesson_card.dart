@@ -2,7 +2,13 @@ import 'package:expat_assistant/src/configs/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class LessonCard extends StatelessWidget{
+class LessonCard extends StatelessWidget {
+  final Function vocabularyAction;
+  final Function conversationAction;
+
+  const LessonCard(
+      {@required this.vocabularyAction, @required this.conversationAction});
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -35,38 +41,50 @@ class LessonCard extends StatelessWidget{
           Container(
             decoration: BoxDecoration(
                 border: Border(
-                  top: BorderSide( //                   <--- left side
-                    color: Colors.black26,
-                    width: 0.5,
-                  ),
-                  bottom: BorderSide( //                   <--- left side
-                    color: Colors.black26,
-                    width: 0.5,
-                  ),
-                )
-            ),
+              top: BorderSide(
+                //                   <--- left side
+                color: Colors.black26,
+                width: 0.5,
+              ),
+              bottom: BorderSide(
+                //                   <--- left side
+                color: Colors.black26,
+                width: 0.5,
+              ),
+            )),
             child: ListTile(
+              onTap: vocabularyAction,
               leading: Image(
                 width: SizeConfig.blockSizeHorizontal * 10,
                 height: SizeConfig.blockSizeVertical * 10,
                 image: AssetImage('assets/images/vocabulary_icon.png'),
               ),
               title: Text('Vocabulary'),
-              trailing: IconButton(icon: Icon(CupertinoIcons.square_arrow_down),),
+              trailing: IconButton(
+                icon: Icon(CupertinoIcons.square_arrow_down),
+                onPressed: (){
+                  print('download');
+                },
+              ),
             ),
           ),
           ListTile(
+            onTap: conversationAction,
             leading: Image(
               width: SizeConfig.blockSizeHorizontal * 10,
               height: SizeConfig.blockSizeVertical * 10,
               image: AssetImage('assets/images/conversation_icon.png'),
             ),
             title: Text('Conversation'),
-            trailing: IconButton(icon: Icon(CupertinoIcons.square_arrow_down),),
+            trailing: IconButton(
+              icon: Icon(CupertinoIcons.square_arrow_down),
+              onPressed: (){
+                print('download');
+              },
+            ),
           )
         ],
       ),
     );
   }
-
 }
