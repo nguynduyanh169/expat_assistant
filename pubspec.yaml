@@ -36,6 +36,11 @@ dependencies:
   google_fonts: ^2.1.0
   cupertino_progress_bar: ^0.2.0
   step_progress_indicator: ^1.0.0
+  adaptive_dialog: ^1.0.0
+  sweetsheet: ^0.3.1
+  camera_camera: ^2.0.2
+  flutter_sound: ^8.1.4
+  permission_handler: ^8.0.1
 
 dev_dependencies:
   flutter_test:
@@ -67,6 +72,7 @@ flutter:
     - assets/images/vocabulary_icon.png
     - assets/images/demo_lesson.png
     - assets/images/demo_vocabulary.png
+    - assets/test/demo_sound.mp3
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

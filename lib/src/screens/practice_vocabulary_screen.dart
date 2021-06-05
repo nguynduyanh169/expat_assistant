@@ -1,8 +1,12 @@
 import 'package:cupertino_progress_bar/cupertino_progress_bar.dart';
 import 'package:expat_assistant/src/configs/size_config.dart';
+import 'package:expat_assistant/src/cubits/vocabulary_practice_listening_cubit.dart';
+import 'package:expat_assistant/src/widgets/vocabulary_practice_listening.dart';
+import 'package:expat_assistant/src/widgets/vocabulary_practice_speaking.dart';
 import 'package:expat_assistant/src/widgets/vocabulary_practice_writing.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 
 class PracticeVocabularyScreen extends StatefulWidget {
@@ -42,7 +46,9 @@ class _PracticeVocabularyState extends State<PracticeVocabularyScreen> {
                   ),
                 ),
                 SizedBox(height: SizeConfig.blockSizeVertical * 5,),
-                VocabularyPracticeWriting(vietnamese: 'Thảo luận', english: 'Discuss',)
+                //VocabularyPracticeWriting(vietnamese: 'Thảo luận', english: 'Discuss',)
+                //VocabularyPracticeListening(vietnamese: 'Tổng công ty', english: 'Company',)
+                VocabularyPracticeSpeaking(vietnamese: 'Tổng công ty', english: 'Company')
               ],
             )),
       ),
