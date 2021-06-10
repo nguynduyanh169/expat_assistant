@@ -4,6 +4,7 @@ import 'package:expat_assistant/src/screens/assistant_screen.dart';
 import 'package:expat_assistant/src/screens/events_screen.dart';
 import 'package:expat_assistant/src/screens/home_screen.dart';
 import 'package:expat_assistant/src/screens/restaurants_screen.dart';
+import 'package:expat_assistant/src/screens/utilities_screen.dart';
 import 'package:expat_assistant/src/widgets/FAB_bottom_app_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -16,13 +17,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int currentIndex = 0;
-  List<Widget> _screens = [
-    HomeScreen(),
-    AssistantScreen(),
-    RestaurantsScreen(),
-    EventsScreen(),
-    VNlearnScreen()
-  ];
 
   Widget pageCaller(int index) {
     switch (index) {
@@ -32,15 +26,16 @@ class _HomePageState extends State<HomePage> {
         }
       case 1:
         {
-          return AssistantScreen();
+          return RestaurantsScreen();
         }
       case 2:
         {
           return EventsScreen();
         }
-      case 3: {
-        return VNlearnScreen();
-      }
+      case 3:
+        {
+          return UtilitiesScreen();
+        }
     }
   }
 
@@ -59,45 +54,35 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
       body: pageCaller(currentIndex),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: new FloatingActionButton(
-        onPressed:(){
-          Navigator.pushNamed(context, '/restaurants');
+        onPressed: () {
+          Navigator.pushNamed(context, '/blogs');
         },
         tooltip: 'Restaurant',
         elevation: 0,
-        child: new Icon(LineIcons.hamburger),
+        child: new Icon(LineIcons.newspaperAlt),
       ),
       bottomNavigationBar: FABBottomAppBar(
-        notchedShape: CircularNotchedRectangle(),
-        centerItemText: 'Restaurant',
+        //notchedShape: CircularNotchedRectangle(),
+        centerItemText: 'News',
         backgroundColor: Color.fromRGBO(30, 193, 194, 30),
         color: Colors.white70,
         selectedColor: Colors.white,
-        onTabSelected: (int i){
+        onTabSelected: (int i) {
           onTappedBar(i);
         },
-          items: [
-            FABBottomAppBarItem(
-              text: 'Home',
-              iconData: LineIcons.home,
-            ),
-            FABBottomAppBarItem(
-              iconData: LineIcons.headset,
-              text: 'Ask'
-            ),
-            FABBottomAppBarItem(
-              iconData: LineIcons.calendarAlt,
-              text: 'Event'
-            ),
-            FABBottomAppBarItem(
-              iconData: LineIcons.toolbox,
-              text: 'Utilities'
-            )
-          ],
+        items: [
+          FABBottomAppBarItem(
+            text: 'Home',
+            iconData: LineIcons.home,
+          ),
+          FABBottomAppBarItem(iconData: LineIcons.hamburger, text: 'Eat'),
+          FABBottomAppBarItem(iconData: LineIcons.calendarAlt, text: 'Play'),
+          FABBottomAppBarItem(iconData: LineIcons.toolbox, text: 'Utilities')
+        ],
       ),
       // bottomNavigationBar: BottomNavigationBar(
       //   backgroundColor: Color.fromRGBO(30, 193, 194, 30),

@@ -53,7 +53,7 @@ class _VocabularyPracticeSpeakingState
       toFile: _filePath,
     ).then((value) {
       setState(() {
-        recordIcon = Icon(LineIcons.stopCircle, size: 40, color: Colors.white,);
+        recordIcon = Icon(LineIcons.stop, size: 40, color: Colors.white,);
         recordText = 'Recording...';
       });
     });
@@ -181,7 +181,7 @@ class _VocabularyPracticeSpeakingState
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: <Widget>[
                                         Container(
-                                          width: SizeConfig.blockSizeHorizontal * 35,
+                                          width: SizeConfig.blockSizeHorizontal * 40,
                                           child: Text(
                                             recordText, style: TextStyle(fontSize: 12, color: Colors.grey),),
                                         ),

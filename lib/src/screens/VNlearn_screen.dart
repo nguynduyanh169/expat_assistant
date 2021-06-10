@@ -14,12 +14,13 @@ class _VNlearnScreenState extends State<VNlearnScreen> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
-      backgroundColor: Colors.white10,
+      //backgroundColor: Colors.white10,
       appBar: AppBar(
+        elevation: 0,
         backgroundColor: Color.fromRGBO(30, 193, 194, 30),
         toolbarHeight: SizeConfig.blockSizeVertical * 10,
         //leadingWidth: SizeConfig.blockSizeHorizontal * 10,
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: true,
         //leading: Text('Learn Vietnamese', style: GoogleFonts.ubuntu(fontSize: 22),),
         title: Text(
           'Learn Vietnamese',

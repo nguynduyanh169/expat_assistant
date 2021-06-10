@@ -96,24 +96,42 @@ class LoginScreen extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SizedBox(
-                      width: SizeConfig.blockSizeHorizontal * 39,
-                      child: CupertinoButton(
-                          color: Colors.black12,
-                          child: Image.asset('assets/images/facebook_logo.png'),
-                          onPressed: () {
-                            print('Login');
-                          }),
+                    InkWell(
+                      child: Container(
+                        width: SizeConfig.blockSizeHorizontal * 30,
+                        height: SizeConfig.blockSizeVertical * 9,
+                        padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 3),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10.0),
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Colors.black26.withOpacity(0.1),
+                                  offset: Offset(0.0, 6.0),
+                                  blurRadius: 10.0,
+                                  spreadRadius: 0.10)
+                            ]),
+                        child: Image.asset('assets/images/facebook_logo.png'),
+                      ),
                     ),
-                    SizedBox(width: SizeConfig.blockSizeHorizontal * 3,),
-                    SizedBox(
-                      width: SizeConfig.blockSizeHorizontal * 39,
-                      child: CupertinoButton(
-                          color: Colors.black12,
-                          child: Image.asset('assets/images/google_logo.png'),
-                          onPressed: () {
-                            print('Login');
-                          }),
+                    SizedBox(width: SizeConfig.blockSizeHorizontal * 10,),
+                    InkWell(
+                      child: Container(
+                        width: SizeConfig.blockSizeHorizontal * 30,
+                        height: SizeConfig.blockSizeVertical * 9,
+                        padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 3),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10.0),
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Colors.black26.withOpacity(0.1),
+                                  offset: Offset(0.0, 6.0),
+                                  blurRadius: 10.0,
+                                  spreadRadius: 0.10)
+                            ]),
+                        child: Image.asset('assets/images/google_logo.png'),
+                      ),
                     ),
                   ],
                 ),

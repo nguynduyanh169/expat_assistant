@@ -41,6 +41,10 @@ dependencies:
   camera_camera: ^2.0.2
   flutter_sound: ^8.1.4
   permission_handler: ^8.0.1
+  bubble: ^1.2.1
+  location: ^4.2.1
+  google_maps_flutter: ^2.0.6
+  geocode: ^1.0.1
 
 dev_dependencies:
   flutter_test:
@@ -72,6 +76,13 @@ flutter:
     - assets/images/vocabulary_icon.png
     - assets/images/demo_lesson.png
     - assets/images/demo_vocabulary.png
+    - assets/images/demo_conversation.png
+    - assets/images/demo_event.png
+    - assets/images/demo_news.png
+    - assets/images/vietnamese_logo.png
+    - assets/images/expert_logo.png
+    - assets/images/camera_food_logo.png
+    - assets/images/demo_food.jpg
     - assets/test/demo_sound.mp3
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
