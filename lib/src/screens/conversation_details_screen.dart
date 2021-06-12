@@ -23,8 +23,8 @@ class _ConversationDetailState extends State<ConversationDetailScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(vietnamese, style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),),
-                Text(english)
+                Text(vietnamese, style: GoogleFonts.lato(fontSize: 15, fontWeight: FontWeight.bold),),
+                Text(english, style: GoogleFonts.lato(),)
               ],
             ),
           ),
@@ -74,7 +74,7 @@ class _ConversationDetailState extends State<ConversationDetailScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(vietnamese, style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white),),
-                Text(english, style: TextStyle(color: Colors.white),)
+                Text(english, style: GoogleFonts.lato(color: Colors.white),)
               ],
             ),
           ),
@@ -89,7 +89,7 @@ class _ConversationDetailState extends State<ConversationDetailScreen> {
       appBar: AppBar(
         backgroundColor: Color.fromRGBO(30, 193, 194, 30),
         toolbarHeight: SizeConfig.blockSizeVertical * 10,
-        title: Text('Conversation of Greetings', style: GoogleFonts.ubuntu(fontSize: 22),),
+        title: Text('Conversation of Greetings', style: GoogleFonts.lato(fontSize: 22),),
       ),
       body: Container(
         child: Column(

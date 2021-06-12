@@ -13,12 +13,13 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
+      backgroundColor: Color.fromRGBO(245, 244, 244, 30),
       appBar: AppBar(
         backgroundColor: Color.fromRGBO(30, 193, 194, 30),
         toolbarHeight: SizeConfig.blockSizeVertical * 10,
-        elevation: 0,
+        elevation: 1,
         automaticallyImplyLeading: false,
-        title: Text('Home', style: GoogleFonts.ubuntu(fontSize: 22),),
+        title: Text('Home', style: GoogleFonts.lato(fontSize: 22),),
         actions: [
           InkWell(
             child: Icon(CupertinoIcons.bell_fill, size: 30,),
@@ -38,17 +39,18 @@ class _HomeScreenState extends State<HomeScreen> {
         centerTitle: false,
       ),
       body: Container(
+        height: SizeConfig.blockSizeVertical * 90,
         padding: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 3, right: SizeConfig.blockSizeHorizontal *3),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: ListView(
+          //crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             SizedBox(height: SizeConfig.blockSizeVertical * 2,),
             Container(
-              child: Text('Welcome Bao,', style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600),),
+              child: Text('Welcome Bao,', style: GoogleFonts.lato(fontSize: 30, fontWeight: FontWeight.w600),),
             ),
             SizedBox(height: SizeConfig.blockSizeVertical * 1,),
             Container(
-              child: Text('Good evening!', style: TextStyle(fontSize: 25),),
+              child: Text('Good evening!', style: GoogleFonts.lato(fontSize: 25),),
             ),
             SizedBox(height: SizeConfig.blockSizeHorizontal * 2,),
             Container(
@@ -82,12 +84,20 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Image.asset("assets/images/app_logo.png"),
                   ),
                   Container(
-                    child: Text('3.362.000 VND', style: TextStyle(fontSize: 25, color: Colors.white),),
+                    child: Text('3.362.000 VND', style: GoogleFonts.lato(fontSize: 25, color: Colors.white),),
                   ),
                   SizedBox(height: SizeConfig.blockSizeVertical * 1.5,),
                   Container(
-                    child: Text('Balance', style: TextStyle(fontSize: 20, color: Colors.white),),
+                    child: Text('Balance', style: GoogleFonts.lato(fontSize: 20, color: Colors.white),),
                   )
+                ],
+              ),
+            ),
+            SizedBox(height: SizeConfig.blockSizeVertical * 2,),
+            Container(
+              child: Row(
+                children: <Widget>[
+
                 ],
               ),
             )

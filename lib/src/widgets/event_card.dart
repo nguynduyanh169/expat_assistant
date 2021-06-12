@@ -1,6 +1,7 @@
 import 'package:expat_assistant/src/configs/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class EventCard extends StatelessWidget{
   Function eventAction;
@@ -29,9 +30,10 @@ class EventCard extends StatelessWidget{
                 ClipRRect(
                   borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
                   child: Image(
-                    width: SizeConfig.blockSizeHorizontal * 90,
-                    height: SizeConfig.blockSizeVertical * 20,
+                    // width: SizeConfig.blockSizeHorizontal * 90,
+                    // height: SizeConfig.blockSizeVertical * 20,
                     image: AssetImage('assets/images/demo_event.png'),
+                    fit: BoxFit.cover,
                   ),
                 ),
                 Container(
@@ -44,20 +46,20 @@ class EventCard extends StatelessWidget{
                       SizedBox(height: SizeConfig.blockSizeVertical * 4,),
                       Container(
                         width: SizeConfig.blockSizeHorizontal * 70,
-                        child: Text('Learn how to make passive income', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),),
+                        child: Text('Learn how to make passive income', style: GoogleFonts.lato(fontSize: 15, fontWeight: FontWeight.bold),),
                       ),
                       SizedBox(height: SizeConfig.blockSizeVertical * 1,),
                       Row(
                         children: <Widget>[
                           Icon(CupertinoIcons.clock, size: 15, color: Color.fromRGBO(30, 193, 194, 30),),
-                          Text('10:00 - 13:00', style: TextStyle(fontSize: 12),),
+                          Text('10:00 - 13:00', style: GoogleFonts.lato(fontSize: 12),),
                         ],
                       ),
                       SizedBox(height: SizeConfig.blockSizeVertical * 1,),
                       Row(
                         children: <Widget>[
                           Icon(CupertinoIcons.placemark, size: 15, color: Color.fromRGBO(30, 193, 194, 30),),
-                          Text('District 9,HCMC', style: TextStyle(fontSize: 12),)
+                          Text('District 9,HCMC', style: GoogleFonts.lato(fontSize: 12),)
                         ],
                       ),
                     ],

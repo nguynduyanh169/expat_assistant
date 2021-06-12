@@ -21,7 +21,7 @@ class _BlogsScreenState extends State<BlogsScreen>{
         centerTitle: true,
         title: Text(
           'News',
-          style: GoogleFonts.ubuntu(fontSize: 22),
+          style: GoogleFonts.lato(fontSize: 22),
         ),
       ),
       body: Container(
@@ -55,7 +55,7 @@ class _BlogsScreenState extends State<BlogsScreen>{
                           SizedBox(
                             width: SizeConfig.blockSizeHorizontal * 1,
                           ),
-                          Text('Category')
+                          Text('Category', style: GoogleFonts.lato(),)
                         ],
                       ),
                     ),
@@ -73,25 +73,25 @@ class _BlogsScreenState extends State<BlogsScreen>{
                 children: <Widget>[
                   NewsCard(
                     newsAction: (){
-                      Navigator.pushNamed(context, '/blogdetails');
+                      Navigator.pushNamed(context, '/blogDetails');
                     },
                   ),
                   SizedBox(height: SizeConfig.blockSizeVertical * 2,),
                   NewsCard(
                     newsAction: (){
-                      Navigator.pushNamed(context, '/blogdetails');
+                      Navigator.pushNamed(context, '/blogDetails');
                     },
                   ),
                   SizedBox(height: SizeConfig.blockSizeVertical * 2,),
                   NewsCard(
                     newsAction: (){
-                      Navigator.pushNamed(context, '/blogdetails');
+                      Navigator.pushNamed(context, '/blogDetails');
                     },
                   ),
                   SizedBox(height: SizeConfig.blockSizeVertical * 2,),
                   NewsCard(
                     newsAction: (){
-                      Navigator.pushNamed(context, '/blogdetails');
+                      Navigator.pushNamed(context, '/blogDetails');
                     },
                   ),
                 ],

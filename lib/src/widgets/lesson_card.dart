@@ -1,6 +1,7 @@
 import 'package:expat_assistant/src/configs/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class LessonCard extends StatelessWidget {
   final Function vocabularyAction;
@@ -34,9 +35,9 @@ class LessonCard extends StatelessWidget {
         ),
         title: Text(
           'Greetings',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          style: GoogleFonts.lato(fontSize: 20, fontWeight: FontWeight.bold),
         ),
-        subtitle: Text('24 vocabularies/15 sentences'),
+        subtitle: Text('24 vocabularies/15 sentences', style: GoogleFonts.lato(),),
         children: <Widget>[
           Container(
             decoration: BoxDecoration(
@@ -59,7 +60,7 @@ class LessonCard extends StatelessWidget {
                 height: SizeConfig.blockSizeVertical * 10,
                 image: AssetImage('assets/images/vocabulary_icon.png'),
               ),
-              title: Text('Vocabulary'),
+              title: Text('Vocabulary', style: GoogleFonts.lato(),),
               trailing: IconButton(
                 icon: Icon(CupertinoIcons.square_arrow_down),
                 onPressed: (){
@@ -75,7 +76,7 @@ class LessonCard extends StatelessWidget {
               height: SizeConfig.blockSizeVertical * 10,
               image: AssetImage('assets/images/conversation_icon.png'),
             ),
-            title: Text('Conversation'),
+            title: Text('Conversation', style: GoogleFonts.lato(),),
             trailing: IconButton(
               icon: Icon(CupertinoIcons.square_arrow_down),
               onPressed: (){

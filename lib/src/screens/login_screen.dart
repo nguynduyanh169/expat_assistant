@@ -2,6 +2,7 @@ import 'package:expat_assistant/src/configs/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class LoginScreen extends StatelessWidget {
   @override
@@ -9,6 +10,7 @@ class LoginScreen extends StatelessWidget {
     SizeConfig().init(context);
     SystemChrome.setEnabledSystemUIOverlays([]);
     return Scaffold(
+      //backgroundColor: Color.fromRGBO(245, 244, 244, 5),
       body: login(context),
     );
   }
@@ -17,42 +19,56 @@ class LoginScreen extends StatelessWidget {
     return SingleChildScrollView(
       child: Center(
         child: Container(
-          color: Colors.white10,
           width: SizeConfig.blockSizeHorizontal * 90,
           child: Column(
             children: [
               Container(
-                width: SizeConfig.blockSizeHorizontal * 40,
-                height: SizeConfig.blockSizeVertical * 40,
+                width: SizeConfig.blockSizeHorizontal * 38,
+                height: SizeConfig.blockSizeVertical * 38,
                 child: Image.asset("assets/images/app_logo.png"),
               ),
-              SizedBox(
-                height: SizeConfig.blockSizeVertical * 1,
+              Container(
+                alignment: Alignment.topLeft,
+                child: Text('Email', style: GoogleFonts.lato(fontWeight: FontWeight.bold, fontSize: 17),),
               ),
               Container(
                 child: TextFormField(
                   decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      hintText: 'Email',
-                      hintStyle: TextStyle(fontWeight: FontWeight.w400),
-                      prefixIcon: Icon(CupertinoIcons.mail_solid)),
+                    hintText: 'Enter your email',
+                    hintStyle: GoogleFonts.lato(),
+                    hoverColor: Color.fromRGBO(30, 193, 194, 30),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey,),
+                    ),
+                  ),
                 ),
               ),
               SizedBox(
                 height: SizeConfig.blockSizeVertical * 2,
               ),
               Container(
+                alignment: Alignment.topLeft,
+                child: Text('Password', style: GoogleFonts.lato(fontWeight: FontWeight.bold, fontSize: 17),),
+              ),
+              Container(
                 child: TextFormField(
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      hintText: 'Password',
-                      hintStyle: TextStyle(fontWeight: FontWeight.w400),
-                      prefixIcon: Icon(CupertinoIcons.lock_fill)),
                   obscureText: true,
+                  decoration: InputDecoration(
+                    hintText: 'Enter your password',
+                    hintStyle: GoogleFonts.lato(),
+                    suffix: InkWell(
+                      onTap: (){
+                        print('ok');
+                      },
+                      child: Icon(
+                        Icons.remove_red_eye
+                      ),
+                    ),
+                    hoverColor: Color.fromRGBO(30, 193, 194, 30),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey,),
+                    ),
+                  ),
                 ),
               ),
               SizedBox(
@@ -62,7 +78,7 @@ class LoginScreen extends StatelessWidget {
                 alignment: Alignment.centerRight,
                 child: Text(
                   "Forgot your password?",
-                  style: TextStyle(
+                  style: GoogleFonts.lato(
                       fontWeight: FontWeight.w600, color: Colors.black54),
                 ),
               ),
@@ -71,12 +87,16 @@ class LoginScreen extends StatelessWidget {
               ),
               SizedBox(
                 width: SizeConfig.blockSizeHorizontal * 85,
-                child: CupertinoButton(
-                    color: Color.fromRGBO(30, 193, 194, 30),
+                child: ElevatedButton(
+                    style: ButtonStyle(
+                      padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4)),
+                      backgroundColor: MaterialStateProperty.all<Color>(Color.fromRGBO(30, 193, 194, 30)),
+                      textStyle: MaterialStateProperty.all<TextStyle>(GoogleFonts.lato(fontSize: 17))
+                    ),
+                    //: Color.fromRGBO(30, 193, 194, 30),
                     child: Text("Sign In"),
                     onPressed: () {
-                      print('Login');
-                      Navigator.pushNamed(context, '/homepage');
+                      Navigator.pushNamed(context, '/homePage');
                     }),
               ),
               SizedBox(
@@ -85,7 +105,7 @@ class LoginScreen extends StatelessWidget {
               Container(
                 child: Text(
                     "Or, Sign in with",
-                  style: TextStyle(
+                  style: GoogleFonts.lato(
                       fontWeight: FontWeight.w600, color: Colors.black54),
                 ),
               ),
@@ -142,7 +162,7 @@ class LoginScreen extends StatelessWidget {
               Container(
                 child: Text(
                   "Does not have any account? Sign up",
-                  style: TextStyle(
+                  style: GoogleFonts.lato(
                       fontWeight: FontWeight.w600, color: Colors.black54),
                 ),
               ),

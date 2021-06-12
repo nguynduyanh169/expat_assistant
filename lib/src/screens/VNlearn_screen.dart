@@ -14,7 +14,7 @@ class _VNlearnScreenState extends State<VNlearnScreen> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
-      //backgroundColor: Colors.white10,
+      backgroundColor: Color.fromRGBO(245, 244, 244, 10),
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Color.fromRGBO(30, 193, 194, 30),
@@ -24,7 +24,7 @@ class _VNlearnScreenState extends State<VNlearnScreen> {
         //leading: Text('Learn Vietnamese', style: GoogleFonts.ubuntu(fontSize: 22),),
         title: Text(
           'Learn Vietnamese',
-          style: GoogleFonts.ubuntu(fontSize: 22),
+          style: GoogleFonts.lato(fontSize: 22),
         ),
         actions: [
           InkWell(
@@ -42,10 +42,10 @@ class _VNlearnScreenState extends State<VNlearnScreen> {
           children: <Widget>[
             LessonCard(
               vocabularyAction: () {
-                Navigator.pushNamed(context, '/vocabularydetails');
+                Navigator.pushNamed(context, '/vocabularyDetails');
               },
               conversationAction: (){
-                Navigator.pushNamed(context, '/conversationdetails');
+                Navigator.pushNamed(context, '/conversationDetails');
               },
             ),
             SizedBox(
@@ -53,10 +53,10 @@ class _VNlearnScreenState extends State<VNlearnScreen> {
             ),
             LessonCard(
               vocabularyAction: () {
-                Navigator.pushNamed(context, '/vocabularydetails');
+                Navigator.pushNamed(context, '/vocabularyDetails');
               },
               conversationAction: (){
-                Navigator.pushNamed(context, '/conversationdetails');
+                Navigator.pushNamed(context, '/conversationDetails');
               },
             ),
             SizedBox(
@@ -64,10 +64,10 @@ class _VNlearnScreenState extends State<VNlearnScreen> {
             ),
             LessonCard(
               vocabularyAction: () {
-                Navigator.pushNamed(context, '/vocabularydetails');
+                Navigator.pushNamed(context, '/vocabularyDetails');
               },
               conversationAction: (){
-                Navigator.pushNamed(context, '/conversationdetails');
+                Navigator.pushNamed(context, '/conversationDetails');
               },
             ),
             SizedBox(
@@ -75,10 +75,10 @@ class _VNlearnScreenState extends State<VNlearnScreen> {
             ),
             LessonCard(
               vocabularyAction: () {
-                Navigator.pushNamed(context, '/vocabularydetails');
+                Navigator.pushNamed(context, '/vocabularyDetails');
               },
               conversationAction: (){
-                Navigator.pushNamed(context, '/conversationdetails');
+                Navigator.pushNamed(context, '/conversationDetails');
               },
             ),
             SizedBox(
@@ -86,10 +86,10 @@ class _VNlearnScreenState extends State<VNlearnScreen> {
             ),
             LessonCard(
               vocabularyAction: () {
-                Navigator.pushNamed(context, '/vocabularydetails');
+                Navigator.pushNamed(context, '/vocabularyDetails');
               },
               conversationAction: (){
-                Navigator.pushNamed(context, '/conversationdetails');
+                Navigator.pushNamed(context, '/conversationDetails');
               },
             ),
             SizedBox(
@@ -97,10 +97,10 @@ class _VNlearnScreenState extends State<VNlearnScreen> {
             ),
             LessonCard(
               vocabularyAction: () {
-                Navigator.pushNamed(context, '/vocabularydetails');
+                Navigator.pushNamed(context, '/vocabularyDetails');
               },
               conversationAction: (){
-                Navigator.pushNamed(context, '/conversationdetails');
+                Navigator.pushNamed(context, '/conversationDetails');
               },
             ),
           ],

@@ -1,6 +1,7 @@
 import 'package:expat_assistant/src/configs/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class VocabularyCard extends StatelessWidget{
   @override
@@ -28,8 +29,8 @@ class VocabularyCard extends StatelessWidget{
           height: SizeConfig.blockSizeVertical * 15,
           image: AssetImage('assets/images/demo_vocabulary.png'),
         ),
-        title: Text('Discuss', style: TextStyle(fontSize: 25, fontWeight: FontWeight.w600),),
-        subtitle: Text('Thảo luận', style: TextStyle(fontSize: 18)),
+        title: Text('Discuss', style: GoogleFonts.lato(fontSize: 25, fontWeight: FontWeight.w600),),
+        subtitle: Text('Thảo luận', style: GoogleFonts.lato(fontSize: 18)),
         trailing: CircleAvatar(
           backgroundColor: Color.fromRGBO(30, 193, 194, 30),
           radius: 25,

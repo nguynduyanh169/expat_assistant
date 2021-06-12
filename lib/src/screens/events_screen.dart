@@ -13,6 +13,7 @@ class _EventsScreenState extends State<EventsScreen> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
+      backgroundColor: Color.fromRGBO(245, 244, 244, 30),
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Color.fromRGBO(30, 193, 194, 30),
@@ -21,7 +22,7 @@ class _EventsScreenState extends State<EventsScreen> {
         centerTitle: true,
         title: Text(
           'Events',
-          style: GoogleFonts.ubuntu(fontSize: 22),
+          style: GoogleFonts.lato(fontSize: 22),
         ),
         actions: [
           IconButton(
@@ -65,7 +66,7 @@ class _EventsScreenState extends State<EventsScreen> {
                           SizedBox(
                             width: SizeConfig.blockSizeHorizontal * 1,
                           ),
-                          Text('Category')
+                          Text('Category', style: GoogleFonts.lato(),)
                         ],
                       ),
                     ),
@@ -92,7 +93,7 @@ class _EventsScreenState extends State<EventsScreen> {
                           SizedBox(
                             width: SizeConfig.blockSizeHorizontal * 1,
                           ),
-                          Text('Places')
+                          Text('Places', style: GoogleFonts.lato())
                         ],
                       ),
                     ),
@@ -119,7 +120,7 @@ class _EventsScreenState extends State<EventsScreen> {
                           SizedBox(
                             width: SizeConfig.blockSizeHorizontal * 1,
                           ),
-                          Text('Is Going')
+                          Text('Is Going', style: GoogleFonts.lato())
                         ],
                       ),
                     ),
@@ -136,7 +137,6 @@ class _EventsScreenState extends State<EventsScreen> {
                 children: <Widget>[
                   InkWell(
                     onTap: () {
-                      print('tapped');
                       showDatePicker(
                           context: context,
                           initialDate: DateTime.now(),
@@ -160,7 +160,7 @@ class _EventsScreenState extends State<EventsScreen> {
                           SizedBox(
                             width: SizeConfig.blockSizeHorizontal * 1,
                           ),
-                          Text('From Date')
+                          Text('From Date', style: GoogleFonts.lato(),)
                         ],
                       ),
                     ),
@@ -178,7 +178,7 @@ class _EventsScreenState extends State<EventsScreen> {
                 children: <Widget>[
                   EventCard(
                     eventAction: () {
-                      Navigator.pushNamed(context, '/eventdetail');
+                      Navigator.pushNamed(context, '/eventDetail');
                     },
                   ),
                   SizedBox(
@@ -186,7 +186,7 @@ class _EventsScreenState extends State<EventsScreen> {
                   ),
                   EventCard(
                     eventAction: () {
-                      Navigator.pushNamed(context, '/eventdetail');
+                      Navigator.pushNamed(context, '/eventDetail');
                     },
                   ),
                   SizedBox(
@@ -194,7 +194,7 @@ class _EventsScreenState extends State<EventsScreen> {
                   ),
                   EventCard(
                     eventAction: () {
-                      Navigator.pushNamed(context, '/eventdetail');
+                      Navigator.pushNamed(context, '/eventDetail');
                     },
                   ),
                 ],

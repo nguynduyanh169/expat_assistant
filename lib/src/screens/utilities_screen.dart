@@ -7,6 +7,7 @@ class UtilitiesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
+      backgroundColor: Color.fromRGBO(245, 244, 244, 30),
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Color.fromRGBO(30, 193, 194, 30),
@@ -15,7 +16,7 @@ class UtilitiesScreen extends StatelessWidget {
         centerTitle: true,
         title: Text(
           'Utilities',
-          style: GoogleFonts.ubuntu(fontSize: 22),
+          style: GoogleFonts.lato(fontSize: 22),
         ),
       ),
       body: Container(
@@ -48,11 +49,13 @@ class UtilitiesScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        Text('Find your specialist', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+                        Text('Find your specialist', style: GoogleFonts.lato(fontSize: 20, fontWeight: FontWeight.bold),),
                         Container(
                           width: SizeConfig.blockSizeVertical * 25,
                           child: Text(
-                              'Have an appointment with specialists, they will help you to solve your problems.'),
+                              'Have an appointment with specialists, they will help you to solve your problems.',
+                              style: GoogleFonts.lato(),
+                          ),
                         ),
                       ],
                     )
@@ -65,7 +68,7 @@ class UtilitiesScreen extends StatelessWidget {
             ),
             InkWell(
               onTap: () {
-                Navigator.pushNamed(context, '/vietnameselearns');
+                Navigator.pushNamed(context, '/vietnameseLearns');
               },
               child: Container(
                 width: SizeConfig.blockSizeHorizontal * 85,
@@ -87,11 +90,11 @@ class UtilitiesScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        Text('Learn Vietnamese', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+                        Text('Learn Vietnamese', style: GoogleFonts.lato(fontSize: 20, fontWeight: FontWeight.bold),),
                         Container(
                           width: SizeConfig.blockSizeVertical * 22,
                           child: Text(
-                              'Learn Vietnamese through vocabulary and sentence'),
+                              'Learn Vietnamese through vocabulary and sentence', style: GoogleFonts.lato(),),
                         ),
                       ],
                     ),

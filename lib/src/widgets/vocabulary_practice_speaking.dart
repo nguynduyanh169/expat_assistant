@@ -133,7 +133,7 @@ class _VocabularyPracticeSpeakingState
                   children: <Widget>[
                     Text(
                       'Listen and speak again',
-                      style: TextStyle(
+                      style: GoogleFonts.lato(
                           fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(
@@ -183,7 +183,7 @@ class _VocabularyPracticeSpeakingState
                                         Container(
                                           width: SizeConfig.blockSizeHorizontal * 40,
                                           child: Text(
-                                            recordText, style: TextStyle(fontSize: 12, color: Colors.grey),),
+                                            recordText, style: GoogleFonts.lato(fontSize: 12, color: Colors.grey),),
                                         ),
                                         SizedBox(width: SizeConfig.blockSizeHorizontal * 3,),
                                         InkWell(
@@ -208,7 +208,7 @@ class _VocabularyPracticeSpeakingState
                                     height: SizeConfig.blockSizeVertical * 10,
                                     child: Text(
                                       vietnamese,
-                                      style: GoogleFonts.raleway(
+                                      style: GoogleFonts.lato(
                                           fontSize: 30,
                                           fontWeight: FontWeight.w600),
                                     ),

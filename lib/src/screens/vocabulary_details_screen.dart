@@ -13,11 +13,11 @@ class _VocabularyDetailState extends State<VocabularyDetailScreen>{
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
-      //backgroundColor: Colors.white10,
+      backgroundColor: Color.fromRGBO(245, 244, 244, 10),
       appBar: AppBar(
         backgroundColor: Color.fromRGBO(30, 193, 194, 30),
         toolbarHeight: SizeConfig.blockSizeVertical * 10,
-        title: Text('24 Vocabulary of Greetings', style: GoogleFonts.ubuntu(fontSize: 22),),
+        title: Text('24 Vocabulary of Greetings', style: GoogleFonts.lato(fontSize: 22),),
       ),
       body: Container(
         child: Column(
@@ -45,11 +45,15 @@ class _VocabularyDetailState extends State<VocabularyDetailScreen>{
             SizedBox(height: SizeConfig.blockSizeVertical * 1.5,),
             SizedBox(
               width: SizeConfig.blockSizeHorizontal * 85,
-              child: CupertinoButton(
-                  color: Color.fromRGBO(30, 193, 194, 30),
+              child: ElevatedButton(
+                  style: ButtonStyle(
+                      padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4)),
+                      backgroundColor: MaterialStateProperty.all<Color>(Color.fromRGBO(30, 193, 194, 30)),
+                      textStyle: MaterialStateProperty.all<TextStyle>(GoogleFonts.lato(fontSize: 17))
+                  ),
                   child: Text("Practice"),
                   onPressed: () {
-                      Navigator.pushNamed(context, '/practicevocabulary');
+                      Navigator.pushNamed(context, '/practiceVocabulary');
                   }),
             ),
           ],
