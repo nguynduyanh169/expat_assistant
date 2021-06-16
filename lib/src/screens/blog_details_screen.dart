@@ -22,7 +22,7 @@ class BlogDetailsScreen extends StatelessWidget {
           IconButton(
               onPressed: () {
                 print('tapped');
-                Navigator.popUntil(context, ModalRoute.withName("/homepage"));
+                Navigator.popUntil(context, ModalRoute.withName("/homePage"));
               },
               icon: Icon(CupertinoIcons.home)),
           SizedBox(

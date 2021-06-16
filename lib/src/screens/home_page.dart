@@ -1,6 +1,4 @@
-import 'package:convex_bottom_bar/convex_bottom_bar.dart';
-import 'package:expat_assistant/src/screens/VNlearn_screen.dart';
-import 'package:expat_assistant/src/screens/assistant_screen.dart';
+
 import 'package:expat_assistant/src/screens/events_screen.dart';
 import 'package:expat_assistant/src/screens/home_screen.dart';
 import 'package:expat_assistant/src/screens/restaurants_screen.dart';
@@ -22,7 +20,7 @@ class _HomePageState extends State<HomePage> {
     switch (index) {
       case 0:
         {
-          return HomeScreen();
+          return HomeScreen(changeTab: onTappedBar,);
         }
       case 1:
         {
@@ -55,9 +53,11 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: pageCaller(currentIndex),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: new FloatingActionButton(
+        backgroundColor: Color.fromRGBO(30, 193, 194, 30),
         onPressed: () {
           Navigator.pushNamed(context, '/blogs');
         },
@@ -66,11 +66,13 @@ class _HomePageState extends State<HomePage> {
         child: new Icon(LineIcons.newspaperAlt),
       ),
       bottomNavigationBar: FABBottomAppBar(
-        //notchedShape: CircularNotchedRectangle(),
+        notchedShape: CircularNotchedRectangle(
+        ),
         centerItemText: 'News',
-        backgroundColor: Color.fromRGBO(30, 193, 194, 30),
-        color: Colors.white70,
-        selectedColor: Colors.white,
+        //backgroundColor: Color.fromRGBO(30, 193, 194, 30),
+        backgroundColor: Colors.white,
+        color: Colors.black54,
+        selectedColor: Color.fromRGBO(30, 193, 194, 30),
         onTabSelected: (int i) {
           onTappedBar(i);
         },

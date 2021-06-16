@@ -15,7 +15,7 @@ class _EventsScreenState extends State<EventsScreen> {
     return Scaffold(
       backgroundColor: Color.fromRGBO(245, 244, 244, 30),
       appBar: AppBar(
-        elevation: 0,
+        elevation: 1,
         backgroundColor: Color.fromRGBO(30, 193, 194, 30),
         toolbarHeight: SizeConfig.blockSizeVertical * 10,
         automaticallyImplyLeading: false,

@@ -39,11 +39,13 @@ class EventCard extends StatelessWidget{
                 Container(
                   padding: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 2),
                   alignment: Alignment.bottomLeft,
-                  height: SizeConfig.blockSizeVertical * 15,
+                  height: SizeConfig.blockSizeVertical * 20,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       SizedBox(height: SizeConfig.blockSizeVertical * 4,),
+                      Text('Business', style: GoogleFonts.lato(fontSize: 15, color: Colors.black54),),
+                      SizedBox(height: SizeConfig.blockSizeVertical * 1,),
                       Container(
                         width: SizeConfig.blockSizeHorizontal * 70,
                         child: Text('Learn how to make passive income', style: GoogleFonts.lato(fontSize: 15, fontWeight: FontWeight.bold),),
@@ -62,6 +64,7 @@ class EventCard extends StatelessWidget{
                           Text('District 9,HCMC', style: GoogleFonts.lato(fontSize: 12),)
                         ],
                       ),
+                      SizedBox(height: SizeConfig.blockSizeVertical * 1,),
                     ],
                   ),
                 )

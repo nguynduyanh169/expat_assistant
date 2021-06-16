@@ -104,7 +104,7 @@ class RestaurantDetailsScreen extends StatelessWidget{
               EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 2),
               child: Row(
                 children: <Widget>[
-                  Icon(CupertinoIcons.time, color: Color.fromRGBO(30, 193, 194, 30),),
+                  Icon(LineIcons.businessTime, color: Color.fromRGBO(30, 193, 194, 30),),
                   SizedBox(
                     width: SizeConfig.blockSizeHorizontal * 2,
                   ),
@@ -120,11 +120,27 @@ class RestaurantDetailsScreen extends StatelessWidget{
               EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 2),
               child: Row(
                 children: <Widget>[
-                  Icon(CupertinoIcons.location, color: Color.fromRGBO(30, 193, 194, 30),),
+                  Icon(LineIcons.mapMarked, color: Color.fromRGBO(30, 193, 194, 30),),
                   SizedBox(
                     width: SizeConfig.blockSizeHorizontal * 2,
                   ),
                   Text('District 9, HCM city', style: GoogleFonts.lato(),)
+                ],
+              ),
+            ),
+            SizedBox(
+              height: SizeConfig.blockSizeVertical * 1,
+            ),
+            Container(
+              padding:
+              EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 2),
+              child: Row(
+                children: <Widget>[
+                  Icon(LineIcons.starAlt, color: Color.fromRGBO(252, 191, 7, 30),),
+                  SizedBox(
+                    width: SizeConfig.blockSizeHorizontal * 2,
+                  ),
+                  Text('4.5', style: GoogleFonts.lato(),)
                 ],
               ),
             ),
@@ -144,8 +160,11 @@ class RestaurantDetailsScreen extends StatelessWidget{
               padding:
               EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
               child: Text(
-                'Images: ',
-                style: GoogleFonts.lato(color: Colors.black54, fontSize: 15),
+                'Images:',
+                style: GoogleFonts.lato(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: Color.fromRGBO(0, 99, 99, 30)),
               ),
             ),
             Container(

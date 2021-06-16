@@ -1,12 +1,41 @@
+import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/route.dart';
+import 'package:expat_assistant/src/utils/hive_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart' as path_provider;
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  final appDirectory = await path_provider.getApplicationDocumentsDirectory();
+  Hive.init(appDirectory.path);
+  await Hive.openBox(HiveBoxName.USER_AUTH);
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   // This widget is the root of your application.
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp>{
+  String initRoute = RouteName.LOGIN;
+  HiveUtils _hiveUtils = HiveUtils();
+
+  @override
+  void initState() {
+    bool checkLoggedIn = _hiveUtils.haveToken(boxName: HiveBoxName.USER_AUTH);
+    if(checkLoggedIn == true){
+      initRoute = RouteName.HOME_PAGE;
+    }
+    super.initState();
+  }
+  @override
+  void dispose() {
+    Hive.close();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -25,6 +54,7 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       routes: routes,
+      initialRoute: initRoute,
     );
   }
 }
