@@ -67,7 +67,7 @@ class LoginScreen extends StatelessWidget {
                 children: [
                   Container(
                     width: SizeConfig.blockSizeHorizontal * 40,
-                    height: SizeConfig.blockSizeVertical * 40,
+                    height: SizeConfig.blockSizeVertical * 35,
                     child: Image.asset("assets/images/app_logo.png"),
                   ),
                   Container(

@@ -1,7 +1,10 @@
 import 'package:expat_assistant/src/configs/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:getwidget/components/button/gf_icon_button.dart';
+import 'package:getwidget/getwidget.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:line_icons/line_icons.dart';
 
 class VocabularyCard extends StatelessWidget{
   @override
@@ -31,17 +34,26 @@ class VocabularyCard extends StatelessWidget{
         ),
         title: Text('Discuss', style: GoogleFonts.lato(fontSize: 25, fontWeight: FontWeight.w600),),
         subtitle: Text('Thảo luận', style: GoogleFonts.lato(fontSize: 18)),
-        trailing: CircleAvatar(
-          backgroundColor: Color.fromRGBO(30, 193, 194, 30),
-          radius: 25,
-          child: IconButton(
-            padding: EdgeInsets.zero,
-            icon: Icon(CupertinoIcons.play_arrow_solid),
-            color: Colors.white,
-            onPressed: () {
-              print("play");
-            },
-          ),
+        // trailing: CircleAvatar(
+        //   backgroundColor: Color.fromRGBO(30, 193, 194, 30),
+        //   radius: 25,
+        //   child: IconButton(
+        //     padding: EdgeInsets.zero,
+        //     icon: Icon(CupertinoIcons.ear),
+        //     color: Colors.white,
+        //     onPressed: () {
+        //       print("play");
+        //     },
+        //   ),
+        // ),
+        trailing: GFIconButton(
+          padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 3),
+          onPressed: (){
+            print('hear');
+          },
+          color: Color.fromRGBO(30, 193, 194, 30),
+          icon: Icon(CupertinoIcons.ear),
+          shape: GFIconButtonShape.circle,
         ),
       ),
     );

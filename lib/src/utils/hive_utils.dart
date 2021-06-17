@@ -16,6 +16,12 @@ class HiveUtils {
     openBox.put('userAuth', {'email': email, 'token': token});
   }
 
+  Map<dynamic, dynamic> getUserAuth({@required String boxName}){
+    final openBox = Hive.box(boxName);
+    Map<dynamic, dynamic> userAuth = openBox.get('userAuth');
+    return userAuth;
+  }
+
   deleteUserAuth({@required String boxName}) {
     final openBox = Hive.box(boxName);
     openBox.delete('userAuth');

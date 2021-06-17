@@ -30,6 +30,7 @@ class LoginCubit extends Cubit<LoginState>{
     try{
       LoginResponse loginResponse = await _userRepository.login(email: email, password: password);
       if(loginResponse.token != 'Fail'){
+        print('add');
         _hiveUtils.addUserAuth(email: loginResponse.email, token: loginResponse.token, boxName: HiveBoxName.USER_AUTH);
         emit(state.copyWith(status: FormzStatus.submissionSuccess));
       }else{
