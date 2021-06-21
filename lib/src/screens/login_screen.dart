@@ -33,23 +33,21 @@ class LoginScreen extends StatelessWidget {
       listener: (context, state) {
         if (state.status.isSubmissionFailure) {
           Navigator.pop(context);
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
             content: Text(
-              'Invalid email or password',
+              'Your email or password is not correct!',
               style: GoogleFonts.lato(color: Colors.white),
               textAlign: TextAlign.center,
             ),
             duration: const Duration(milliseconds: 1500),
-            width: SizeConfig.blockSizeHorizontal * 60,
+            // width: SizeConfig.blockSizeHorizontal * 60,
             // Width of the SnackBar.
             padding: const EdgeInsets.symmetric(
               horizontal: 8.0, // Inner padding for SnackBar content.
             ),
-            backgroundColor: Colors.redAccent,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
-            ),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.fixed,
           ));
         }else if(state.status.isSubmissionSuccess){
           Navigator.pop(context);

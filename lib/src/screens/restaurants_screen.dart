@@ -24,14 +24,21 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
       resizeToAvoidBottomInset: false,
       backgroundColor: Color.fromRGBO(245, 244, 244, 30),
       appBar: AppBar(
-        elevation: 1,
-        backgroundColor: Color.fromRGBO(30, 193, 194, 30),
+        bottom: PreferredSize(
+            child: Container(
+              color: Colors.black38,
+              height: 0.25,
+            ),
+            preferredSize: Size.fromHeight(0.25)),
+        elevation: 0.5,
+        backgroundColor: Colors.white,
         toolbarHeight: SizeConfig.blockSizeVertical * 10,
         automaticallyImplyLeading: false,
         centerTitle: true,
+        iconTheme: IconThemeData(color: Colors.black),
         title: Text(
-          'Find Your Restaurant',
-          style: GoogleFonts.lato(fontSize: 22),
+          'Find your restaurant',
+          style: GoogleFonts.lato(fontSize: 22, color: Colors.black),
         ),
       ),
       body: BlocProvider(
@@ -52,8 +59,8 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
               }
               return Container(
                 padding: EdgeInsets.only(
-                    left: SizeConfig.blockSizeHorizontal * 3,
-                    right: SizeConfig.blockSizeHorizontal * 3),
+                    left: SizeConfig.blockSizeHorizontal * 2,
+                    right: SizeConfig.blockSizeHorizontal * 2),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
@@ -64,8 +71,8 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
                       child: Text(
                         'Your location: ',
                         style: GoogleFonts.lato(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w700,
+                            fontSize: 22,
+                            fontWeight: FontWeight.w500,
                             color: Color.fromRGBO(0, 99, 99, 30)),
                       ),
                     ),
@@ -146,12 +153,12 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
                     // ),
                     Container(
                       width: SizeConfig.blockSizeHorizontal * 100,
-                      padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
+                      padding: EdgeInsets.only(top: SizeConfig.blockSizeHorizontal * 2, bottom: SizeConfig.blockSizeHorizontal * 2),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Container(
-                            width: SizeConfig.blockSizeHorizontal * 70,
+                            width: SizeConfig.blockSizeHorizontal * 75,
                             padding: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 2, right: SizeConfig.blockSizeHorizontal * 2),
                             decoration: BoxDecoration(
                               color: Colors.white,
@@ -164,7 +171,7 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
                             child: TextFormField(
                               enabled: false,
                               decoration: InputDecoration(
-                                  hintText: 'What do you want to eat?',
+                                  hintText: '   What do you want to eat?',
                                   border: InputBorder.none,
                                   suffixIcon: IconButton(
                                     icon: Icon(CupertinoIcons.search, color: Color.fromRGBO(30, 193, 194, 30),),
@@ -192,8 +199,8 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
                       child: Text(
                         'Near you ',
                         style: GoogleFonts.lato(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w700,
+                            fontSize: 22,
+                            fontWeight: FontWeight.w500,
                             color: Color.fromRGBO(0, 99, 99, 30)),
                       ),
                     ),
@@ -202,7 +209,7 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
                     ),
                     Container(
                       height: SizeConfig.blockSizeVertical * 5,
-                      padding: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 2, right: SizeConfig.blockSizeHorizontal * 2),
+                      //padding: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 2, right: SizeConfig.blockSizeHorizontal * 2),
                       child: ListView(
                         scrollDirection: Axis.horizontal,
                         children: <Widget>[
@@ -221,7 +228,7 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
                                 ]),
                             child: Row(
                               children: <Widget>[
-                                Icon(LineIcons.starAlt,),
+                                Icon(LineIcons.star,),
                                 SizedBox(width: SizeConfig.blockSizeHorizontal * 1,),
                                 Text('High Ratings', style: GoogleFonts.lato())
                               ],

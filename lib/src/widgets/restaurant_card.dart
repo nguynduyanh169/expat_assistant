@@ -123,9 +123,46 @@ class RestaurantCard extends StatelessWidget {
                         left: SizeConfig.blockSizeHorizontal * 1),
                     child: Container(
                         width: SizeConfig.blockSizeHorizontal * 55,
-                        child: Text(
-                          'Opening at 11:00 - Closing at 22:00',
-                          style: GoogleFonts.lato(fontSize: 12),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Container(
+                                child: Text(
+                                  'Opening Now',
+                                  style: GoogleFonts.lato(fontSize: 12, color: Colors.green),
+                                )),
+                            SizedBox(
+                              width: SizeConfig.blockSizeHorizontal * 1,
+                            ),
+                            Container(
+                                child: Text(
+                                  '.',
+                                  style: GoogleFonts.lato(fontSize: 12),
+                                )),
+                            SizedBox(
+                              width: SizeConfig.blockSizeHorizontal * 1,
+                            ),
+                            Container(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Icon(
+                                      LineIcons.businessTime,
+                                      color: Color.fromRGBO(252, 191, 7, 30),
+                                      size: 14,
+                                    ),
+                                    SizedBox(
+                                      width: SizeConfig.blockSizeHorizontal * 1,
+                                    ),
+                                    Container(
+                                        child: Text(
+                                          '11:00 - 21:00',
+                                          style: GoogleFonts.lato(fontSize: 12),
+                                        ))
+                                  ],
+                                ))
+                          ],
                         )),
                   ),
                 ],

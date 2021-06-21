@@ -15,21 +15,27 @@ class _EventsScreenState extends State<EventsScreen> {
     return Scaffold(
       backgroundColor: Color.fromRGBO(245, 244, 244, 30),
       appBar: AppBar(
-        elevation: 1,
-        backgroundColor: Color.fromRGBO(30, 193, 194, 30),
+        bottom: PreferredSize(
+            child: Container(
+              color: Colors.black38,
+              height: 0.25,
+            ),
+            preferredSize: Size.fromHeight(0.25)),
+        elevation: 0.5,
+        backgroundColor: Colors.white,
         toolbarHeight: SizeConfig.blockSizeVertical * 10,
         automaticallyImplyLeading: false,
         centerTitle: true,
         title: Text(
           'Events',
-          style: GoogleFonts.lato(fontSize: 22),
+          style: GoogleFonts.lato(fontSize: 22, color: Colors.black),
         ),
         actions: [
           IconButton(
               onPressed: () {
                 print('tapped');
               },
-              icon: Icon(CupertinoIcons.search)),
+              icon: Icon(CupertinoIcons.search, color: Colors.black,)),
           SizedBox(
             width: SizeConfig.blockSizeHorizontal * 4,
           )
@@ -40,9 +46,9 @@ class _EventsScreenState extends State<EventsScreen> {
           children: <Widget>[
             Container(
               padding: EdgeInsets.only(
-                  left: SizeConfig.blockSizeHorizontal * 3,
+                  left: SizeConfig.blockSizeHorizontal * 2,
                   top: SizeConfig.blockSizeHorizontal * 3,
-                  right: SizeConfig.blockSizeHorizontal * 3),
+                  right: SizeConfig.blockSizeHorizontal * 2),
               child: Row(
                 children: <Widget>[
                   InkWell(
@@ -55,7 +61,7 @@ class _EventsScreenState extends State<EventsScreen> {
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.black12),
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(15.0),
+                        borderRadius: BorderRadius.circular(20.0),
                       ),
                       child: Row(
                         children: <Widget>[
@@ -82,7 +88,7 @@ class _EventsScreenState extends State<EventsScreen> {
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.black12),
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(15.0),
+                        borderRadius: BorderRadius.circular(20.0),
                       ),
                       child: Row(
                         children: <Widget>[
@@ -109,7 +115,7 @@ class _EventsScreenState extends State<EventsScreen> {
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.black12),
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(15.0),
+                        borderRadius: BorderRadius.circular(20.0),
                       ),
                       child: Row(
                         children: <Widget>[
@@ -130,9 +136,9 @@ class _EventsScreenState extends State<EventsScreen> {
             ),
             Container(
               padding: EdgeInsets.only(
-                  left: SizeConfig.blockSizeHorizontal * 3,
+                  left: SizeConfig.blockSizeHorizontal * 2,
                   top: SizeConfig.blockSizeHorizontal * 3,
-                  right: SizeConfig.blockSizeHorizontal * 3),
+                  right: SizeConfig.blockSizeHorizontal * 2),
               child: Row(
                 children: <Widget>[
                   InkWell(
@@ -149,7 +155,7 @@ class _EventsScreenState extends State<EventsScreen> {
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.black12),
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(15.0),
+                        borderRadius: BorderRadius.circular(20.0),
                       ),
                       child: Row(
                         children: <Widget>[
@@ -172,8 +178,8 @@ class _EventsScreenState extends State<EventsScreen> {
               height: SizeConfig.blockSizeVertical * 66,
               child: ListView(
                 padding: EdgeInsets.only(
-                    left: SizeConfig.blockSizeHorizontal * 5,
-                    right: SizeConfig.blockSizeHorizontal * 5,
+                    left: SizeConfig.blockSizeHorizontal * 2,
+                    right: SizeConfig.blockSizeHorizontal * 2,
                     top: SizeConfig.blockSizeVertical * 2),
                 children: <Widget>[
                   EventCard(

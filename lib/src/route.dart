@@ -2,6 +2,7 @@ import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/screens/VNlearn_screen.dart';
 import 'package:expat_assistant/src/screens/blog_details_screen.dart';
 import 'package:expat_assistant/src/screens/blogs_screen.dart';
+import 'package:expat_assistant/src/screens/channel_screen.dart';
 import 'package:expat_assistant/src/screens/conversation_details_screen.dart';
 import 'package:expat_assistant/src/screens/event_details_screen.dart';
 import 'package:expat_assistant/src/screens/events_screen.dart';
@@ -35,8 +36,8 @@ final routes = {
   '/conversationDetails': (BuildContext context) => new ConversationDetailScreen(),
   '/vocabularyDetails': (BuildContext context) => new VocabularyDetailScreen(),
   '/practiceVocabulary': (BuildContext context) => new PracticeVocabularyScreen(),
-  '/utilities': (BuildContext context) => new UtilitiesScreen(),
-  '/blogs': (BuildContext context) => new BlogsScreen(),
+  RouteName.UTILS: (BuildContext context) => new UtilitiesScreen(),
+  RouteName.BLOGS: (BuildContext context) => new BlogsScreen(),
   '/map': (BuildContext context) => new MapScreen(),
   RouteName.BLOG_DETAILS: (BuildContext context) => new BlogDetailsScreen(),
   '/foodCamera': (BuildContext context) => new FoodCameraScreen(),
@@ -44,5 +45,6 @@ final routes = {
   RouteName.SPECIALIST_DETAILS: (BuildContext context) => new SpecialistDetailsScreen(),
   RouteName.PROFILE: (BuildContext context) => new ProfileScreen(),
   RouteName.WALLET: (BuildContext context) => new WalletScreen(),
+  RouteName.CHANNEL: (BuildContext context) => new ChannelScreen(),
 };
 

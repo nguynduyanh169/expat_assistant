@@ -14,14 +14,21 @@ class _RestaurantByFoodState extends State<RestaurantByFoodScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        elevation: 1,
-        backgroundColor: Color.fromRGBO(30, 193, 194, 30),
+        bottom: PreferredSize(
+            child: Container(
+              color: Colors.black38,
+              height: 0.25,
+            ),
+            preferredSize: Size.fromHeight(0.25)),
+        elevation: 0.5,
+        iconTheme: IconThemeData(color: Colors.black),
+        backgroundColor: Colors.white,
         toolbarHeight: SizeConfig.blockSizeVertical * 10,
         automaticallyImplyLeading: true,
         centerTitle: true,
         title: Text(
           'Phở',
-          style: GoogleFonts.lato(fontSize: 22),
+          style: GoogleFonts.lato(fontSize: 22, color: Colors.black),
         ),
         actions: [
           IconButton(
@@ -29,7 +36,7 @@ class _RestaurantByFoodState extends State<RestaurantByFoodScreen> {
                 print('tapped');
                 Navigator.popUntil(context, ModalRoute.withName("/homePage"));
               },
-              icon: Icon(CupertinoIcons.home)),
+              icon: Icon(CupertinoIcons.home, color: Colors.black,)),
           SizedBox(
             width: SizeConfig.blockSizeHorizontal * 4,
           )

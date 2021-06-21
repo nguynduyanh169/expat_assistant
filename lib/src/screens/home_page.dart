@@ -1,6 +1,8 @@
 
+import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/screens/events_screen.dart';
 import 'package:expat_assistant/src/screens/home_screen.dart';
+import 'package:expat_assistant/src/screens/profile_screen.dart';
 import 'package:expat_assistant/src/screens/restaurants_screen.dart';
 import 'package:expat_assistant/src/screens/utilities_screen.dart';
 import 'package:expat_assistant/src/widgets/FAB_bottom_app_bar.dart';
@@ -32,7 +34,7 @@ class _HomePageState extends State<HomePage> {
         }
       case 3:
         {
-          return UtilitiesScreen();
+          return ProfileScreen();
         }
     }
   }
@@ -57,22 +59,22 @@ class _HomePageState extends State<HomePage> {
       body: pageCaller(currentIndex),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: new FloatingActionButton(
-        backgroundColor: Color.fromRGBO(30, 193, 194, 30),
+        backgroundColor: Color.fromRGBO(64, 201, 162, 30),
         onPressed: () {
-          Navigator.pushNamed(context, '/blogs');
+          Navigator.pushNamed(context, RouteName.UTILS);
         },
-        tooltip: 'Restaurant',
+        tooltip: 'Utilities',
         elevation: 0,
-        child: new Icon(LineIcons.newspaperAlt),
+        child: new Icon(LineIcons.tools),
       ),
       bottomNavigationBar: FABBottomAppBar(
         notchedShape: CircularNotchedRectangle(
         ),
-        centerItemText: 'News',
+        centerItemText: 'Utilities',
         //backgroundColor: Color.fromRGBO(30, 193, 194, 30),
         backgroundColor: Colors.white,
         color: Colors.black54,
-        selectedColor: Color.fromRGBO(30, 193, 194, 30),
+        selectedColor: Color.fromRGBO(64, 201, 162, 30),
         onTabSelected: (int i) {
           onTappedBar(i);
         },
@@ -83,7 +85,7 @@ class _HomePageState extends State<HomePage> {
           ),
           FABBottomAppBarItem(iconData: LineIcons.hamburger, text: 'Eat'),
           FABBottomAppBarItem(iconData: LineIcons.calendarAlt, text: 'Play'),
-          FABBottomAppBarItem(iconData: LineIcons.toolbox, text: 'Utilities')
+          FABBottomAppBarItem(iconData: LineIcons.user, text: 'Profile')
         ],
       ),
       // bottomNavigationBar: BottomNavigationBar(

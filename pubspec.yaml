@@ -65,7 +65,7 @@ dev_dependencies:
 
 flutter_native_splash:
   color: "#FFFFFF"
-  image: assets/images/app_logo.png
+  image: assets/images/logo_spash.png
   fullscreen: true
 
 # For information on the generic Dart part of this file, see the
@@ -85,6 +85,7 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
     - assets/images/app_logo.png
+    - assets/images/logo_spash.png
     - assets/images/app_icon.png
     - assets/images/facebook_logo.png
     - assets/images/google_logo.png
@@ -93,10 +94,14 @@ flutter:
     - assets/images/profile.png
     - assets/images/conversation_icon.png
     - assets/images/vocabulary_icon.png
+    - assets/images/utilities_banner.jpg
+    - assets/images/utilities_banner_2.png
     - assets/images/demo_lesson.png
     - assets/images/demo_vocabulary.png
     - assets/images/demo_conversation.png
     - assets/images/demo_event.png
+    - assets/images/demo_thumb.jpg
+    - assets/images/demo_channel.png
     - assets/images/demo_news.png
     - assets/images/vietnamese_logo.png
     - assets/images/expert_logo.png

@@ -2,6 +2,8 @@ import 'package:bubble/bubble.dart';
 import 'package:expat_assistant/src/configs/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:getwidget/components/button/gf_icon_button.dart';
+import 'package:getwidget/shape/gf_icon_button_shape.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ConversationDetailScreen extends StatefulWidget{
@@ -29,18 +31,27 @@ class _ConversationDetailState extends State<ConversationDetailScreen> {
             ),
           ),
         ),
-        CircleAvatar(
-          backgroundColor: Color.fromRGBO(30, 193, 194, 30),
-          radius: 20,
-          child: IconButton(
-            padding: EdgeInsets.zero,
-            icon: Icon(CupertinoIcons.play_arrow_solid),
-            color: Colors.white,
-            onPressed: () {
-              print("play");
-            },
-          ),
-        ),
+        // CircleAvatar(
+        //   backgroundColor: Color.fromRGBO(30, 193, 194, 30),
+        //   radius: 20,
+        //   child: IconButton(
+        //     padding: EdgeInsets.zero,
+        //     icon: Icon(CupertinoIcons.play_arrow_solid),
+        //     color: Colors.white,
+        //     onPressed: () {
+        //       print("play");
+        //     },
+        //   ),
+        // ),
+        GFIconButton(
+          padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 3),
+          onPressed: (){
+            print('hear');
+          },
+          color: Color.fromRGBO(30, 193, 194, 30),
+          icon: Icon(CupertinoIcons.ear),
+          shape: GFIconButtonShape.circle,
+        )
       ],
     );
   }
@@ -50,17 +61,14 @@ class _ConversationDetailState extends State<ConversationDetailScreen> {
       crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        CircleAvatar(
-          backgroundColor: Color.fromRGBO(30, 193, 194, 30),
-          radius: 20,
-          child: IconButton(
-            padding: EdgeInsets.zero,
-            icon: Icon(CupertinoIcons.play_arrow_solid),
-            color: Colors.white,
-            onPressed: () {
-              print("play");
-            },
-          ),
+        GFIconButton(
+          padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 3),
+          onPressed: (){
+            print('hear');
+          },
+          color: Color.fromRGBO(30, 193, 194, 30),
+          icon: Icon(CupertinoIcons.ear),
+          shape: GFIconButtonShape.circle,
         ),
         Bubble(
           radius: Radius.circular(10),

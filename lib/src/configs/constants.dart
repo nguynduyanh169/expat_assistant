@@ -9,6 +9,9 @@ class RouteName {
   static const WALLET = "/wallet";
   static const HOME_PAGE = "/homePage";
   static const LOGIN = "/";
+  static const UTILS = "/utilities";
+  static const BLOGS = "/blogs";
+  static const CHANNEL = "/channel";
 }
 
 class ApiName {

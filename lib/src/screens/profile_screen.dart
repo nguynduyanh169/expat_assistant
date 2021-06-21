@@ -16,14 +16,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
     SizeConfig().init(context);
     return Scaffold(
       appBar: AppBar(
-        elevation: 1,
-        backgroundColor: Color.fromRGBO(30, 193, 194, 30),
+        bottom: PreferredSize(
+            child: Container(
+              color: Colors.black38,
+              height: 0.25,
+            ),
+            preferredSize: Size.fromHeight(0.25)),
+        elevation: 0.5,
+        backgroundColor: Colors.white,
         toolbarHeight: SizeConfig.blockSizeVertical * 10,
-        automaticallyImplyLeading: true,
+        automaticallyImplyLeading: false,
         centerTitle: true,
+        iconTheme: IconThemeData(color: Colors.black),
         title: Text(
           'Profile',
-          style: GoogleFonts.lato(fontSize: 22),
+          style: GoogleFonts.lato(fontSize: 22, color: Colors.black),
         ),
       ),
       body: Container(
@@ -33,7 +40,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             SizedBox(
-              height: SizeConfig.blockSizeVertical * 3,
+              height: SizeConfig.blockSizeVertical * 1,
             ),
             CircleAvatar(
               radius: SizeConfig.blockSizeHorizontal * 15,
@@ -44,7 +51,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
             SizedBox(
-              height: SizeConfig.blockSizeVertical * 2,
+              height: SizeConfig.blockSizeVertical * 1,
             ),
             Text(
               'Ho Quang Bao',
@@ -52,7 +59,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   GoogleFonts.lato(fontSize: 25, fontWeight: FontWeight.w700),
             ),
             SizedBox(
-              height: SizeConfig.blockSizeVertical * 4,
+              height: SizeConfig.blockSizeVertical * 3.75,
             ),
             Container(
               padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
@@ -175,25 +182,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             'Sign out?',
                             style: GoogleFonts.lato(),
                           ),
-                          content: Text('You are about to sign out',
-                              style: GoogleFonts.lato()),
+                          content: Text('You are about to sign out of application',
+                              style: GoogleFonts.lato(color: Colors.black54,)),
                           actions: <Widget>[
                             TextButton(
                                 onPressed: () {
                                   Navigator.pop(context, false);
                                 },
-                                child: Text('Cancel',
+                                child: Text('CANCEL',
                                     style: GoogleFonts.lato(
                                         color:
-                                            Color.fromRGBO(30, 193, 194, 30)))),
+                                            Color.fromRGBO(30, 193, 194, 30), fontWeight: FontWeight.w700))),
                             TextButton(
                                 onPressed: () {
                                   Navigator.pop(context, true);
                                 },
-                                child: Text('Sign Out',
+                                child: Text('SIGN OUT',
                                     style: GoogleFonts.lato(
                                         color:
-                                            Color.fromRGBO(30, 193, 194, 30))))
+                                            Color.fromRGBO(30, 193, 194, 30), fontWeight: FontWeight.w700)))
                           ],
                         );
                       }).then((value) {

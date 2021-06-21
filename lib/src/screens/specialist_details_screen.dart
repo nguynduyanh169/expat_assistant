@@ -1,9 +1,9 @@
 import 'package:expandable_text/expandable_text.dart';
 import 'package:expat_assistant/src/configs/size_config.dart';
+import 'package:expat_assistant/src/models/event.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class SpecialistDetailsScreen extends StatefulWidget {
@@ -11,6 +11,39 @@ class SpecialistDetailsScreen extends StatefulWidget {
 }
 
 class _SpecialistDetailsState extends State<SpecialistDetailsScreen> {
+  ValueNotifier<List<Event>> _selectedEvents;
+  CalendarFormat _calendarFormat = CalendarFormat.month;
+  DateTime _focusedDay = DateTime.now();
+  DateTime _selectedDay = DateTime.now();
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedDay = _focusedDay;
+    _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay));
+  }
+
+  @override
+  void dispose() {
+    _selectedEvents.dispose();
+    super.dispose();
+  }
+
+  List<Event> _getEventsForDay(DateTime day) {
+    // Implementation example
+    return kEvents[day] ?? [];
+  }
+
+  void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
+    if (!isSameDay(_selectedDay, selectedDay)) {
+      setState(() {
+        _selectedDay = selectedDay;
+        _focusedDay = focusedDay;
+      });
+
+      _selectedEvents.value = _getEventsForDay(selectedDay);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -180,18 +213,60 @@ class _SpecialistDetailsState extends State<SpecialistDetailsScreen> {
                   ),
                   Container(
                     height: SizeConfig.blockSizeVertical * 60,
-                    child: TableCalendar(
-                      calendarStyle: CalendarStyle(
-                        outsideTextStyle: GoogleFonts.lato(),
-                        todayTextStyle: GoogleFonts.lato(),
-                        defaultTextStyle: GoogleFonts.lato(),
-                        disabledTextStyle: GoogleFonts.lato(color: Colors.grey),
-                        selectedTextStyle: GoogleFonts.lato(color: Colors.white)
-                      ),
-                      calendarFormat: CalendarFormat.week,
-                      firstDay: DateTime.utc(2010, 10, 16),
-                      lastDay: DateTime.utc(2030, 3, 14),
-                      focusedDay: DateTime.now(),
+                    child: Column(
+                      children: <Widget>[
+                        TableCalendar<Event>(
+                          locale: 'en_US',
+                          firstDay: kFirstDay,
+                          lastDay: kLastDay,
+                          focusedDay: _focusedDay,
+                          selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+                          calendarFormat: _calendarFormat,
+                          eventLoader: _getEventsForDay,
+                          startingDayOfWeek: StartingDayOfWeek.monday,
+                          calendarStyle: CalendarStyle(
+                            // Use `CalendarStyle` to customize the UI
+                            outsideDaysVisible: false,
+                          ),
+                          onDaySelected: _onDaySelected,
+                          onFormatChanged: (format) {
+                            if (_calendarFormat != format) {
+                              setState(() {
+                                _calendarFormat = format;
+                              });
+                            }
+                          },
+                          onPageChanged: (focusedDay) {
+                            _focusedDay = focusedDay;
+                          },
+                        ),
+                        Expanded(
+                          child: ValueListenableBuilder<List<Event>>(
+                            valueListenable: _selectedEvents,
+                            builder: (context, value, _) {
+                              return ListView.builder(
+                                itemCount: value.length,
+                                itemBuilder: (context, index) {
+                                  return Container(
+                                    margin: const EdgeInsets.symmetric(
+                                      horizontal: 12.0,
+                                      vertical: 4.0,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(),
+                                      borderRadius: BorderRadius.circular(12.0),
+                                    ),
+                                    child: ListTile(
+                                      onTap: () => print('${value[index]}'),
+                                      title: Text('${value[index]}'),
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
