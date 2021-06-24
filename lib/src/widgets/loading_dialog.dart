@@ -17,14 +17,14 @@ class CustomLoadingDialog {
               borderRadius: BorderRadius.circular(4.0),
             ),
             child: Padding(
-              padding: const EdgeInsets.all(80.0),
+              padding: const EdgeInsets.all(70.0),
               child: Column(
                 children: <Widget>[
                   CircularProgressIndicator(
-                    color: Color.fromRGBO(30, 193, 194, 30),
+                    color: Colors.green,
                   ),
-                  SizedBox(height: 20,),
-                  Text('Loading....', style: GoogleFonts.lato(color: Color.fromRGBO(30, 193, 194, 30), fontSize: 20, fontWeight: FontWeight.w700),)
+                  SizedBox(height: 30,),
+                  Text('Loading....', style: GoogleFonts.lato(color: Colors.green, fontSize: 20, fontWeight: FontWeight.w500),)
                 ],
               ),
             ),

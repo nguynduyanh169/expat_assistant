@@ -1,4 +1,5 @@
 import 'package:expandable_text/expandable_text.dart';
+import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/configs/size_config.dart';
 import 'package:expat_assistant/src/models/event.dart';
 import 'package:flutter/cupertino.dart';
@@ -51,20 +52,27 @@ class _SpecialistDetailsState extends State<SpecialistDetailsScreen> {
     return Scaffold(
       backgroundColor: Color.fromRGBO(245, 244, 244, 2),
       appBar: AppBar(
-        elevation: 1,
-        backgroundColor: Color.fromRGBO(30, 193, 194, 30),
+        bottom: PreferredSize(
+            child: Container(
+              color: Colors.black38,
+              height: 0.25,
+            ),
+            preferredSize: Size.fromHeight(0.25)),
+        elevation: 0.5,
+        iconTheme: IconThemeData(color: Colors.black),
+        backgroundColor: Colors.white,
         toolbarHeight: SizeConfig.blockSizeVertical * 10,
         automaticallyImplyLeading: true,
         centerTitle: true,
         title: Text(
           'Dr. Ho Xuan Cuong',
-          style: GoogleFonts.lato(fontSize: 22),
+          style: GoogleFonts.lato(fontSize: 22, color: Colors.black),
         ),
         actions: [
           IconButton(
               onPressed: () {
                 print('tapped');
-                Navigator.popUntil(context, ModalRoute.withName("/homePage"));
+                Navigator.popUntil(context, ModalRoute.withName(RouteName.HOME_PAGE));
               },
               icon: Icon(CupertinoIcons.home)),
           SizedBox(
@@ -244,22 +252,16 @@ class _SpecialistDetailsState extends State<SpecialistDetailsScreen> {
                           child: ValueListenableBuilder<List<Event>>(
                             valueListenable: _selectedEvents,
                             builder: (context, value, _) {
-                              return ListView.builder(
+                              return GridView.builder(
+                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 3,
+                                ),
                                 itemCount: value.length,
                                 itemBuilder: (context, index) {
-                                  return Container(
-                                    margin: const EdgeInsets.symmetric(
-                                      horizontal: 12.0,
-                                      vertical: 4.0,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      border: Border.all(),
-                                      borderRadius: BorderRadius.circular(12.0),
-                                    ),
-                                    child: ListTile(
-                                      onTap: () => print('${value[index]}'),
-                                      title: Text('${value[index]}'),
-                                    ),
+                                  return FilterChip(
+                                    label: Text('11:00 - 11:30', style: GoogleFonts.lato(),),
+                                    selected: false,
+                                    onSelected: (bool value) {},
                                   );
                                 },
                               );

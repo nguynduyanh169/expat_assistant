@@ -1,6 +1,7 @@
 import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/cubits/authentication_cubit.dart';
 import 'package:expat_assistant/src/models/auth_status.dart';
+import 'package:expat_assistant/src/models/hive_object.dart';
 import 'package:expat_assistant/src/route.dart';
 import 'package:expat_assistant/src/states/authentication_state.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,13 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final appDirectory = await path_provider.getApplicationDocumentsDirectory();
   Hive.init(appDirectory.path);
+  Hive.registerAdapter<LessonLocal>(LessonLocalAdapter());
+  Hive.registerAdapter<ConversationLocal>(ConversationLocalAdapter());
+  Hive.registerAdapter<LessonFileLocal>(LessonFileLocalAdapter());
   await Hive.openBox(HiveBoxName.USER_AUTH);
+  await Hive.openBox(HiveBoxName.LESSON_SRC);
+  await Hive.openBox(HiveBoxName.LESSON);
+  await Hive.openBox(HiveBoxName.CONVERSATION);
   initializeDateFormatting().then((_) => runApp(MyApp()));
 }
 
@@ -24,7 +31,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String initRoute;
+  bool isLoggedIn = false;
 
   @override
   void dispose() {
@@ -36,19 +43,13 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => AuthenticationCubit()..checkLoggedIn(),
-      child: BlocConsumer<AuthenticationCubit, AuthenticationState>(
-        listener: (context, state) {
-          if (state.status.isAuthenticated) {
-            initRoute = RouteName.HOME_PAGE;
-          } else if (state.status.isUnauthenticated) {
-            initRoute = RouteName.LOGIN;
-          }
-        },
+      child: BlocBuilder<AuthenticationCubit, AuthenticationState>(
         builder: (context, state) {
           if (state.status.isAuthenticated) {
-            initRoute = RouteName.HOME_PAGE;
+            print('OK');
+            isLoggedIn = true;
           } else if (state.status.isUnauthenticated) {
-            initRoute = RouteName.LOGIN;
+            isLoggedIn = false;
           }
           return MaterialApp(
             title: 'HCMC expat assistant',
@@ -66,7 +67,7 @@ class _MyAppState extends State<MyApp> {
             ),
             debugShowCheckedModeBanner: false,
             routes: routes,
-            initialRoute: initRoute,
+            initialRoute: isLoggedIn == true ? RouteName.HOME_PAGE : RouteName.LOGIN,
           );
         },
       ),

@@ -263,7 +263,7 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
                     ),
                     Container(
                       padding: EdgeInsets.only(top: SizeConfig.blockSizeHorizontal * 1),
-                      height: SizeConfig.blockSizeVertical * 49.5,
+                      height: SizeConfig.blockSizeVertical * 48.3,
                       child: ListView(
                         children: [
                           RestaurantCard(

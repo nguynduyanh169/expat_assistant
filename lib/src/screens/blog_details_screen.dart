@@ -1,3 +1,4 @@
+import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/configs/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +23,7 @@ class BlogDetailsScreen extends StatelessWidget {
           IconButton(
               onPressed: () {
                 print('tapped');
-                Navigator.popUntil(context, ModalRoute.withName("/homePage"));
+                Navigator.popUntil(context, ModalRoute.withName(RouteName.HOME_PAGE));
               },
               icon: Icon(CupertinoIcons.home)),
           SizedBox(

@@ -1,3 +1,4 @@
+import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/configs/size_config.dart';
 import 'package:expat_assistant/src/cubits/login_cubit.dart';
 import 'package:expat_assistant/src/repositories/user_repository.dart';
@@ -51,7 +52,7 @@ class LoginScreen extends StatelessWidget {
           ));
         }else if(state.status.isSubmissionSuccess){
           Navigator.pop(context);
-          Navigator.pushReplacementNamed(context, '/homePage');
+          Navigator.pushReplacementNamed(context, RouteName.HOME_PAGE);
         }else if(state.status.isSubmissionInProgress){
           CustomLoadingDialog.loadingDialog(context);
         }
@@ -249,13 +250,25 @@ class LoginScreen extends StatelessWidget {
                     ),
                   ),
                   SizedBox(
-                    height: SizeConfig.blockSizeVertical * 3,
+                    height: SizeConfig.blockSizeVertical * 2,
                   ),
                   Container(
-                    child: Text(
-                      "Does not have any account? Sign up",
-                      style: GoogleFonts.lato(
-                          fontWeight: FontWeight.w600, color: Colors.black54),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          "Does not have any account?",
+                          style: GoogleFonts.lato(
+                              fontWeight: FontWeight.w600, color: Colors.black54),
+                        ),
+                        TextButton(
+                            onPressed: (){
+                              Navigator.pushNamed(context, RouteName.SIGN_UP);
+                            },
+                            child: Text('Sign up', style: GoogleFonts.lato(
+                                fontWeight: FontWeight.w600, color: Colors.green),))
+                      ],
                     ),
                   ),
                 ],

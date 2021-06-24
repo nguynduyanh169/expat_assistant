@@ -1,24 +1,37 @@
+import 'dart:io';
+
+import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/configs/size_config.dart';
+import 'package:expat_assistant/src/models/conversation.dart';
+import 'package:expat_assistant/src/models/hive_object.dart';
+import 'package:expat_assistant/src/utils/hive_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive/hive.dart';
 
 class LessonCard extends StatelessWidget {
   final Function vocabularyAction;
   final Function conversationAction;
-
+  final Function downloadConversation;
+  final HiveList conversations;
+  final String title;
+  final String description;
+  final String image;
   const LessonCard(
-      {@required this.vocabularyAction, @required this.conversationAction});
-
+      {@required this.vocabularyAction, @required this.conversationAction,@required this.downloadConversation, @required this.title, @required this.description, @required this.image, @required this.conversations});
+  
   @override
   Widget build(BuildContext context) {
+    HiveUtils _hiveUtils = HiveUtils();
+    String filePath = _hiveUtils.getFilePath(boxName: HiveBoxName.LESSON_SRC, key: image).srcPath;
     SizeConfig().init(context);
     return Container(
       padding: EdgeInsets.only(
           top: SizeConfig.blockSizeVertical * 3,
           bottom: SizeConfig.blockSizeVertical * 2,
-          left: SizeConfig.blockSizeHorizontal * 2,
-          right: SizeConfig.blockSizeHorizontal * 3),
+          left: SizeConfig.blockSizeHorizontal * 1,
+          right: SizeConfig.blockSizeHorizontal * 1),
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(10.0),
@@ -31,13 +44,16 @@ class LessonCard extends StatelessWidget {
           ]),
       child: ExpansionTile(
         leading: Image(
-          image: AssetImage('assets/images/demo_lesson.png'),
+          width: SizeConfig.blockSizeHorizontal * 15,
+          height: SizeConfig.blockSizeVertical * 6,
+          fit: BoxFit.cover,
+          image: FileImage(File(filePath)),
         ),
         title: Text(
-          'Greetings',
+          title,
           style: GoogleFonts.lato(fontSize: 20, fontWeight: FontWeight.bold),
         ),
-        subtitle: Text('24 vocabularies/15 sentences', style: GoogleFonts.lato(),),
+        subtitle: Text(description, style: GoogleFonts.lato(),),
         children: <Widget>[
           Container(
             decoration: BoxDecoration(
@@ -77,12 +93,11 @@ class LessonCard extends StatelessWidget {
               image: AssetImage('assets/images/conversation_icon.png'),
             ),
             title: Text('Conversation', style: GoogleFonts.lato(),),
-            trailing: IconButton(
+            trailing: (conversations == null) || (conversations.length == 0) ? IconButton(
               icon: Icon(CupertinoIcons.square_arrow_down),
-              onPressed: (){
-                print('download');
-              },
-            ),
+              onPressed: downloadConversation,
+            ): Container(width: SizeConfig.blockSizeHorizontal * 10,
+              height: SizeConfig.blockSizeVertical * 10,),
           )
         ],
       ),

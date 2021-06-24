@@ -1,4 +1,5 @@
 import 'package:expandable_text/expandable_text.dart';
+import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/configs/size_config.dart';
 import 'package:expat_assistant/src/widgets/restaurant_card.dart';
 import 'package:flutter/cupertino.dart';
@@ -33,8 +34,7 @@ class _RestaurantByFoodState extends State<RestaurantByFoodScreen> {
         actions: [
           IconButton(
               onPressed: () {
-                print('tapped');
-                Navigator.popUntil(context, ModalRoute.withName("/homePage"));
+                Navigator.popUntil(context, ModalRoute.withName(RouteName.HOME_PAGE));
               },
               icon: Icon(CupertinoIcons.home, color: Colors.black,)),
           SizedBox(

@@ -16,17 +16,24 @@ class _SpecialistsScreenState extends State<SpecialistsScreen> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
-      backgroundColor: Color.fromRGBO(245, 244, 244, 10),
+      backgroundColor: Color.fromRGBO(245, 244, 244, 2),
       appBar: AppBar(
-        elevation: 1,
-        backgroundColor: Color.fromRGBO(30, 193, 194, 30),
+        bottom: PreferredSize(
+            child: Container(
+              color: Colors.black38,
+              height: 0.25,
+            ),
+            preferredSize: Size.fromHeight(0.25)),
+        elevation: 0.5,
+        iconTheme: IconThemeData(color: Colors.black),
+        backgroundColor: Colors.white,
         toolbarHeight: SizeConfig.blockSizeVertical * 10,
         //leadingWidth: SizeConfig.blockSizeHorizontal * 10,
         automaticallyImplyLeading: true,
         //leading: Text('Learn Vietnamese', style: GoogleFonts.ubuntu(fontSize: 22),),
         title: Text(
           'Find your specialist',
-          style: GoogleFonts.lato(fontSize: 22),
+          style: GoogleFonts.lato(fontSize: 22, color: Colors.black),
         ),
         actions: [
           InkWell(
@@ -41,7 +48,7 @@ class _SpecialistsScreenState extends State<SpecialistsScreen> {
       body: Container(
         child: Column(
           children: <Widget>[
-            SizedBox(height: SizeConfig.blockSizeVertical * 3,),
+            SizedBox(height: SizeConfig.blockSizeVertical * 2,),
             Container(
               padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 3),
               child: Row(
@@ -69,7 +76,7 @@ class _SpecialistsScreenState extends State<SpecialistsScreen> {
             ),
             Container(
               height: SizeConfig.blockSizeVertical * 5,
-              padding: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 2, right: SizeConfig.blockSizeHorizontal * 2),
+              padding: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 3, right: SizeConfig.blockSizeHorizontal * 2),
               child: ListView(
                 scrollDirection: Axis.horizontal,
                 children: <Widget>[
@@ -186,7 +193,7 @@ class _SpecialistsScreenState extends State<SpecialistsScreen> {
               padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
               height: SizeConfig.blockSizeVertical * 45,
               child: ListView(
-                padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 2),
+                //padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 2),
                 children: <Widget>[
                   SpecialistCard(
                     action: (){

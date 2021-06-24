@@ -8,6 +8,7 @@ import 'package:expat_assistant/src/screens/utilities_screen.dart';
 import 'package:expat_assistant/src/widgets/FAB_bottom_app_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:line_icons/line_icons.dart';
 
 class HomePage extends StatefulWidget {
@@ -54,23 +55,24 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setEnabledSystemUIOverlays ([]);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: pageCaller(currentIndex),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: new FloatingActionButton(
-        backgroundColor: Color.fromRGBO(64, 201, 162, 30),
+        backgroundColor: Color.fromRGBO(64, 201, 162, 1),
         onPressed: () {
           Navigator.pushNamed(context, RouteName.UTILS);
         },
-        tooltip: 'Utilities',
+        tooltip: 'Services',
         elevation: 0,
         child: new Icon(LineIcons.tools),
       ),
       bottomNavigationBar: FABBottomAppBar(
         notchedShape: CircularNotchedRectangle(
         ),
-        centerItemText: 'Utilities',
+        centerItemText: 'Services',
         //backgroundColor: Color.fromRGBO(30, 193, 194, 30),
         backgroundColor: Colors.white,
         color: Colors.black54,
@@ -83,8 +85,8 @@ class _HomePageState extends State<HomePage> {
             text: 'Home',
             iconData: LineIcons.home,
           ),
-          FABBottomAppBarItem(iconData: LineIcons.hamburger, text: 'Eat'),
-          FABBottomAppBarItem(iconData: LineIcons.calendarAlt, text: 'Play'),
+          FABBottomAppBarItem(iconData: LineIcons.hamburger, text: 'Food'),
+          FABBottomAppBarItem(iconData: LineIcons.calendarAlt, text: 'Event'),
           FABBottomAppBarItem(iconData: LineIcons.user, text: 'Profile')
         ],
       ),

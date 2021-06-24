@@ -2,6 +2,7 @@ import 'package:expat_assistant/src/configs/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:line_icons/line_icons.dart';
 
 class SpecialistCard extends StatelessWidget{
   Function action;
@@ -30,25 +31,86 @@ class SpecialistCard extends StatelessWidget{
               child: Image(
                 fit: BoxFit.cover,
                 width: SizeConfig.blockSizeHorizontal * 18,
-                height: SizeConfig.blockSizeVertical * 8,
+                height: SizeConfig.blockSizeVertical * 10,
                 image: AssetImage('assets/images/demo_expert.jpg'),
               ),
             ),
-            SizedBox(width: SizeConfig.blockSizeHorizontal * 2,),
+            SizedBox(width: SizeConfig.blockSizeHorizontal * 3,),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text('Dr. Xuan Cuong Ho', style: GoogleFonts.lato( fontSize: 18, fontWeight: FontWeight.w700),),
-                Text('Lawyer', style: GoogleFonts.lato(),),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                        child: Text(
+                          'Lawyer',
+                          style: GoogleFonts.lato(fontSize: 12),
+                        )),
+                    SizedBox(
+                      width: SizeConfig.blockSizeHorizontal * 1,
+                    ),
+                    Container(
+                        child: Text(
+                          '.',
+                          style: GoogleFonts.lato(fontSize: 12),
+                        )),
+                    SizedBox(
+                      width: SizeConfig.blockSizeHorizontal * 1,
+                    ),
+                    Container(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Icon(
+                              LineIcons.starAlt,
+                              color: Color.fromRGBO(252, 191, 7, 30),
+                              size: 14,
+                            ),
+                            SizedBox(
+                              width: SizeConfig.blockSizeHorizontal * 1,
+                            ),
+                            Container(
+                                child: Text(
+                                  '4.5',
+                                  style: GoogleFonts.lato(fontSize: 12),
+                                ))
+                          ],
+                        ))
+                  ],
+                ),
                 SizedBox(height: SizeConfig.blockSizeVertical * 0.7,),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Icon(CupertinoIcons.star_fill, color: Colors.yellow, size: 14,),
-                    Icon(CupertinoIcons.star_fill, color: Colors.yellow, size: 14,),
-                    Icon(CupertinoIcons.star_fill, color: Colors.yellow, size: 14,),
-                    Icon(CupertinoIcons.star_fill, color: Colors.yellow, size: 14,),
-                    Icon(CupertinoIcons.star_fill, color: Colors.yellow, size: 14,),
+                    Text(
+                      'Language: ',
+                      style: GoogleFonts.lato( fontSize: 12,
+                          fontWeight: FontWeight.w700),
+                    ),
+                    Text(
+                      'English, Japanese',
+                      style: GoogleFonts.lato(fontSize: 12),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Certificate: ',
+                      style: GoogleFonts.lato(
+                          fontWeight: FontWeight.w700, fontSize: 12),
+                    ),
+                    Text(
+                      'Bachelor Degree of Lawyer',
+                      style: GoogleFonts.lato(fontSize: 12),
+                      overflow: TextOverflow.clip,
+                      maxLines: 1,
+                      softWrap: false,
+                    ),
                   ],
                 ),
               ],

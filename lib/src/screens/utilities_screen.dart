@@ -1,3 +1,4 @@
+import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/configs/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -106,12 +107,13 @@ class UtilitiesScreen extends StatelessWidget {
                               fontWeight: FontWeight.w500,
                               color: Color.fromRGBO(0, 99, 99, 30)),
                         ),
-                        InkWell(
-                          onTap: () {},
-                          child: Text('See more',
-                              style: GoogleFonts.lato(
-                                  color: Color.fromRGBO(30, 193, 194, 30))),
-                        )
+                        TextButton(
+                            onPressed: (){
+                                Navigator.pushNamed(context, RouteName.SPECIALISTS);
+                            },
+                            child: Text('See more',
+                                style: GoogleFonts.lato(
+                                    color: Color.fromRGBO(30, 193, 194, 30))))
                       ],
                     ),
                   ),
@@ -286,8 +288,10 @@ class UtilitiesScreen extends StatelessWidget {
                               fontWeight: FontWeight.w500,
                               color: Color.fromRGBO(0, 99, 99, 30)),
                         ),
-                        InkWell(
-                          onTap: () {},
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, RouteName.VIETNAMESE_LEARN);
+                          },
                           child: Text('See more',
                               style: GoogleFonts.lato(
                                   color: Color.fromRGBO(30, 193, 194, 30))),

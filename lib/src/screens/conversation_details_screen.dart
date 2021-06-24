@@ -1,10 +1,12 @@
 import 'package:bubble/bubble.dart';
 import 'package:expat_assistant/src/configs/size_config.dart';
+import 'package:expat_assistant/src/models/hive_object.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:getwidget/components/button/gf_icon_button.dart';
 import 'package:getwidget/shape/gf_icon_button_shape.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive/hive.dart';
 
 class ConversationDetailScreen extends StatefulWidget{
   _ConversationDetailState createState() => _ConversationDetailState();
@@ -93,11 +95,26 @@ class _ConversationDetailState extends State<ConversationDetailScreen> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
+    final args = ModalRoute.of(context).settings.arguments as ConversationDetailScreenArguments;
+    HiveList conversations = args.conversations;
+    List<ConversationLocal> conversationLocal = [];
+    for(var item in conversations){
+      conversationLocal.add(item);
+    }
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromRGBO(30, 193, 194, 30),
+        bottom: PreferredSize(
+            child: Container(
+              color: Colors.black38,
+              height: 0.25,
+            ),
+            preferredSize: Size.fromHeight(0.25)),
+        elevation: 0.5,
+        backgroundColor: Colors.white,
         toolbarHeight: SizeConfig.blockSizeVertical * 10,
-        title: Text('Conversation of Greetings', style: GoogleFonts.lato(fontSize: 22),),
+        centerTitle: true,
+        iconTheme: IconThemeData(color: Colors.black),
+        title: Text(args.title, style: GoogleFonts.lato(fontSize: 22, color: Colors.black),),
       ),
       body: Container(
         child: Column(
@@ -106,17 +123,24 @@ class _ConversationDetailState extends State<ConversationDetailScreen> {
               child: Image(
                 width: SizeConfig.blockSizeHorizontal * 100,
                 height: SizeConfig.blockSizeVertical * 24,
+                fit: BoxFit.cover,
                 image: AssetImage('assets/images/demo_conversation.png'),
               ),
             ),
             Container(
               height: SizeConfig.blockSizeVertical * 55,
-              child: ListView(
-                children: <Widget>[
-                  _leftBubble(' Hi Jason, Sorry to bother you. I have a question for you.', 'Chào Jason, xin lỗi vì đã làm phiền bạn. Nhưng tôi muốn hỏi bạn một câu.'),
-                  SizedBox(height: SizeConfig.blockSizeVertical * 2,),
-                  _rightBubble('OK, what’s up?', 'Được chứ, có chuyện gì vậy?')
-                ],
+              child: ListView.separated(
+                itemCount: conversationLocal.length,
+                separatorBuilder: (context, index) => SizedBox(
+                  height: SizeConfig.blockSizeVertical * 2,
+                ),
+                itemBuilder: (context, index) {
+                  if(index % 2 == 0){
+                   return _leftBubble(conversationLocal[index].conversation, conversationLocal[index].description);
+                  }else{
+                    return _rightBubble(conversationLocal[index].conversation, conversationLocal[index].description);
+                  }
+                },
               ),
             ),
             SizedBox(
@@ -133,4 +157,11 @@ class _ConversationDetailState extends State<ConversationDetailScreen> {
       ),
     );
   }
+}
+
+class ConversationDetailScreenArguments{
+  final HiveList conversations;
+  final String title;
+  ConversationDetailScreenArguments(this.conversations, this.title);
+
 }
