@@ -21,13 +21,15 @@ class LessonLocalAdapter extends TypeAdapter<LessonLocal> {
       fields[1] as String,
       fields[2] as String,
       fields[3] as String,
-    )..conversations = (fields[4] as HiveList)?.castHiveList();
+    )
+      ..conversations = (fields[4] as HiveList)?.castHiveList()
+      ..vocabularies = (fields[5] as HiveList)?.castHiveList();
   }
 
   @override
   void write(BinaryWriter writer, LessonLocal obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -37,7 +39,9 @@ class LessonLocalAdapter extends TypeAdapter<LessonLocal> {
       ..writeByte(3)
       ..write(obj.imageLink)
       ..writeByte(4)
-      ..write(obj.conversations);
+      ..write(obj.conversations)
+      ..writeByte(5)
+      ..write(obj.vocabularies);
   }
 
   @override
@@ -130,6 +134,52 @@ class ConversationLocalAdapter extends TypeAdapter<ConversationLocal> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is ConversationLocalAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class VocabularyLocalAdapter extends TypeAdapter<VocabularyLocal> {
+  @override
+  final int typeId = 3;
+
+  @override
+  VocabularyLocal read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return VocabularyLocal(
+      fields[0] as int,
+      fields[1] as String,
+      fields[2] as String,
+      fields[3] as String,
+      fields[4] as String,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, VocabularyLocal obj) {
+    writer
+      ..writeByte(5)
+      ..writeByte(0)
+      ..write(obj.id)
+      ..writeByte(1)
+      ..write(obj.vocabulary)
+      ..writeByte(2)
+      ..write(obj.description)
+      ..writeByte(3)
+      ..write(obj.imageLink)
+      ..writeByte(4)
+      ..write(obj.voiceLink);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is VocabularyLocalAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

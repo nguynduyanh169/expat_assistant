@@ -1,19 +1,25 @@
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:bubble/bubble.dart';
+import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/configs/size_config.dart';
 import 'package:expat_assistant/src/models/hive_object.dart';
+import 'package:expat_assistant/src/utils/hive_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:getwidget/components/button/gf_icon_button.dart';
 import 'package:getwidget/shape/gf_icon_button_shape.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
+import 'package:ionicons/ionicons.dart';
 
 class ConversationDetailScreen extends StatefulWidget{
   _ConversationDetailState createState() => _ConversationDetailState();
 }
 
 class _ConversationDetailState extends State<ConversationDetailScreen> {
-  Widget _leftBubble(String vietnamese, String english){
+  final assetsAudioPlayer = AssetsAudioPlayer();
+  HiveUtils _hiveUtils = HiveUtils();
+  Widget _leftBubble(String vietnamese, String english, String voiceLink){
     return Row(
       children: [
         Bubble(
@@ -33,32 +39,27 @@ class _ConversationDetailState extends State<ConversationDetailScreen> {
             ),
           ),
         ),
-        // CircleAvatar(
-        //   backgroundColor: Color.fromRGBO(30, 193, 194, 30),
-        //   radius: 20,
-        //   child: IconButton(
-        //     padding: EdgeInsets.zero,
-        //     icon: Icon(CupertinoIcons.play_arrow_solid),
-        //     color: Colors.white,
-        //     onPressed: () {
-        //       print("play");
-        //     },
-        //   ),
-        // ),
         GFIconButton(
           padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 3),
           onPressed: (){
-            print('hear');
+            if(voiceLink != null){
+              String filePath = _hiveUtils
+                  .getFilePath(boxName: HiveBoxName.LESSON_SRC, key: voiceLink)
+                  .srcPath;
+              assetsAudioPlayer.open(
+                Audio.file(filePath),
+              );
+            }
           },
-          color: Color.fromRGBO(30, 193, 194, 30),
-          icon: Icon(CupertinoIcons.ear),
+          color: AppColors.MAIN_COLOR,
+          icon: Icon(Ionicons.volume_medium_outline),
           shape: GFIconButtonShape.circle,
         )
       ],
     );
   }
 
-  Widget _rightBubble(String vietnamese, String english){
+  Widget _rightBubble(String vietnamese, String english, String voiceLink){
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisAlignment: MainAxisAlignment.end,
@@ -66,10 +67,17 @@ class _ConversationDetailState extends State<ConversationDetailScreen> {
         GFIconButton(
           padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 3),
           onPressed: (){
-            print('hear');
+            if(voiceLink != null){
+              String filePath = _hiveUtils
+                  .getFilePath(boxName: HiveBoxName.LESSON_SRC, key: voiceLink)
+                  .srcPath;
+              assetsAudioPlayer.open(
+                Audio.file(filePath),
+              );
+            }
           },
-          color: Color.fromRGBO(30, 193, 194, 30),
-          icon: Icon(CupertinoIcons.ear),
+          color: AppColors.MAIN_COLOR,
+          icon: Icon(Ionicons.volume_medium_outline),
           shape: GFIconButtonShape.circle,
         ),
         Bubble(
@@ -96,11 +104,7 @@ class _ConversationDetailState extends State<ConversationDetailScreen> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     final args = ModalRoute.of(context).settings.arguments as ConversationDetailScreenArguments;
-    HiveList conversations = args.conversations;
-    List<ConversationLocal> conversationLocal = [];
-    for(var item in conversations){
-      conversationLocal.add(item);
-    }
+    List<ConversationLocal> conversationLocal = args.conversations;
     return Scaffold(
       appBar: AppBar(
         bottom: PreferredSize(
@@ -128,7 +132,7 @@ class _ConversationDetailState extends State<ConversationDetailScreen> {
               ),
             ),
             Container(
-              height: SizeConfig.blockSizeVertical * 55,
+              height: SizeConfig.blockSizeVertical * 57,
               child: ListView.separated(
                 itemCount: conversationLocal.length,
                 separatorBuilder: (context, index) => SizedBox(
@@ -136,22 +140,47 @@ class _ConversationDetailState extends State<ConversationDetailScreen> {
                 ),
                 itemBuilder: (context, index) {
                   if(index % 2 == 0){
-                   return _leftBubble(conversationLocal[index].conversation, conversationLocal[index].description);
+                   return _leftBubble(conversationLocal[index].conversation, conversationLocal[index].description, conversationLocal[index].voiceLink);
                   }else{
-                    return _rightBubble(conversationLocal[index].conversation, conversationLocal[index].description);
+                    return _rightBubble(conversationLocal[index].conversation, conversationLocal[index].description, conversationLocal[index].voiceLink);
                   }
                 },
               ),
             ),
-            SizedBox(
-              width: SizeConfig.blockSizeHorizontal * 85,
-              child: CupertinoButton(
-                  color: Color.fromRGBO(30, 193, 194, 30),
-                  child: Text("Practice"),
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/practicevocabulary');
-                  }),
-            ),
+            Center(
+              child: Container(
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+                    boxShadow: [
+                      BoxShadow(
+                          color: Colors.black26.withOpacity(0.2),
+                          offset: Offset(0.0, 6.0),
+                          blurRadius: 10.0,
+                          spreadRadius: 0.10)
+                    ]),
+                height: SizeConfig.blockSizeVertical * 9,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Container(
+                      width: SizeConfig.blockSizeHorizontal * 80,
+                      child: ElevatedButton(
+                          style: ButtonStyle(
+                              padding: MaterialStateProperty.all<EdgeInsets>(
+                                  EdgeInsets.all(
+                                      SizeConfig.blockSizeHorizontal * 4)),
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  AppColors.MAIN_COLOR),
+                              textStyle: MaterialStateProperty.all<TextStyle>(
+                                  GoogleFonts.lato(fontSize: 17))),
+                          child: Text("Practice"),
+                          onPressed: () {}),
+                    )
+                  ],
+                ),
+              ),
+            )
           ],
         ),
       ),
@@ -160,8 +189,7 @@ class _ConversationDetailState extends State<ConversationDetailScreen> {
 }
 
 class ConversationDetailScreenArguments{
-  final HiveList conversations;
+  final List<ConversationLocal> conversations;
   final String title;
   ConversationDetailScreenArguments(this.conversations, this.title);
-
 }

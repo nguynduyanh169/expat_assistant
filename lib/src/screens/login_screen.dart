@@ -173,7 +173,7 @@ class LoginScreen extends StatelessWidget {
                                           SizeConfig.blockSizeHorizontal * 4)),
                                   backgroundColor:
                                       MaterialStateProperty.all<Color>(
-                                          Color.fromRGBO(30, 193, 194, 30)),
+                                          AppColors.MAIN_COLOR),
                                   textStyle:
                                       MaterialStateProperty.all<TextStyle>(
                                           GoogleFonts.lato(fontSize: 17))),

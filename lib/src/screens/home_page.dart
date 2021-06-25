@@ -9,6 +9,7 @@ import 'package:expat_assistant/src/widgets/FAB_bottom_app_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:line_icons/line_icons.dart';
 
 class HomePage extends StatefulWidget {
@@ -67,7 +68,7 @@ class _HomePageState extends State<HomePage> {
         },
         tooltip: 'Services',
         elevation: 0,
-        child: new Icon(LineIcons.tools),
+        child: new Icon(Ionicons.file_tray_full_outline),
       ),
       bottomNavigationBar: FABBottomAppBar(
         notchedShape: CircularNotchedRectangle(
@@ -83,11 +84,11 @@ class _HomePageState extends State<HomePage> {
         items: [
           FABBottomAppBarItem(
             text: 'Home',
-            iconData: LineIcons.home,
+            iconData: Ionicons.home_outline,
           ),
-          FABBottomAppBarItem(iconData: LineIcons.hamburger, text: 'Food'),
-          FABBottomAppBarItem(iconData: LineIcons.calendarAlt, text: 'Event'),
-          FABBottomAppBarItem(iconData: LineIcons.user, text: 'Profile')
+          FABBottomAppBarItem(iconData: Ionicons.fast_food_outline, text: 'Food'),
+          FABBottomAppBarItem(iconData: Ionicons.calendar_outline, text: 'Event'),
+          FABBottomAppBarItem(iconData: Ionicons.person_outline, text: 'Profile')
         ],
       ),
       // bottomNavigationBar: BottomNavigationBar(

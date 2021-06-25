@@ -1,4 +1,5 @@
 import 'package:camera_camera/camera_camera.dart';
+import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/configs/size_config.dart';
 import 'package:expat_assistant/src/cubits/restaurants_cubit.dart';
 import 'package:expat_assistant/src/states/restaurants_state.dart';
@@ -89,9 +90,9 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
                             color: Colors.white,
                           ),
                           decoration: BoxDecoration(
-                              color: Color.fromRGBO(30, 193, 194, 30),
+                              color: AppColors.MAIN_COLOR,
                               border: Border.all(
-                                color: Color.fromRGBO(30, 193, 194, 30),
+                                color: AppColors.MAIN_COLOR,
                               ),
                               borderRadius:
                                   BorderRadius.all(Radius.circular(20))),

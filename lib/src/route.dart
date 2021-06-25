@@ -6,6 +6,7 @@ import 'package:expat_assistant/src/screens/channel_screen.dart';
 import 'package:expat_assistant/src/screens/conversation_details_screen.dart';
 import 'package:expat_assistant/src/screens/event_details_screen.dart';
 import 'package:expat_assistant/src/screens/events_screen.dart';
+import 'package:expat_assistant/src/screens/finish_screen.dart';
 import 'package:expat_assistant/src/screens/food_camera_screen.dart';
 import 'package:expat_assistant/src/screens/home_page.dart';
 import 'package:expat_assistant/src/screens/home_screen.dart';
@@ -48,5 +49,6 @@ final routes = {
   RouteName.WALLET: (BuildContext context) => new WalletScreen(),
   RouteName.CHANNEL: (BuildContext context) => new ChannelScreen(),
   RouteName.SIGN_UP: (BuildContext context) => new SignUpScreen(),
+  RouteName.FINISH: (BuildContext context) => new FinishScreen(),
 };
 

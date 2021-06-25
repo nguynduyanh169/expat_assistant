@@ -4,10 +4,13 @@ import 'package:expat_assistant/src/models/hive_object.dart';
 import 'package:expat_assistant/src/models/topic.dart';
 import 'package:expat_assistant/src/repositories/conversation_repository.dart';
 import 'package:expat_assistant/src/repositories/topic_repository.dart';
+import 'package:expat_assistant/src/repositories/vocabulary_repository.dart';
 import 'package:expat_assistant/src/screens/conversation_details_screen.dart';
+import 'package:expat_assistant/src/screens/vocabulary_details_screen.dart';
 import 'package:expat_assistant/src/states/vn_learn_state.dart';
 import 'package:expat_assistant/src/widgets/lesson_card.dart';
 import 'package:expat_assistant/src/widgets/loading.dart';
+import 'package:expat_assistant/src/widgets/loading_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -20,6 +23,7 @@ class VNlearnScreen extends StatefulWidget {
 
 class _VNlearnScreenState extends State<VNlearnScreen> {
   List<LessonLocal> _lessons;
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -53,15 +57,32 @@ class _VNlearnScreenState extends State<VNlearnScreen> {
         centerTitle: true,
       ),
       body: BlocProvider(
-        create: (context) => VNlearnCubit(TopicRepository(), ConversationRepository())..getAllTopic(),
-        child: BlocBuilder<VNlearnCubit, VNlearnState>(
-          builder: (context, state){
-            if(state.status.isLoadFailed){
+        create: (context) => VNlearnCubit(
+            TopicRepository(), ConversationRepository(), VocabularyRepository())
+          ..getAllTopic(),
+        child: BlocConsumer<VNlearnCubit, VNlearnState>(
+          listener: (context, state){
+            if(state.status.isDownloadingVocabulary){
+              CustomLoadingDialog.loadingDialog(context);
+            }else if(state.status.isDownloadVocabularySuccess){
+              Navigator.pop(context);
+            }else if(state.status.isDownloadingConversation) {
+              CustomLoadingDialog.loadingDialog(context);
+            }else if(state.status.isDownloadConversationSuccess){
+              Navigator.pop(context);
+            }
+          },
+          builder: (context, state) {
+            if (state.status.isLoadFailed) {
               return Container();
-            }else if(state.status.isLoading){
+            } else if (state.status.isLoading) {
               return LoadingView(message: 'Loading lessons...');
-            }else{
-              if(state.status.isLoadSuccess) {
+            } else {
+              if (state.status.isLoadSuccess) {
+                print('ok');
+                _lessons = state.lessonLocalList;
+              }
+              if (state.status.isDownloadVocabularySuccess) {
                 _lessons = state.lessonLocalList;
               }
               return Container(
@@ -75,14 +96,76 @@ class _VNlearnScreenState extends State<VNlearnScreen> {
                     title: _lessons[index].name,
                     description: _lessons[index].des,
                     image: _lessons[index].imageLink,
-                    downloadConversation: (){
-                      BlocProvider.of<VNlearnCubit>(context).downloadConversation(_lessons[index].id);
+                    vocabularies: _lessons[index].vocabularies,
+                    downloadConversation: () {
+                      BlocProvider.of<VNlearnCubit>(context)
+                          .downloadConversation(
+                              _lessons[index].id, _lessons[index].name);
+                    },
+                    downloadVocabulary: () {
+                      BlocProvider.of<VNlearnCubit>(context).downloadVocabulary(
+                          _lessons[index].id, _lessons[index].name, context);
                     },
                     vocabularyAction: () {
-                      Navigator.pushNamed(context, '/vocabularyDetails');
+                      if (_lessons[index].vocabularies == null ||
+                          _lessons[index].vocabularies.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(
+                            'Please download data before starting to learn',
+                            style: GoogleFonts.lato(color: Colors.white),
+                            textAlign: TextAlign.center,
+                          ),
+                          duration: const Duration(milliseconds: 1500),
+                          // width: SizeConfig.blockSizeHorizontal * 60,
+                          // Width of the SnackBar.
+                          padding: const EdgeInsets.symmetric(
+                            horizontal:
+                                8.0, // Inner padding for SnackBar content.
+                          ),
+                          backgroundColor: Colors.green,
+                          behavior: SnackBarBehavior.fixed,
+                        ));
+                      } else {
+                        List<VocabularyLocal> vocabularyList = [];
+                        for (var item in _lessons[index].vocabularies) {
+                          vocabularyList.add(item);
+                        }
+                        Navigator.pushNamed(context, '/vocabularyDetails',
+                            arguments: VocabularyDetailsScreenArguments(
+                                title: _lessons[index].name,
+                                vocabularyList: vocabularyList));
+                      }
                     },
-                    conversationAction: (){
-                      Navigator.pushNamed(context, '/conversationDetails', arguments: ConversationDetailScreenArguments(_lessons[index].conversations, _lessons[index].name));
+                    conversationAction: () {
+                      if (_lessons[index].conversations == null ||
+                          _lessons[index].conversations.isEmpty){
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(
+                            'Please download data before starting to learn',
+                            style: GoogleFonts.lato(color: Colors.white),
+                            textAlign: TextAlign.center,
+                          ),
+                          duration: const Duration(milliseconds: 1500),
+                          // width: SizeConfig.blockSizeHorizontal * 60,
+                          // Width of the SnackBar.
+                          padding: const EdgeInsets.symmetric(
+                            horizontal:
+                            8.0, // Inner padding for SnackBar content.
+                          ),
+                          backgroundColor: Colors.green,
+                          behavior: SnackBarBehavior.fixed,
+                        ));
+
+                      }else{
+                        List<ConversationLocal> conversationList = [];
+                        for (var item in _lessons[index].conversations) {
+                          conversationList.add(item);
+                        }
+                        Navigator.pushNamed(context, '/conversationDetails',
+                            arguments: ConversationDetailScreenArguments(
+                            conversationList,
+                            _lessons[index].name));
+                      }
                     },
                     conversations: _lessons[index].conversations,
                   ),

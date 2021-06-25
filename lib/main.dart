@@ -18,10 +18,12 @@ void main() async {
   Hive.registerAdapter<LessonLocal>(LessonLocalAdapter());
   Hive.registerAdapter<ConversationLocal>(ConversationLocalAdapter());
   Hive.registerAdapter<LessonFileLocal>(LessonFileLocalAdapter());
+  Hive.registerAdapter<VocabularyLocal>(VocabularyLocalAdapter());
   await Hive.openBox(HiveBoxName.USER_AUTH);
   await Hive.openBox(HiveBoxName.LESSON_SRC);
   await Hive.openBox(HiveBoxName.LESSON);
   await Hive.openBox(HiveBoxName.CONVERSATION);
+  await Hive.openBox(HiveBoxName.VOCABULARY);
   initializeDateFormatting().then((_) => runApp(MyApp()));
 }
 

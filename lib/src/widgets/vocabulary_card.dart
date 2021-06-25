@@ -1,15 +1,30 @@
+import 'dart:io';
+
+import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/configs/size_config.dart';
+import 'package:expat_assistant/src/utils/hive_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:getwidget/components/button/gf_icon_button.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:line_icons/line_icons.dart';
+import 'package:ionicons/ionicons.dart';
 
 class VocabularyCard extends StatelessWidget{
+  final String vietnamese, english, imageLink;
+  final Function playAudio;
+
+  VocabularyCard({@required this.vietnamese, @required this.english, this.imageLink, this.playAudio});
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
+    HiveUtils _hiveUtils = HiveUtils();
+    String filePath;
+    if(imageLink != null) {
+      filePath = _hiveUtils
+          .getFilePath(boxName: HiveBoxName.LESSON_SRC, key: imageLink)
+          .srcPath;
+    }
     return Container(
       padding: EdgeInsets.only(
           top: SizeConfig.blockSizeVertical * 3,
@@ -30,29 +45,16 @@ class VocabularyCard extends StatelessWidget{
         leading: Image(
           width: SizeConfig.blockSizeHorizontal * 15,
           height: SizeConfig.blockSizeVertical * 15,
-          image: AssetImage('assets/images/demo_vocabulary.png'),
+          fit: BoxFit.cover,
+          image: imageLink == null ? AssetImage('assets/images/demo_vocabulary.png') : FileImage(File(filePath)),
         ),
-        title: Text('Discuss', style: GoogleFonts.lato(fontSize: 25, fontWeight: FontWeight.w600),),
-        subtitle: Text('Thảo luận', style: GoogleFonts.lato(fontSize: 18)),
-        // trailing: CircleAvatar(
-        //   backgroundColor: Color.fromRGBO(30, 193, 194, 30),
-        //   radius: 25,
-        //   child: IconButton(
-        //     padding: EdgeInsets.zero,
-        //     icon: Icon(CupertinoIcons.ear),
-        //     color: Colors.white,
-        //     onPressed: () {
-        //       print("play");
-        //     },
-        //   ),
-        // ),
+        title: Text(vietnamese, style: GoogleFonts.lato(fontSize: 25, fontWeight: FontWeight.w600),),
+        subtitle: Text(english, style: GoogleFonts.lato(fontSize: 15)),
         trailing: GFIconButton(
           padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 3),
-          onPressed: (){
-            print('hear');
-          },
-          color: Color.fromRGBO(30, 193, 194, 30),
-          icon: Icon(CupertinoIcons.ear),
+          onPressed: playAudio,
+          color: AppColors.MAIN_COLOR,
+          icon: Icon(Ionicons.volume_medium_outline),
           shape: GFIconButtonShape.circle,
         ),
       ),

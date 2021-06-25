@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:expat_assistant/src/screens/home_screen.dart';
 
 class RouteName {
@@ -24,6 +26,7 @@ class RouteName {
   static const PRACTICE_VOCABULARY = "/practiceVocabulary";
   static const MAP = "/map";
   static const FOOD_CAMERA = "/foodCamera";
+  static const FINISH = "/finish";
 }
 
 class ApiName {
@@ -40,4 +43,8 @@ class HiveBoxName{
   static const LESSON_SRC = "LessonSrc";
   static const CONVERSATION = "Conversation";
   static const VOCABULARY = "Vocabulary";
+}
+
+class AppColors{
+  static const Color MAIN_COLOR = Color.fromRGBO(64, 201, 162, 1);
 }

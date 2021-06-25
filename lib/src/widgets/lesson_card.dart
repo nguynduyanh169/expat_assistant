@@ -14,12 +14,14 @@ class LessonCard extends StatelessWidget {
   final Function vocabularyAction;
   final Function conversationAction;
   final Function downloadConversation;
+  final Function downloadVocabulary;
   final HiveList conversations;
+  final HiveList vocabularies;
   final String title;
   final String description;
   final String image;
   const LessonCard(
-      {@required this.vocabularyAction, @required this.conversationAction,@required this.downloadConversation, @required this.title, @required this.description, @required this.image, @required this.conversations});
+      {@required this.vocabularyAction, @required this.conversationAction,@required this.downloadConversation, @required this.title, @required this.description, @required this.image, @required this.conversations, @required this.downloadVocabulary, @required this.vocabularies});
   
   @override
   Widget build(BuildContext context) {
@@ -77,12 +79,11 @@ class LessonCard extends StatelessWidget {
                 image: AssetImage('assets/images/vocabulary_icon.png'),
               ),
               title: Text('Vocabulary', style: GoogleFonts.lato(),),
-              trailing: IconButton(
+              trailing: (vocabularies == null) || (vocabularies.length == 0) ? IconButton(
                 icon: Icon(CupertinoIcons.square_arrow_down),
-                onPressed: (){
-                  print('download');
-                },
-              ),
+                onPressed: downloadVocabulary,
+              ): Container(width: SizeConfig.blockSizeHorizontal * 10,
+                height: SizeConfig.blockSizeVertical * 10,),
             ),
           ),
           ListTile(

@@ -90,12 +90,26 @@ class HiveUtils {
     LessonLocal lesson = lessons.get(lessonKey);
     lesson.conversations = HiveList(conversations);
     lesson.conversations.addAll(list);
+    lessons.delete(lessonKey);
+    lessons.put(lessonKey, lesson);
   }
+
 
   ConversationLocal getConversation({@required String boxName, @required String key}){
     final openBox = Hive.box(boxName);
     ConversationLocal conversationLocal = openBox.get(key);
     return conversationLocal;
+  }
+
+  addVocabulary({@required String vocabularyBox, @required String lessonBox, @required List<VocabularyLocal> list, @required int lessonKey}){
+    var vocabularies = Hive.box(vocabularyBox);
+    vocabularies.addAll(list);
+    var lessons = Hive.box(lessonBox);
+    LessonLocal lesson = lessons.get(lessonKey);
+    lesson.vocabularies = HiveList(vocabularies);
+    lesson.vocabularies.addAll(list);
+    lessons.delete(lessonKey);
+    lessons.put(lessonKey, lesson);
   }
 
 }

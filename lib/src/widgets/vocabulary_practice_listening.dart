@@ -1,40 +1,49 @@
 import 'dart:typed_data';
 
+import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/configs/size_config.dart';
 import 'package:expat_assistant/src/cubits/vocabulary_practice_listening_cubit.dart';
 import 'package:expat_assistant/src/models/character_description.dart';
+import 'package:expat_assistant/src/models/hive_object.dart';
 import 'package:expat_assistant/src/states/vocabulary_practice_listening_state.dart';
+import 'package:expat_assistant/src/utils/hive_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sound/public/flutter_sound_player.dart';
 import 'package:flutter_sound/public/tau.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:sweetsheet/sweetsheet.dart';
 
 // ignore: must_be_immutable
 class VocabularyPracticeListening extends StatefulWidget {
-  String vietnamese, english;
+  VocabularyLocal vocabulary;
+  Function openSpeaking;
+  BuildContext upperContext;
 
   VocabularyPracticeListening(
-      {@required this.vietnamese, @required this.english});
+      {@required this.vocabulary, @required this.openSpeaking, @required this.upperContext});
 
   _VocabularyPracticeListeningState createState() =>
-      _VocabularyPracticeListeningState(vietnamese, english);
+      _VocabularyPracticeListeningState(vocabulary, openSpeaking, upperContext);
 }
 
 class _VocabularyPracticeListeningState
     extends State<VocabularyPracticeListening> {
-  String _vietnamese, _english, _learnerAns = "";
+  VocabularyLocal _vocabulary;
+  Function openSpeaking;
+  BuildContext upperContext;
+  String _learnerAns = "";
   List<CharacterDescription> chars = [];
   final SweetSheet _sweetSheet = SweetSheet();
   FlutterSoundPlayer _mPlayer = FlutterSoundPlayer();
+  HiveUtils _hiveUtils = HiveUtils();
   bool _mPlayerIsInit = false;
   Icon soundIcon = Icon(CupertinoIcons.play_arrow_solid);
   String soundText = "Tap to listen";
 
-  _VocabularyPracticeListeningState(this._vietnamese, this._english);
+  _VocabularyPracticeListeningState(this._vocabulary, this.openSpeaking, this.upperContext);
 
   Widget _character(
       {@required CharacterDescription characterDescription,
@@ -52,7 +61,7 @@ class _VocabularyPracticeListeningState
         child: Center(
           child: Text(
             characterDescription.char,
-            style: GoogleFonts.raleway(
+            style: GoogleFonts.lato(
                 color: characterDescription.fontColor,
                 fontWeight: FontWeight.w600,
                 fontSize: 20),
@@ -86,14 +95,13 @@ class _VocabularyPracticeListeningState
   }
 
   void playAudio() async {
-    Uint8List dataBuffer = (await rootBundle.load('assets/test/demo_sound.mp3'))
-        .buffer
-        .asUint8List();
-    await _mPlayer
-        .startPlayer(
-      fromDataBuffer: dataBuffer,
-      codec: Codec.mp3,
-    );
+    print(_hiveUtils.getFilePath(boxName: HiveBoxName.LESSON_SRC, key: _vocabulary.voiceLink).srcPath);
+    await _mPlayer.startPlayer(
+        fromURI: _hiveUtils.getFilePath(boxName: HiveBoxName.LESSON_SRC, key: _vocabulary.voiceLink).srcPath,
+        codec: Codec.mp3,
+        whenFinished: () {
+          setState(() {});
+        });
   }
 
   getPlaybackFn() {
@@ -104,11 +112,17 @@ class _VocabularyPracticeListeningState
   }
 
   @override
+  void dispose() {
+    closeAudioSession();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return BlocProvider(
       create: (context) =>
-          VocabularyPracticeListeningCubit()..loadCharacters(_vietnamese),
+          VocabularyPracticeListeningCubit()..loadCharacters(_vocabulary.vocabulary),
       child: BlocConsumer<VocabularyPracticeListeningCubit,
           VocabularyPracticeListeningState>(
         listener: (context, state) {
@@ -125,13 +139,14 @@ class _VocabularyPracticeListeningState
             _sweetSheet.show(
               isDismissible: false,
               context: context,
-              title: Text("Correct"),
-              description: Text('${_vietnamese.toUpperCase()}' +
-                  '\nEnglish meaning: $_english'),
+              title: Text("Correct", style: GoogleFonts.lato(),),
+              description: Text('${_vocabulary.vocabulary.toUpperCase()}' +
+                  '\nEnglish meaning: ${_vocabulary.description}',style: GoogleFonts.lato()),
               color: SweetSheetColor.SUCCESS,
               icon: CupertinoIcons.check_mark_circled_solid,
               positive: SweetSheetAction(
                 onPressed: () {
+                  openSpeaking(upperContext);
                   Navigator.of(context).pop();
                 },
                 title: 'NEXT',
@@ -142,15 +157,15 @@ class _VocabularyPracticeListeningState
             _sweetSheet.show(
               isDismissible: false,
               context: context,
-              title: Text("Incorrect"),
-              description: Text('${_vietnamese.toUpperCase()}' +
-                  '\nEnglish meaning: $_english'),
+              title: Text("Incorrect", style: GoogleFonts.lato()),
+              description: Text('${_vocabulary.vocabulary.toUpperCase()}' +
+                  '\nEnglish meaning: ${_vocabulary.description}', style: GoogleFonts.lato()),
               color: SweetSheetColor.DANGER,
               icon: CupertinoIcons.xmark_circle_fill,
               positive: SweetSheetAction(
                 onPressed: () {
                   BlocProvider.of<VocabularyPracticeListeningCubit>(context)
-                      .loadCharacters(_vietnamese);
+                      .loadCharacters(_vocabulary.vocabulary);
                   Navigator.of(context).pop();
                 },
                 title: 'DO AGAIN',
@@ -192,7 +207,7 @@ class _VocabularyPracticeListeningState
                 children: <Widget>[
                   Text(
                     'Listen and correct the vocabulary',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    style: GoogleFonts.lato(fontSize: 20, fontWeight: FontWeight.bold,),
                   ),
                   SizedBox(
                     height: SizeConfig.blockSizeVertical * 5,
@@ -200,11 +215,11 @@ class _VocabularyPracticeListeningState
                   Row(
                     children: <Widget>[
                       CircleAvatar(
-                        backgroundColor: Color.fromRGBO(30, 193, 194, 30),
+                        backgroundColor: AppColors.MAIN_COLOR,
                         radius: 25,
                         child: IconButton(
                           padding: EdgeInsets.zero,
-                          icon: _mPlayer.isPlaying ? Icon(CupertinoIcons.stop_fill) : Icon(CupertinoIcons.play_arrow_solid),
+                          icon: _mPlayer.isPlaying ? Icon(CupertinoIcons.stop_fill) : Icon(Ionicons.volume_medium_outline),
                           color: Colors.white,
                           onPressed: () {
                             getPlaybackFn();
@@ -225,11 +240,11 @@ class _VocabularyPracticeListeningState
                         onTap: () {
                           BlocProvider.of<VocabularyPracticeListeningCubit>(
                                   context)
-                              .loadCharacters(_vietnamese);
+                              .loadCharacters(_vocabulary.vocabulary);
                         },
                         child: Container(
                           decoration: BoxDecoration(
-                            color: Color.fromRGBO(30, 193, 194, 30),
+                            color: AppColors.MAIN_COLOR,
                             borderRadius: BorderRadius.circular(10.0),
                             //borderSide: new BorderSide(color: Colors.black12)
                           ),
@@ -238,7 +253,7 @@ class _VocabularyPracticeListeningState
                           child: Center(
                             child: Text(
                               'Reset',
-                              style: TextStyle(color: Colors.white),
+                              style: GoogleFonts.lato(color: Colors.white),
                             ),
                           ),
                         ),
@@ -261,7 +276,7 @@ class _VocabularyPracticeListeningState
                             EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
                         child: Text(
                           _learnerAns,
-                          style: GoogleFonts.raleway(
+                          style: GoogleFonts.lato(
                               color: Colors.black,
                               fontWeight: FontWeight.w600,
                               fontSize: 25),
@@ -292,16 +307,24 @@ class _VocabularyPracticeListeningState
                   Center(
                     child: Container(
                       width: SizeConfig.blockSizeHorizontal * 85,
-                      child: CupertinoButton(
-                          color: Color.fromRGBO(30, 193, 194, 30),
+                      child: ElevatedButton(
+                          style: ButtonStyle(
+                              padding: MaterialStateProperty
+                                  .all<EdgeInsets>(EdgeInsets.all(
+                                  SizeConfig.blockSizeHorizontal * 4)),
+                              backgroundColor:
+                              MaterialStateProperty.all<Color>(
+                                  AppColors.MAIN_COLOR),
+                              textStyle:
+                              MaterialStateProperty.all<TextStyle>(
+                                  GoogleFonts.lato(fontSize: 17))),
+                          //: Color.fromRGBO(30, 193, 194, 30),
                           child: Text("Check"),
                           onPressed: () {
-                            BlocProvider.of<VocabularyPracticeListeningCubit>(
-                                    context)
-                                .checkAnswer(_learnerAns, _vietnamese);
+                            openSpeaking(upperContext);
                           }),
                     ),
-                  ),
+                  )
                 ],
               ),
             );

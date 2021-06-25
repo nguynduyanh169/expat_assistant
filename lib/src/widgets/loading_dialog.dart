@@ -1,3 +1,4 @@
+import 'package:expat_assistant/src/widgets/color_loader.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -10,20 +11,20 @@ class CustomLoadingDialog {
       builder: (context) => Container(
         child: Center(
           child: Container(
-            width: 250.0,
-            height: 250.0,
+            width: 260.0,
+            height: 100.0,
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(4.0),
+              borderRadius: BorderRadius.circular(10.0),
             ),
             child: Padding(
-              padding: const EdgeInsets.all(70.0),
-              child: Column(
+              padding: const EdgeInsets.only(left: 30, right: 40, top: 20, bottom: 20),
+              child: Row(
                 children: <Widget>[
-                  CircularProgressIndicator(
-                    color: Colors.green,
+                  ColorLoader3(
+                    radius: 15.0,
+                    dotRadius: 5.0,
                   ),
-                  SizedBox(height: 30,),
                   Text('Loading....', style: GoogleFonts.lato(color: Colors.green, fontSize: 20, fontWeight: FontWeight.w500),)
                 ],
               ),
