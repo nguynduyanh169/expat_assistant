@@ -1,7 +1,5 @@
 import 'dart:ui';
 
-import 'package:expat_assistant/src/screens/home_screen.dart';
-
 class RouteName {
   static const RESTAURANTS_BY_FOOD = "/restaurantsFood";
   static const SPECIALISTS = "/specialists";
@@ -24,9 +22,11 @@ class RouteName {
   static const CONVERSATION_DETAILS = "/conversationDetails";
   static const VOCABULARY_DETAILS = "/vocabularyDetails";
   static const PRACTICE_VOCABULARY = "/practiceVocabulary";
+  static const PRACTICE_CONVERSATION = "/practiceConversation";
   static const MAP = "/map";
   static const FOOD_CAMERA = "/foodCamera";
   static const FINISH = "/finish";
+  static const FINISH_CONVERSATION = "/finishConversation";
 }
 
 class ApiName {

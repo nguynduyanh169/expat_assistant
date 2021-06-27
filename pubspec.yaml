@@ -99,6 +99,8 @@ flutter:
     - assets/images/google_white_logo.png
     - assets/images/facebook_white_logo.png
     - assets/images/profile.png
+    - assets/images/folder.png
+    - assets/images/oops.png
     - assets/images/conversation_icon.png
     - assets/images/vocabulary_icon.png
     - assets/images/utilities_banner.jpg

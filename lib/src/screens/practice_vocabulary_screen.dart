@@ -24,10 +24,6 @@ class _PracticeVocabularyState extends State<PracticeVocabularyScreen> {
     BlocProvider.of<PracticeVocabularyCubit>(context).practiceListening(index);
   }
 
-  void openWriting(BuildContext context) {
-
-  }
-
   void openSpeaking(BuildContext context) {
     BlocProvider.of<PracticeVocabularyCubit>(context).practiceSpeaking(index);
   }
@@ -37,63 +33,70 @@ class _PracticeVocabularyState extends State<PracticeVocabularyScreen> {
     final args = ModalRoute.of(context).settings.arguments
         as PracticeVocabularyScreenArguments;
     return BlocProvider(
-      create: (context) => PracticeVocabularyCubit()..practiceWriting(index, args.vocabularyList.length),
+      create: (context) => PracticeVocabularyCubit()
+        ..practiceWriting(index, args.vocabularyList.length),
       child: Scaffold(
         body: SingleChildScrollView(
           child: Container(
               child: Column(
             children: <Widget>[
-              Container(
-                padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 3),
-                child: Row(
-                  children: [
-                    IconButton(
-                        icon: Icon(Icons.close),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        }),
-                    Container(
-                      width: SizeConfig.blockSizeHorizontal * 65,
-                      height: SizeConfig.blockSizeVertical * 1.5,
-                      child: StepProgressIndicator(
-                          totalSteps: 20,
-                          currentStep: 15,
-                          size: 10,
-                          padding: 0,
-                          selectedColor: AppColors.MAIN_COLOR,
-                          unselectedColor: Colors.grey,
-                          roundedEdges: Radius.circular(10.0)),
-                    ),
-                    SizedBox(
-                      width: SizeConfig.blockSizeHorizontal * 2,
-                    ),
-                    Text(
-                      '15/20',
-                      style: GoogleFonts.lato(),
-                    )
-                  ],
-                ),
-              ),
+              BlocBuilder<PracticeVocabularyCubit, PracticeVocabularyState>(
+                  buildWhen: (previous, current) {
+                return previous.index != current.index;
+              }, builder: (context, state) {
+                if (state.status.isPracticeWriting) {
+                  index = state.index;
+                }
+                return Container(
+                  padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 3),
+                  child: Row(
+                    children: [
+                      IconButton(
+                          icon: Icon(Icons.close),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          }),
+                      Container(
+                        width: SizeConfig.blockSizeHorizontal * 65,
+                        height: SizeConfig.blockSizeVertical * 1.5,
+                        child: StepProgressIndicator(
+                            totalSteps: args.vocabularyList.length,
+                            currentStep: index,
+                            size: 10,
+                            padding: 0,
+                            selectedColor: AppColors.MAIN_COLOR,
+                            unselectedColor: Colors.grey,
+                            roundedEdges: Radius.circular(10.0)),
+                      ),
+                      SizedBox(
+                        width: SizeConfig.blockSizeHorizontal * 2,
+                      ),
+                      Text(
+                        '$index/${args.vocabularyList.length}',
+                        style: GoogleFonts.lato(),
+                      )
+                    ],
+                  ),
+                );
+              }),
               SizedBox(
                 height: SizeConfig.blockSizeVertical * 5,
               ),
-              // //VocabularyPracticeWriting(vietnamese: 'Thảo luận', english: 'Discuss',)
-              // //VocabularyPracticeListening(vietnamese: 'Tổng công ty', english: 'Company',)
-              // VocabularyPracticeSpeaking(vietnamese: 'Tổng công ty', english: 'Company')
               BlocConsumer<PracticeVocabularyCubit, PracticeVocabularyState>(
-                listener: (context, state){
-                  if(state.status.isPracticeDone){
-                    Navigator.pushNamed(context, RouteName.FINISH, arguments: FinishScreenArugments(args.vocabularyList.length));
-                  }
-                },
-                  builder: (context, state) {
+                  listener: (context, state) {
+                if (state.status.isPracticeDone) {
+                  Navigator.pushNamed(context, RouteName.FINISH,
+                      arguments:
+                          FinishScreenArugments(args.vocabularyList.length));
+                }
+              }, builder: (context, state) {
                 if (state.status.isPracticeListening) {
                   index = state.index;
                   return VocabularyPracticeListening(
-                        vocabulary: args.vocabularyList[index],
-                        upperContext: context,
+                    vocabulary: args.vocabularyList[index],
+                    upperContext: context,
                     openSpeaking: openSpeaking,
-                      );
+                  );
                 } else if (state.status.isPracticeWriting) {
                   index = state.index;
                   return VocabularyPracticeWriting(
@@ -105,11 +108,12 @@ class _PracticeVocabularyState extends State<PracticeVocabularyScreen> {
                   index = state.index;
                   return VocabularyPracticeSpeaking(
                     vocabulary: args.vocabularyList[index],
-                    openWriting: (){
+                    openWriting: () {
                       BlocProvider.of<PracticeVocabularyCubit>(context)
-                          .practiceWriting(index + 1, args.vocabularyList.length);
+                          .practiceWriting(
+                              index + 1, args.vocabularyList.length);
                     },
-                      );
+                  );
                 }
               })
             ],

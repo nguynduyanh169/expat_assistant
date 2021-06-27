@@ -1,10 +1,11 @@
 import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/configs/size_config.dart';
-import 'package:expat_assistant/src/cubits/vocabulary_practice_speaking_cubit.dart';
+import 'package:expat_assistant/src/cubits/conversation_practice_listening_cubit.dart';
+import 'package:expat_assistant/src/cubits/conversation_practice_speaking_cubit.dart';
 import 'package:expat_assistant/src/models/hive_object.dart';
-import 'package:expat_assistant/src/states/vocabulary_practice_speaking_state.dart';
+import 'package:expat_assistant/src/states/conversation_practice_speaking_state.dart';
 import 'package:expat_assistant/src/utils/hive_utils.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sound/public/flutter_sound_player.dart';
@@ -13,27 +14,25 @@ import 'package:getwidget/components/button/gf_icon_button.dart';
 import 'package:getwidget/shape/gf_icon_button_shape.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:permission_handler/permission_handler.dart';
 
 // ignore: must_be_immutable
-class VocabularyPracticeSpeaking extends StatefulWidget {
-  VocabularyLocal vocabulary;
-  Function openWriting;
+class ConversationPracticeSpeaking extends StatefulWidget {
+  ConversationLocal conversation;
+  Function openListening;
 
-  VocabularyPracticeSpeaking(
-      {@required this.vocabulary, @required this.openWriting});
-
-  _VocabularyPracticeSpeakingState createState() =>
-      _VocabularyPracticeSpeakingState(vocabulary, openWriting);
+  ConversationPracticeSpeaking(
+      {@required this.conversation, @required this.openListening});
+  _ConversationPracticeSpeakingState createState() =>
+      _ConversationPracticeSpeakingState(conversation, openListening);
 }
 
-class _VocabularyPracticeSpeakingState
-    extends State<VocabularyPracticeSpeaking> {
+class _ConversationPracticeSpeakingState
+    extends State<ConversationPracticeSpeaking> {
   static final String FILE_RECORD = 'voice_record.acc';
   HiveUtils _hiveUtils = HiveUtils();
-  VocabularyLocal vocabulary;
-  Function openWriting;
+  ConversationLocal conversation;
+  Function openListening;
   FlutterSoundPlayer _mPlayer = FlutterSoundPlayer();
   FlutterSoundRecorder _mRecorder = FlutterSoundRecorder();
   bool _mPlayerIsInit = false;
@@ -44,9 +43,10 @@ class _VocabularyPracticeSpeakingState
     size: 28,
     color: Colors.white,
   );
+
   String recordText = 'Please record your voice';
 
-  _VocabularyPracticeSpeakingState(this.vocabulary, this.openWriting);
+  _ConversationPracticeSpeakingState(this.conversation, this.openListening);
 
   Future<void> openTheRecorder() async {
     if (!kIsWeb) {
@@ -98,10 +98,7 @@ class _VocabularyPracticeSpeakingState
   }
 
   void play(String filePath) {
-    assert(_mPlayerIsInit &&
-        _mPlayBackReady &&
-        _mRecorder.isStopped &&
-        _mPlayer.isStopped);
+    assert(_mPlayerIsInit);
     _mPlayer.startPlayer(
         fromURI: filePath,
         whenFinished: () {
@@ -122,6 +119,13 @@ class _VocabularyPracticeSpeakingState
     return _mPlayer.isStopped ? play(filePath) : stopPlayer();
   }
 
+  getPlaybachForConversation(String filePath){
+     if (!_mPlayerIsInit) {
+      return null;
+    }
+    return _mPlayer.isStopped ? play(filePath) : stopPlayer();
+  }
+
   @override
   void dispose() {
     _mPlayer.closeAudioSession();
@@ -135,11 +139,11 @@ class _VocabularyPracticeSpeakingState
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return BlocProvider(
-      create: (context) => VocabularyPracticeSpeakingCubit(),
-      child: BlocBuilder<VocabularyPracticeSpeakingCubit,
-          VocabularyPracticeSpeakingState>(
+      create: (context) => ConversationPracticeSpeakingCubit(),
+      child: BlocBuilder<ConversationPracticeSpeakingCubit,
+          ConversationPracticeSpeakingState>(
         builder: (context, state) {
-          if (state is Init) {
+          if (state.status.isInit) {
             openTheRecorder().then((value) {
               setState(() {
                 _mRecorderIsInit = true;
@@ -152,7 +156,7 @@ class _VocabularyPracticeSpeakingState
               });
             });
             return Container(
-              padding: EdgeInsets.only(
+               padding: EdgeInsets.only(
                   left: SizeConfig.blockSizeHorizontal * 5,
                   right: SizeConfig.blockSizeHorizontal * 5),
               child: Column(
@@ -247,15 +251,18 @@ class _VocabularyPracticeSpeakingState
                                   ),
                                 ),
                                 SizedBox(
-                                  height: SizeConfig.blockSizeVertical * 10,
+                                  height: SizeConfig.blockSizeVertical * 7,
                                 ),
                                 Container(
+                                  width: SizeConfig.blockSizeHorizontal * 70,
+                                  //padding: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 3, right: SizeConfig.blockSizeHorizontal * 3),
                                   height: SizeConfig.blockSizeVertical * 10,
                                   child: Text(
-                                    vocabulary.vocabulary,
+                                    conversation.conversation,
                                     style: GoogleFonts.lato(
-                                        fontSize: 30,
+                                        fontSize: 18,
                                         fontWeight: FontWeight.w600),
+                                    textAlign: TextAlign.center,
                                   ),
                                 ),
                                 GFIconButton(
@@ -265,10 +272,10 @@ class _VocabularyPracticeSpeakingState
                                     String file = _hiveUtils
                                         .getFilePath(
                                             boxName: HiveBoxName.LESSON_SRC,
-                                            key: vocabulary.voiceLink)
+                                            key: conversation.voiceLink)
                                         .srcPath;
                                     print(file);
-                                    getPlaybackFn(file);
+                                    getPlaybachForConversation(file);
                                   },
                                   color: AppColors.MAIN_COLOR,
                                   icon: Icon(
@@ -312,7 +319,7 @@ class _VocabularyPracticeSpeakingState
                                   GoogleFonts.lato(fontSize: 17))),
                           //: Color.fromRGBO(30, 193, 194, 30),
                           child: Text("Check"),
-                          onPressed: openWriting),
+                          onPressed: openListening),
                     ),
                   ),
                 ],

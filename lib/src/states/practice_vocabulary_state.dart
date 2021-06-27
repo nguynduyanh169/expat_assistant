@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:expat_assistant/src/models/hive_object.dart';
 enum PracticeVocabularyStatus{
   practiceWriting, practiceListening, practiceSpeaking, practiceDone
 }
@@ -23,6 +22,7 @@ class PracticeVocabularyState extends Equatable{
   const PracticeVocabularyState({ this.status, this.index, this.error, this.lessonLenght});
 
   @override
+  // ignore: todo
   // TODO: implement props
   List<Object> get props => [index, status];
 

@@ -110,11 +110,13 @@ class VNlearnCubit extends Cubit<VNlearnState> {
               conversation.voiceLink);
           _conversationLocals.add(conversationLocal);
           var path =
-          await AndroidExternalStorage.getExternalStoragePublicDirectory(
-              DirType.documentsDirectory);
-          String imagePath = '$path/$lessonName/conversation/${DateFormat('yyyyMMddHHmmss').format(DateTime.now())}.png';
-          String audioPath = '$path/$lessonName/conversation/${DateFormat('yyyyMMddHHmmss').format(DateTime.now())}.mp3';
-          if(conversationLocal.imageLink != null){
+              await AndroidExternalStorage.getExternalStoragePublicDirectory(
+                  DirType.documentsDirectory);
+          String imagePath =
+              '$path/$lessonName/conversation/${DateFormat('yyyyMMddHHmmss').format(DateTime.now())}.png';
+          String audioPath =
+              '$path/$lessonName/conversation/${DateFormat('yyyyMMddHHmmss').format(DateTime.now())}.mp3';
+          if (conversationLocal.imageLink != null) {
             await Flowder.download(
                 conversationLocal.imageLink,
                 DownloaderUtils(
@@ -126,14 +128,15 @@ class VNlearnCubit extends Cubit<VNlearnState> {
                   progress: ProgressImplementation(),
                   onDone: () {
                     LessonFileLocal lessonFileLocal =
-                    LessonFileLocal(conversationLocal.imageLink, imagePath);
+                        LessonFileLocal(conversationLocal.imageLink, imagePath);
                     _hiveUtils.addFilePath(
                         boxName: HiveBoxName.LESSON_SRC,
                         lessonFileLocal: lessonFileLocal);
                   },
                   deleteOnCancel: true,
                 ));
-          }if(conversationLocal.voiceLink != null){
+          }
+          if (conversationLocal.voiceLink != null) {
             await Flowder.download(
                 conversationLocal.voiceLink,
                 DownloaderUtils(
@@ -145,7 +148,7 @@ class VNlearnCubit extends Cubit<VNlearnState> {
                   progress: ProgressImplementation(),
                   onDone: () {
                     LessonFileLocal lessonFileLocal =
-                    LessonFileLocal(conversationLocal.voiceLink, audioPath);
+                        LessonFileLocal(conversationLocal.voiceLink, audioPath);
                     _hiveUtils.addFilePath(
                         boxName: HiveBoxName.LESSON_SRC,
                         lessonFileLocal: lessonFileLocal);
@@ -159,7 +162,10 @@ class VNlearnCubit extends Cubit<VNlearnState> {
             list: _conversationLocals,
             lessonBox: HiveBoxName.LESSON,
             lessonKey: lessonId);
-        emit(state.copyWith(status: VNlearnStatus.downloadConversationSuccess, lessonLocalList: _hiveUtils.getAllLesson(boxName: HiveBoxName.LESSON)));
+        emit(state.copyWith(
+            status: VNlearnStatus.downloadConversationSuccess,
+            lessonLocalList:
+                _hiveUtils.getAllLesson(boxName: HiveBoxName.LESSON)));
       } else {
         emit(state.copyWith(
             status: VNlearnStatus.downloadConversationFailed,
@@ -172,7 +178,8 @@ class VNlearnCubit extends Cubit<VNlearnState> {
     }
   }
 
-  Future<void> downloadVocabulary(int lessonId, String lessonName, BuildContext context) async {
+  Future<void> downloadVocabulary(
+      int lessonId, String lessonName, BuildContext context) async {
     List<VocabularyLocal> _vocabularyLocals = [];
     emit(state.copyWith(status: VNlearnStatus.downloadingVocabulary));
     try {
@@ -193,8 +200,10 @@ class VNlearnCubit extends Cubit<VNlearnState> {
           var path =
               await AndroidExternalStorage.getExternalStoragePublicDirectory(
                   DirType.documentsDirectory);
-          String imagePath = '$path/$lessonName/vocabulary/${DateFormat('yyyyMMddHHmmss').format(DateTime.now())}.png';
-          String audioPath = '$path/$lessonName/vocabulary/${DateFormat('yyyyMMddHHmmss').format(DateTime.now())}.mp3';
+          String imagePath =
+              '$path/$lessonName/vocabulary/${DateFormat('yyyyMMddHHmmss').format(DateTime.now())}.png';
+          String audioPath =
+              '$path/$lessonName/vocabulary/${DateFormat('yyyyMMddHHmmss').format(DateTime.now())}.mp3';
           if (vocabularyLocal.imageLink != null) {
             await Flowder.download(
                 vocabularyLocal.imageLink,
@@ -241,12 +250,34 @@ class VNlearnCubit extends Cubit<VNlearnState> {
             list: _vocabularyLocals,
             lessonBox: HiveBoxName.LESSON,
             lessonKey: lessonId);
-        emit(state.copyWith(status: VNlearnStatus.downloadVocabularySuccess, lessonLocalList: _hiveUtils.getAllLesson(boxName: HiveBoxName.LESSON)));
+        emit(state.copyWith(
+            status: VNlearnStatus.downloadVocabularySuccess,
+            lessonLocalList:
+                _hiveUtils.getAllLesson(boxName: HiveBoxName.LESSON)));
       }
     } on Exception catch (e) {
       print(e.toString());
       emit(state.copyWith(
           status: VNlearnStatus.downloadVocabularyFailed, error: e.toString()));
+    }
+  }
+
+  Future<void> searchLesson(
+      List<LessonLocal> lessonList, String keyword) async {
+    List<LessonLocal> results = [];
+    if (keyword.isEmpty) {
+      results = _hiveUtils.getAllLesson(boxName: HiveBoxName.LESSON);
+    } else {
+      results = lessonList
+          .where((lesson) =>
+              lesson.name.toLowerCase().contains(keyword.toLowerCase()))
+          .toList();
+    }
+    if (results.length == 0) {
+      emit(state.copyWith(status: VNlearnStatus.searchFailed));
+    } else {
+      emit(state.copyWith(
+          status: VNlearnStatus.searchSuccess, lessonLocalList: results));
     }
   }
 }

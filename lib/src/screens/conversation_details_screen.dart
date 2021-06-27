@@ -3,6 +3,7 @@ import 'package:bubble/bubble.dart';
 import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/configs/size_config.dart';
 import 'package:expat_assistant/src/models/hive_object.dart';
+import 'package:expat_assistant/src/screens/practice_conversation_screen.dart';
 import 'package:expat_assistant/src/utils/hive_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -175,7 +176,9 @@ class _ConversationDetailState extends State<ConversationDetailScreen> {
                               textStyle: MaterialStateProperty.all<TextStyle>(
                                   GoogleFonts.lato(fontSize: 17))),
                           child: Text("Practice"),
-                          onPressed: () {}),
+                          onPressed: () {
+                            Navigator.pushNamed(context, RouteName.PRACTICE_CONVERSATION, arguments: PracticeConversationScreenArguments(conversationLocal));
+                          }),
                     )
                   ],
                 ),

@@ -1,4 +1,3 @@
-import 'package:camera_camera/camera_camera.dart';
 import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/configs/size_config.dart';
 import 'package:expat_assistant/src/cubits/restaurants_cubit.dart';
@@ -9,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:line_icons/line_icons.dart';
-import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
 class RestaurantsScreen extends StatefulWidget {
   _RestaurantsScreenState createState() => _RestaurantsScreenState();
@@ -154,20 +152,25 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
                     // ),
                     Container(
                       width: SizeConfig.blockSizeHorizontal * 100,
-                      padding: EdgeInsets.only(top: SizeConfig.blockSizeHorizontal * 2, bottom: SizeConfig.blockSizeHorizontal * 2),
+                      padding: EdgeInsets.only(
+                          top: SizeConfig.blockSizeHorizontal * 2,
+                          bottom: SizeConfig.blockSizeHorizontal * 2),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Container(
                             width: SizeConfig.blockSizeHorizontal * 75,
-                            padding: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 2, right: SizeConfig.blockSizeHorizontal * 2),
+                            padding: EdgeInsets.only(
+                                left: SizeConfig.blockSizeHorizontal * 2,
+                                right: SizeConfig.blockSizeHorizontal * 2),
                             decoration: BoxDecoration(
                               color: Colors.white,
                               border: Border.all(
-                                  color: Color.fromRGBO(30, 193, 194, 30),// set border color
-                                  width: 1.0),   // set border width
-                              borderRadius: BorderRadius.all(
-                                  Radius.circular(10.0)), // set rounded corner radius
+                                  color: Color.fromRGBO(
+                                      30, 193, 194, 30), // set border color
+                                  width: 1.0), // set border width
+                              borderRadius: BorderRadius.all(Radius.circular(
+                                  10.0)), // set rounded corner radius
                             ),
                             child: TextFormField(
                               enabled: false,
@@ -175,22 +178,24 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
                                   hintText: '   What do you want to eat?',
                                   border: InputBorder.none,
                                   suffixIcon: IconButton(
-                                    icon: Icon(CupertinoIcons.search, color: Color.fromRGBO(30, 193, 194, 30),),
+                                    icon: Icon(
+                                      CupertinoIcons.search,
+                                      color: Color.fromRGBO(30, 193, 194, 30),
+                                    ),
                                     iconSize: 30.0,
                                   ),
-                                  hintStyle: GoogleFonts.lato()
-                              ),
+                                  hintStyle: GoogleFonts.lato()),
                             ),
                           ),
                           InkWell(
-                            onTap: (){
+                            onTap: () {
                               Navigator.pushNamed(context, '/foodCamera');
                             },
                             child: Container(
                               width: SizeConfig.blockSizeHorizontal * 15,
                               height: SizeConfig.blockSizeVertical * 10,
-                              child:
-                              Image.asset("assets/images/camera_food_logo.png"),
+                              child: Image.asset(
+                                  "assets/images/camera_food_logo.png"),
                             ),
                           )
                         ],
@@ -216,7 +221,8 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
                         children: <Widget>[
                           Container(
                             //width: SizeConfig.blockSizeHorizontal * 30,
-                            padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
+                            padding: EdgeInsets.all(
+                                SizeConfig.blockSizeHorizontal * 2),
                             decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(10.0),
@@ -229,15 +235,22 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
                                 ]),
                             child: Row(
                               children: <Widget>[
-                                Icon(LineIcons.star,),
-                                SizedBox(width: SizeConfig.blockSizeHorizontal * 1,),
+                                Icon(
+                                  LineIcons.star,
+                                ),
+                                SizedBox(
+                                  width: SizeConfig.blockSizeHorizontal * 1,
+                                ),
                                 Text('High Ratings', style: GoogleFonts.lato())
                               ],
                             ),
                           ),
-                          SizedBox(width: SizeConfig.blockSizeHorizontal * 2,),
+                          SizedBox(
+                            width: SizeConfig.blockSizeHorizontal * 2,
+                          ),
                           Container(
-                            padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
+                            padding: EdgeInsets.all(
+                                SizeConfig.blockSizeHorizontal * 2),
                             decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(10.0),
@@ -250,8 +263,12 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
                                 ]),
                             child: Row(
                               children: <Widget>[
-                                Icon(LineIcons.businessTime,),
-                                SizedBox(width: SizeConfig.blockSizeHorizontal * 1,),
+                                Icon(
+                                  LineIcons.businessTime,
+                                ),
+                                SizedBox(
+                                  width: SizeConfig.blockSizeHorizontal * 1,
+                                ),
                                 Text('Opening Now', style: GoogleFonts.lato())
                               ],
                             ),
@@ -263,7 +280,8 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
                       height: SizeConfig.blockSizeVertical * 1,
                     ),
                     Container(
-                      padding: EdgeInsets.only(top: SizeConfig.blockSizeHorizontal * 1),
+                      padding: EdgeInsets.only(
+                          top: SizeConfig.blockSizeHorizontal * 1),
                       height: SizeConfig.blockSizeVertical * 48.3,
                       child: ListView(
                         children: [

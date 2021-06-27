@@ -8,7 +8,6 @@ import 'package:expat_assistant/src/widgets/vocabulary_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hive/hive.dart';
 
 class VocabularyDetailScreen extends StatefulWidget {
   _VocabularyDetailState createState() => _VocabularyDetailState();
@@ -54,19 +53,21 @@ class _VocabularyDetailState extends State<VocabularyDetailScreen> {
                 height: SizeConfig.blockSizeVertical * 2,
               ),
               itemBuilder: (context, index) => VocabularyCard(
-                  vietnamese: vocabularyList[index].vocabulary,
-                  english: vocabularyList[index].description,
-                  imageLink: vocabularyList[index].imageLink,
-                  playAudio: (){
-                    if(vocabularyList[index].voiceLink != null){
-                      String filePath = _hiveUtils
-                          .getFilePath(boxName: HiveBoxName.LESSON_SRC, key: vocabularyList[index].voiceLink)
-                          .srcPath;
-                      assetsAudioPlayer.open(
-                        Audio.file(filePath),
-                      );
-                    }
-                  },
+                vietnamese: vocabularyList[index].vocabulary,
+                english: vocabularyList[index].description,
+                imageLink: vocabularyList[index].imageLink,
+                playAudio: () {
+                  if (vocabularyList[index].voiceLink != null) {
+                    String filePath = _hiveUtils
+                        .getFilePath(
+                            boxName: HiveBoxName.LESSON_SRC,
+                            key: vocabularyList[index].voiceLink)
+                        .srcPath;
+                    assetsAudioPlayer.open(
+                      Audio.file(filePath),
+                    );
+                  }
+                },
               ),
             ),
           ),
@@ -74,7 +75,9 @@ class _VocabularyDetailState extends State<VocabularyDetailScreen> {
             child: Container(
               decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(10),
+                      topRight: Radius.circular(10)),
                   boxShadow: [
                     BoxShadow(
                         color: Colors.black26.withOpacity(0.2),
@@ -99,7 +102,10 @@ class _VocabularyDetailState extends State<VocabularyDetailScreen> {
                                 GoogleFonts.lato(fontSize: 17))),
                         child: Text("Practice"),
                         onPressed: () {
-                          Navigator.pushNamed(context, RouteName.PRACTICE_VOCABULARY, arguments: PracticeVocabularyScreenArguments(vocabularyList));
+                          Navigator.pushNamed(
+                              context, RouteName.PRACTICE_VOCABULARY,
+                              arguments: PracticeVocabularyScreenArguments(
+                                  vocabularyList));
                         }),
                   )
                 ],

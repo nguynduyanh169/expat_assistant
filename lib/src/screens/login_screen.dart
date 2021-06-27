@@ -54,7 +54,7 @@ class LoginScreen extends StatelessWidget {
           Navigator.pop(context);
           Navigator.pushReplacementNamed(context, RouteName.HOME_PAGE);
         }else if(state.status.isSubmissionInProgress){
-          CustomLoadingDialog.loadingDialog(context);
+          CustomLoadingDialog.loadingDialog(context: context, message: 'Logging in...');
         }
       },
       builder: (context, state) {

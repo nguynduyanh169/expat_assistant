@@ -11,7 +11,9 @@ enum VNlearnStatus {
   downloadConversationFailed,
   downloadVocabularySuccess,
   downloadingVocabulary,
-  downloadVocabularyFailed
+  downloadVocabularyFailed,
+  searchSuccess,
+  searchFailed,
 }
 
 extension Explanation on VNlearnStatus {
@@ -38,6 +40,9 @@ extension Explanation on VNlearnStatus {
 
   bool get isDownloadVocabularyFailed =>
       this == VNlearnStatus.downloadVocabularyFailed;
+  bool get isSearchSuccess => this == VNlearnStatus.searchSuccess;
+
+  bool get isSearchFailed => this == VNlearnStatus.searchFailed;
 }
 
 class VNlearnState extends Equatable {

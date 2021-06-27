@@ -246,7 +246,7 @@ class _ColorLoader3State extends State<ColorLoader3>
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 100.0,
+      width: 50.0,
       height: 100.0,
       //color: Colors.black12,
       child: new Center(

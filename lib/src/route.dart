@@ -12,6 +12,7 @@ import 'package:expat_assistant/src/screens/home_page.dart';
 import 'package:expat_assistant/src/screens/home_screen.dart';
 import 'package:expat_assistant/src/screens/login_screen.dart';
 import 'package:expat_assistant/src/screens/map_screen.dart';
+import 'package:expat_assistant/src/screens/practice_conversation_screen.dart';
 import 'package:expat_assistant/src/screens/practice_vocabulary_screen.dart';
 import 'package:expat_assistant/src/screens/profile_screen.dart';
 import 'package:expat_assistant/src/screens/restaurant_by_food_screen.dart';
@@ -50,5 +51,7 @@ final routes = {
   RouteName.CHANNEL: (BuildContext context) => new ChannelScreen(),
   RouteName.SIGN_UP: (BuildContext context) => new SignUpScreen(),
   RouteName.FINISH: (BuildContext context) => new FinishScreen(),
+  RouteName.PRACTICE_CONVERSATION: (BuildContext context) => new PracticeConversationScreen(),
+  RouteName.FINISH_CONVERSATION: (BuildContext context) => new FinishScreenForConversation(),
 };
 

@@ -1,11 +1,9 @@
-import 'dart:typed_data';
-
 import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/configs/size_config.dart';
-import 'package:expat_assistant/src/cubits/vocabulary_practice_listening_cubit.dart';
+import 'package:expat_assistant/src/cubits/conversation_practice_listening_cubit.dart';
 import 'package:expat_assistant/src/models/character_description.dart';
 import 'package:expat_assistant/src/models/hive_object.dart';
-import 'package:expat_assistant/src/states/vocabulary_practice_listening_state.dart';
+import 'package:expat_assistant/src/states/conversation_practice_listening_state.dart';
 import 'package:expat_assistant/src/utils/hive_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,45 +15,39 @@ import 'package:ionicons/ionicons.dart';
 import 'package:sweetsheet/sweetsheet.dart';
 
 // ignore: must_be_immutable
-class VocabularyPracticeListening extends StatefulWidget {
-  VocabularyLocal vocabulary;
+class ConversationPracticeListening extends StatefulWidget {
+  ConversationLocal conversation;
   Function openSpeaking;
-  BuildContext upperContext;
 
-  VocabularyPracticeListening(
-      {@required this.vocabulary,
-      @required this.openSpeaking,
-      @required this.upperContext});
+  ConversationPracticeListening({this.conversation, this.openSpeaking});
 
-  _VocabularyPracticeListeningState createState() =>
-      _VocabularyPracticeListeningState(vocabulary, openSpeaking, upperContext);
+  _ConversationPracticeListeningState createState() =>
+      _ConversationPracticeListeningState(conversation, openSpeaking);
 }
 
-class _VocabularyPracticeListeningState
-    extends State<VocabularyPracticeListening> {
-  VocabularyLocal _vocabulary;
+class _ConversationPracticeListeningState
+    extends State<ConversationPracticeListening> {
+  ConversationLocal conversation;
   Function openSpeaking;
-  BuildContext upperContext;
   String _learnerAns = "";
-  List<CharacterDescription> chars = [];
+  List<CharacterDescription> words = [];
   final SweetSheet _sweetSheet = SweetSheet();
   FlutterSoundPlayer _mPlayer = FlutterSoundPlayer();
   HiveUtils _hiveUtils = HiveUtils();
   bool _mPlayerIsInit = false;
-  Icon soundIcon = Icon(CupertinoIcons.play_arrow_solid);
-  String soundText = "Tap to listen";
 
-  _VocabularyPracticeListeningState(
-      this._vocabulary, this.openSpeaking, this.upperContext);
+  _ConversationPracticeListeningState(this.conversation, this.openSpeaking);
 
   Widget _character(
-      {@required CharacterDescription characterDescription,
+      {@required CharacterDescription character,
       @required BuildContext context}) {
     return InkWell(
       onTap: () {
-        if (characterDescription.canChoose == true) {
-          BlocProvider.of<VocabularyPracticeListeningCubit>(context)
-              .addCharacters(characterDescription);
+        if (character.canChoose == true) {
+          if (character.canChoose == true) {
+          BlocProvider.of<ConversationPracticeListeningCubit>(context)
+              .addCharacters(character);
+        }
         }
       },
       child: Container(
@@ -63,15 +55,15 @@ class _VocabularyPracticeListeningState
         height: SizeConfig.blockSizeVertical * 6,
         child: Center(
           child: Text(
-            characterDescription.char,
+            character.char,
             style: GoogleFonts.lato(
-                color: characterDescription.fontColor,
+                color: character.fontColor,
                 fontWeight: FontWeight.w600,
-                fontSize: 20),
+                fontSize: 15),
           ),
         ),
         decoration: BoxDecoration(
-            color: characterDescription.background,
+            color: character.background,
             border: Border.all(color: Colors.black12),
             borderRadius: BorderRadius.circular(10.0),
             boxShadow: [
@@ -100,17 +92,15 @@ class _VocabularyPracticeListeningState
   void playAudio() async {
     print(_hiveUtils
         .getFilePath(
-            boxName: HiveBoxName.LESSON_SRC, key: _vocabulary.voiceLink)
+            boxName: HiveBoxName.LESSON_SRC, key: conversation.voiceLink)
         .srcPath);
     await _mPlayer.startPlayer(
-        fromURI: _hiveUtils
-            .getFilePath(
-                boxName: HiveBoxName.LESSON_SRC, key: _vocabulary.voiceLink)
-            .srcPath,
-        codec: Codec.mp3,
-        whenFinished: () {
-          setState(() {});
-        });
+      fromURI: _hiveUtils
+          .getFilePath(
+              boxName: HiveBoxName.LESSON_SRC, key: conversation.voiceLink)
+          .srcPath,
+      codec: Codec.mp3,
+    );
   }
 
   getPlaybackFn() {
@@ -130,21 +120,22 @@ class _VocabularyPracticeListeningState
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return BlocProvider(
-      create: (context) => VocabularyPracticeListeningCubit()
-        ..loadCharacters(_vocabulary.vocabulary),
-      child: BlocConsumer<VocabularyPracticeListeningCubit,
-          VocabularyPracticeListeningState>(
+      create: (context) => ConversationPracticeListeningCubit()
+        ..loadCharacters(conversation.conversation),
+      child: BlocConsumer<ConversationPracticeListeningCubit,
+          ConversationPracticeListeningState>(
         listener: (context, state) {
-          if (state is AddCharacter) {
-            _learnerAns += state.char.char;
-            for (CharacterDescription char in chars) {
-              if (char.index == state.char.index) {
-                char.background = Colors.black12;
-                char.fontColor = Colors.grey;
-                char.canChoose = false;
+          if (state.status.isAddCharacter) {
+            _learnerAns += state.word.char;
+            _learnerAns += " ";
+            for (CharacterDescription word in words) {
+              if (word.index == state.word.index) {
+                word.background = Colors.black12;
+                word.fontColor = Colors.grey;
+                word.canChoose = false;
               }
             }
-          } else if (state is CorrectAnswer) {
+          } else if (state.status.isCorrect) {
             _sweetSheet.show(
               isDismissible: false,
               context: context,
@@ -153,35 +144,35 @@ class _VocabularyPracticeListeningState
                 style: GoogleFonts.lato(),
               ),
               description: Text(
-                  '${_vocabulary.vocabulary.toUpperCase()}' +
-                      '\nEnglish meaning: ${_vocabulary.description}',
-                  style: GoogleFonts.lato()),
+                  '${conversation.conversation.toUpperCase()}' +
+                      '\nEnglish meaning: ${conversation.description}',
+                  style: GoogleFonts.lato(fontSize: 13, fontWeight: FontWeight.w500)),
               color: SweetSheetColor.SUCCESS,
               icon: CupertinoIcons.check_mark_circled_solid,
               positive: SweetSheetAction(
                 onPressed: () {
-                  openSpeaking(upperContext);
+                  openSpeaking();
                   Navigator.of(context).pop();
                 },
                 title: 'NEXT',
                 icon: CupertinoIcons.arrow_right_circle_fill,
               ),
             );
-          } else if (state is IncorrectAnswer) {
+          } else if (state.status.isIncorrect) {
             _sweetSheet.show(
               isDismissible: false,
               context: context,
               title: Text("Incorrect", style: GoogleFonts.lato()),
               description: Text(
-                  '${_vocabulary.vocabulary.toUpperCase()}' +
-                      '\nEnglish meaning: ${_vocabulary.description}',
-                  style: GoogleFonts.lato()),
+                  '${conversation.conversation.toUpperCase()}' +
+                      '\nEnglish meaning: ${conversation.description}',
+                  style: GoogleFonts.lato(fontSize: 13, fontWeight: FontWeight.w500)),
               color: SweetSheetColor.DANGER,
               icon: CupertinoIcons.xmark_circle_fill,
               positive: SweetSheetAction(
                 onPressed: () {
-                  BlocProvider.of<VocabularyPracticeListeningCubit>(context)
-                      .loadCharacters(_vocabulary.vocabulary);
+                  BlocProvider.of<ConversationPracticeListeningCubit>(context)
+                      .loadCharacters(conversation.conversation);
                   Navigator.of(context).pop();
                 },
                 title: 'DO AGAIN',
@@ -191,24 +182,24 @@ class _VocabularyPracticeListeningState
           }
         },
         builder: (context, state) {
-          if (state is Loaded ||
-              state is AddCharacter ||
-              state is IncorrectAnswer ||
-              state is CorrectAnswer) {
-            if (state is Loaded) {
+          if (state.status.isLoaded ||
+              state.status.isAddCharacter ||
+              state.status.isIncorrect ||
+              state.status.isCorrect) {
+            if (state.status.isLoaded) {
               _learnerAns = '';
-              chars.clear();
+              words.clear();
               int index = 0;
-              for (var char in state.chars) {
+              for (var word in state.words) {
                 index = index + 1;
                 CharacterDescription characterDescription =
                     new CharacterDescription(
-                        char: char,
+                        char: word,
                         background: Colors.white,
                         fontColor: Colors.black,
                         canChoose: true,
                         index: index);
-                chars.add(characterDescription);
+                words.add(characterDescription);
               }
               _mPlayer.openAudioSession().then((value) => {
                     _mPlayerIsInit = true,
@@ -259,9 +250,9 @@ class _VocabularyPracticeListeningState
                       ),
                       InkWell(
                         onTap: () {
-                          BlocProvider.of<VocabularyPracticeListeningCubit>(
+                          BlocProvider.of<ConversationPracticeListeningCubit>(
                                   context)
-                              .loadCharacters(_vocabulary.vocabulary);
+                              .loadCharacters(conversation.conversation);
                         },
                         child: Container(
                           decoration: BoxDecoration(
@@ -300,7 +291,7 @@ class _VocabularyPracticeListeningState
                           style: GoogleFonts.lato(
                               color: Colors.black,
                               fontWeight: FontWeight.w600,
-                              fontSize: 25),
+                              fontSize: 20),
                         ),
                       )),
                   SizedBox(
@@ -315,10 +306,9 @@ class _VocabularyPracticeListeningState
                         mainAxisSpacing: 15,
                         crossAxisCount: 5,
                         children: List.generate(
-                            chars.length,
+                            words.length,
                             (index) => _character(
-                                characterDescription: chars[index],
-                                context: context)),
+                                character: words[index], context: context)),
                       ),
                     ),
                   ),
@@ -340,10 +330,10 @@ class _VocabularyPracticeListeningState
                           //: Color.fromRGBO(30, 193, 194, 30),
                           child: Text("Check"),
                           onPressed: () {
-                            BlocProvider.of<VocabularyPracticeListeningCubit>(
+                            BlocProvider.of<ConversationPracticeListeningCubit>(
                                     context)
                                 .checkAnswer(
-                                    _learnerAns, _vocabulary.vocabulary);
+                                    _learnerAns, conversation.conversation);
                           }),
                     ),
                   )
