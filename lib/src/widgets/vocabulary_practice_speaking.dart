@@ -48,6 +48,22 @@ class _VocabularyPracticeSpeakingState
 
   _VocabularyPracticeSpeakingState(this.vocabulary, this.openWriting);
 
+  @override
+  void initState() {
+    super.initState();
+    openTheRecorder().then((value) {
+      print('ok');
+      setState(() {
+        _mRecorderIsInit = true;
+      });
+    });
+    _mPlayer.openAudioSession().then((value) {
+      setState(() {
+        _mPlayerIsInit = true;
+      });
+    });
+  }
+
   Future<void> openTheRecorder() async {
     if (!kIsWeb) {
       var status = await Permission.microphone.request();
@@ -98,10 +114,7 @@ class _VocabularyPracticeSpeakingState
   }
 
   void play(String filePath) {
-    assert(_mPlayerIsInit &&
-        _mPlayBackReady &&
-        _mRecorder.isStopped &&
-        _mPlayer.isStopped);
+    assert(_mPlayerIsInit);
     _mPlayer.startPlayer(
         fromURI: filePath,
         whenFinished: () {
@@ -117,6 +130,13 @@ class _VocabularyPracticeSpeakingState
 
   getPlaybackFn(String filePath) {
     if (!_mPlayerIsInit || !_mPlayBackReady || !_mRecorder.isStopped) {
+      return null;
+    }
+    return _mPlayer.isStopped ? play(filePath) : stopPlayer();
+  }
+
+  getPlaybachForVocabulary(String filePath) {
+    if (!_mPlayerIsInit) {
       return null;
     }
     return _mPlayer.isStopped ? play(filePath) : stopPlayer();
@@ -140,17 +160,6 @@ class _VocabularyPracticeSpeakingState
           VocabularyPracticeSpeakingState>(
         builder: (context, state) {
           if (state is Init) {
-            openTheRecorder().then((value) {
-              setState(() {
-                _mRecorderIsInit = true;
-              });
-            });
-
-            _mPlayer.openAudioSession().then((value) {
-              setState(() {
-                _mPlayerIsInit = true;
-              });
-            });
             return Container(
               padding: EdgeInsets.only(
                   left: SizeConfig.blockSizeHorizontal * 5,
@@ -267,8 +276,7 @@ class _VocabularyPracticeSpeakingState
                                             boxName: HiveBoxName.LESSON_SRC,
                                             key: vocabulary.voiceLink)
                                         .srcPath;
-                                    print(file);
-                                    getPlaybackFn(file);
+                                    getPlaybachForVocabulary(file);
                                   },
                                   color: AppColors.MAIN_COLOR,
                                   icon: Icon(
