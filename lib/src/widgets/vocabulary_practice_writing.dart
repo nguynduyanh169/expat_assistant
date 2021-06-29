@@ -84,7 +84,7 @@ class VocabularyPracticeWriting extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            'Write the correct translation',
+            'Choose the correct translation',
             style: GoogleFonts.lato(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           SizedBox(

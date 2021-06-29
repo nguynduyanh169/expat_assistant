@@ -12,7 +12,7 @@ class SpecialistDetailsScreen extends StatefulWidget {
 }
 
 class _SpecialistDetailsState extends State<SpecialistDetailsScreen> {
-  ValueNotifier<List<Event>> _selectedEvents;
+  ValueNotifier<List<EventDemo>> _selectedEvents;
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime _selectedDay = DateTime.now();
@@ -30,7 +30,7 @@ class _SpecialistDetailsState extends State<SpecialistDetailsScreen> {
     super.dispose();
   }
 
-  List<Event> _getEventsForDay(DateTime day) {
+  List<EventDemo> _getEventsForDay(DateTime day) {
     // Implementation example
     return kEvents[day] ?? [];
   }
@@ -223,7 +223,7 @@ class _SpecialistDetailsState extends State<SpecialistDetailsScreen> {
                     height: SizeConfig.blockSizeVertical * 60,
                     child: Column(
                       children: <Widget>[
-                        TableCalendar<Event>(
+                        TableCalendar<EventDemo>(
                           locale: 'en_US',
                           firstDay: kFirstDay,
                           lastDay: kLastDay,
@@ -249,7 +249,7 @@ class _SpecialistDetailsState extends State<SpecialistDetailsScreen> {
                           },
                         ),
                         Expanded(
-                          child: ValueListenableBuilder<List<Event>>(
+                          child: ValueListenableBuilder<List<EventDemo>>(
                             valueListenable: _selectedEvents,
                             builder: (context, value, _) {
                               return GridView.builder(

@@ -33,11 +33,16 @@ class ApiName {
   static const String BASE_URL = "https://hcmc.herokuapp.com";
   static const String LOGIN_API = BASE_URL + "/api/authen/login";
   static const String FIND_ALL_TOPICS = BASE_URL + "/api/topic/topics";
-  static const String FIND_CONVERSATION_BY_TOPIC_ID = BASE_URL + "/api/conversation";
-  static const String FIND_VOCABULARIES_BY_TOPIC_ID = BASE_URL + "/api/vocabulary";
+  static const String FIND_CONVERSATION_BY_TOPIC_ID =
+      BASE_URL + "/api/conversation";
+  static const String FIND_VOCABULARIES_BY_TOPIC_ID =
+      BASE_URL + "/api/vocabulary";
+  static const String GET_EVENTS_PAGINGATION = BASE_URL + "/api/events/event/";
+  static const String GET_LOCATIONS_BY_EVENTID = BASE_URL + "/api/location/";
+  static const String GET_TOPICS_BY_EVENTID = BASE_URL + "/api/topic/";
 }
 
-class HiveBoxName{
+class HiveBoxName {
   static const USER_AUTH = "UserAuthentication";
   static const LESSON = "VietnameseLesson";
   static const LESSON_SRC = "LessonSrc";
@@ -45,6 +50,6 @@ class HiveBoxName{
   static const VOCABULARY = "Vocabulary";
 }
 
-class AppColors{
+class AppColors {
   static const Color MAIN_COLOR = Color.fromRGBO(64, 201, 162, 1);
 }

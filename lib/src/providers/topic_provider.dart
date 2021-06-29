@@ -27,4 +27,24 @@ class TopicProvider {
     }
     return topics;
   }
+
+  Future<List<Topic>> getTopicsByEventId({@required String token, @required int eventId}) async {
+    List<Topic> topics;
+    try {
+      Map<String, String> headers = {
+        Headers.contentTypeHeader: "application/json",
+        Headers.acceptHeader: "application/json",
+        'Authorization': 'Bearer $token'
+      };
+      Response response = await _dio.get(ApiName.GET_TOPICS_BY_EVENTID + eventId.toString(),
+          options: Options(headers: headers));
+      topics = (response.data as List<dynamic>)
+          .map((i) => Topic.fromJson(i))
+          .toList()
+          .cast<Topic>();
+    }catch (e) {
+      print(e.toString());
+    }
+    return topics;
+  }
 }
