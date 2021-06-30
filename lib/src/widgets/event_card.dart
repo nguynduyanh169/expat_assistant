@@ -1,7 +1,11 @@
 import 'package:expat_assistant/src/configs/size_config.dart';
 import 'package:expat_assistant/src/models/event.dart';
+import 'package:expat_assistant/src/utils/date_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:getwidget/components/button/gf_icon_button.dart';
+import 'package:getwidget/shape/gf_icon_button_shape.dart';
+import 'package:getwidget/types/gf_border_type.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 // ignore: must_be_immutable
@@ -13,6 +17,7 @@ class EventCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
+    DateTimeUtils _dateUtils = DateTimeUtils();
     return InkWell(
       onTap: eventAction,
       child: Container(
@@ -72,6 +77,7 @@ class EventCard extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
+                      maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
@@ -96,7 +102,9 @@ class EventCard extends StatelessWidget {
                         width: SizeConfig.blockSizeHorizontal * 1,
                       ),
                       Text(
-                        '10:00 - 13:00',
+                        _dateUtils.getStartEndHour(
+                            startDateTime: content.content.eventStartDate,
+                            endDateTime: content.content.eventEndDate),
                         style: GoogleFonts.lato(
                             fontSize: 15,
                             color: Colors.white,
@@ -142,14 +150,20 @@ class EventCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      '04',
+                      _dateUtils
+                          .getStartDay(
+                              startDateTime: content.content.eventStartDate)
+                          .toString(),
                       style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                           color: Color.fromRGBO(30, 193, 194, 30)),
                     ),
                     Text(
-                      'SEP',
+                      _dateUtils
+                          .getStartMonthText(
+                              startDateTime: content.content.eventStartDate)
+                          .toUpperCase(),
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Color.fromRGBO(30, 193, 194, 30)),
@@ -192,7 +206,12 @@ class EventCard extends StatelessWidget {
                           spreadRadius: 0.10)
                     ]),
               ),
-            )
+            ),
+            Positioned(
+              left: SizeConfig.blockSizeHorizontal * 2,
+              top: SizeConfig.blockSizeVertical * 2,
+              child: Icon(CupertinoIcons.ticket_fill, color: Colors.green,),
+            ),
           ],
         ),
       ),

@@ -1,43 +1,35 @@
 import 'dart:async';
 
+import 'package:expat_assistant/src/configs/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:ionicons/ionicons.dart';
+import 'package:line_icons/line_icons.dart';
 import 'package:location/location.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class MapScreen extends StatefulWidget{
+class MapScreen extends StatefulWidget {
   @override
   _MapScreenState createState() => _MapScreenState();
-
 }
 
-class _MapScreenState extends State<MapScreen>{
+class _MapScreenState extends State<MapScreen> {
   double _lat = 10.9748588;
   double _lng = 106.891206;
   Completer<GoogleMapController> _controller = Completer();
   Location location = new Location();
-  bool _serviceEnabled;
-  PermissionStatus _permissionGranted;
   CameraPosition _currentPosition;
+  PermissionStatus _permissionGranted;
 
   @override
   initState() {
     super.initState();
-    _currentPosition = CameraPosition(
-      target: LatLng(_lat, _lng),
-      zoom: 12,
-    );
+    requestPermission();
   }
 
-  _locateMe() async {
-    _serviceEnabled = await location.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await location.requestService();
-      if (!_serviceEnabled) {
-        return;
-      }
-    }
-
+  Future<void> requestPermission() async {
     _permissionGranted = await location.hasPermission();
     if (_permissionGranted == PermissionStatus.denied) {
       _permissionGranted = await location.requestPermission();
@@ -45,26 +37,83 @@ class _MapScreenState extends State<MapScreen>{
         return;
       }
     }
-    await location.getLocation().then((res) async {
-      final GoogleMapController controller = await _controller.future;
-      final _position = CameraPosition(
-        target: LatLng(res.latitude, res.longitude),
-        zoom: 12,
-      );
-      controller.animateCamera(CameraUpdate.newCameraPosition(_position));
-      setState(() {
-        _lat = res.latitude;
-        _lng = res.longitude;
-      });
-    });
   }
-
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
+    final args =
+        ModalRoute.of(context).settings.arguments as MapScreenArguments;
+    if (args.lat != null && args.long != null) {
+      _lat = args.lat;
+      _lng = args.long;
+    }
+    _currentPosition = CameraPosition(
+      target: LatLng(_lat, _lng),
+      zoom: 12,
+    );
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: Text("Google Maps"),
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        leading: IconButton(
+          icon: Icon(
+            Ionicons.chevron_back_circle,
+            color: Colors.black,
+            size: 30,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        title: Text(
+          'Map',
+          style: GoogleFonts.lato(fontSize: 22, color: Colors.black),
+        ),
+        centerTitle: false,
+        actions: [
+          InkWell(
+            onTap: () async {
+              String googleUrl =
+                  'https://www.google.com/maps/search/?api=1&query=$_lat,$_lng';
+              if (await canLaunch(googleUrl)) {
+                await launch(googleUrl);
+              } else {
+                throw 'Could not open the map.';
+              }
+            },
+            child: Padding(
+              padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 3),
+              child: Container(
+                padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10.0),
+                    boxShadow: [
+                      BoxShadow(
+                          color: Colors.black26.withOpacity(0.05),
+                          offset: Offset(0.0, 6.0),
+                          blurRadius: 10.0,
+                          spreadRadius: 0.10)
+                    ]),
+                child: Row(
+                  children: <Widget>[
+                    Icon(
+                      LineIcons.mapAlt,
+                      color: Colors.black,
+                    ),
+                    SizedBox(
+                      width: SizeConfig.blockSizeHorizontal * 1,
+                    ),
+                    Text('Get Direction',
+                        style: GoogleFonts.lato(color: Colors.black)),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
       body: Container(
         height: double.infinity,
@@ -82,12 +131,12 @@ class _MapScreenState extends State<MapScreen>{
           },
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(CupertinoIcons.location_circle),
-        onPressed: () => _locateMe(),
-      ),
     );
   }
-  
-  
+}
+
+class MapScreenArguments {
+  final double lat;
+  final double long;
+  MapScreenArguments(this.lat, this.long);
 }

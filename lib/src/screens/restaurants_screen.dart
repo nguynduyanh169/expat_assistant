@@ -14,7 +14,7 @@ class RestaurantsScreen extends StatefulWidget {
 }
 
 class _RestaurantsScreenState extends State<RestaurantsScreen> {
-  String _addressText = "";
+  String _addressText = "abchdhhdh";
 
   @override
   Widget build(BuildContext context) {
@@ -282,7 +282,7 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
                     Container(
                       padding: EdgeInsets.only(
                           top: SizeConfig.blockSizeHorizontal * 1),
-                      height: SizeConfig.blockSizeVertical * 48.3,
+                      height: SizeConfig.blockSizeVertical * 43.3,
                       child: ListView(
                         children: [
                           RestaurantCard(

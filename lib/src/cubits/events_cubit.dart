@@ -8,6 +8,8 @@ import 'package:expat_assistant/src/repositories/location_repository.dart';
 import 'package:expat_assistant/src/repositories/topic_repository.dart';
 import 'package:expat_assistant/src/states/events_state.dart';
 import 'package:expat_assistant/src/utils/hive_utils.dart';
+import 'package:expat_assistant/src/widgets/alert_dialog_vocabulary.dart';
+import 'package:flutter/material.dart';
 
 class EventsCubit extends Cubit<EventsState> {
   EventRepository _eventRepository;
@@ -30,16 +32,22 @@ class EventsCubit extends Cubit<EventsState> {
       List<Content> contents = [];
       List<Location> locations = [];
       List<Topic> topics = [];
+      List<Topic> topicList = [];
       EventShow event;
       if (currentState.status.isLoaded) {
         oldEvents = currentState.events;
       }
       emit(state.copyWith(
-          status: EventsStatus.loading,
-          oldEvents: oldEvents,
-          isFirstFetched: page == 0));
+        status: EventsStatus.loading,
+        oldEvents: oldEvents,
+        isFirstFetched: page == 0,
+      ));
       eventJson =
           await _eventRepository.getEventsPagination(page: page, token: token);
+      if (page == 0) {
+        topicList =
+            await _topicRepository.getAllTopic(token: token);
+      }
       page++;
       final events = state.oldEvents;
       contents.addAll(eventJson.content);
@@ -53,32 +61,24 @@ class EventsCubit extends Cubit<EventsState> {
         events.add(event);
       }
       emit(state.copyWith(
-          status: EventsStatus.loaded, events: events, page: page));
-      // _eventRepository
-      //     .getEventsPagination(page: page, token: token)
-      //     .then((value) {
-      //   page++;
-      //   final events = state.oldEvents;
-      //   for (Content content in value.content) {
-      //     EventShow event = EventShow(content: content);
-      //     _locationRepository
-      //         .getLocationsByEventId(token: token, eventId: content.eventId)
-      //         .then((value) {
-      //       event.location = value[0];
-      //       print(event.location.locationName);
-      //     });
-      //     _topicRepository
-      //         .getTopicByEventId(token: token, eventId: content.eventId)
-      //         .then((value) => event.topic = value[0]);
-      //     events.add(event);
-      //     print('done');
-      //   }
-      //   emit(state.copyWith(
-      //       status: EventsStatus.loaded, events: events, page: page));
-      // });
-
+          status: EventsStatus.loaded, events: events, page: page, topicList: topicList));
     } on Exception {
       emit(state.copyWith(status: EventsStatus.loadError));
+    }
+  }
+
+  Future<void> chooseTopic(BuildContext context, List<Topic> topics) async {
+    Map<dynamic, dynamic> loginResponse =
+        _hiveUtils.getUserAuth(boxName: HiveBoxName.USER_AUTH);
+    String token = loginResponse['token'].toString();
+    Topic seletedTopic;
+    if (topics.length == 0 || topics != null) {
+      showConfimationDialogForCategory(
+              context: context, action: () {}, topics: topics)
+          .then((value) {
+        seletedTopic = value;
+        print(seletedTopic.topicDesc);
+      });
     }
   }
 }

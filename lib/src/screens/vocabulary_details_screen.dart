@@ -46,7 +46,7 @@ class _VocabularyDetailState extends State<VocabularyDetailScreen> {
         children: <Widget>[
           Container(
             padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
-            height: SizeConfig.blockSizeVertical * 81,
+            height: SizeConfig.blockSizeVertical * 77.5,
             child: ListView.separated(
               itemCount: vocabularyList.length,
               separatorBuilder: (context, index) => SizedBox(

@@ -1,65 +1,83 @@
+import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/configs/size_config.dart';
+import 'package:expat_assistant/src/models/topic.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-void showCorrectDialog({@required BuildContext context, @required Function action, @required String vietnamese, @required String english}){
+Future<Topic> showConfimationDialogForCategory(
+    {@required BuildContext context,
+    @required Function action,
+    @required List<Topic> topics}) async {
+  int selected = 0;
+  Topic selectedTopic;
   SizeConfig().init(context);
-  showDialog(
+  return await showDialog(
       context: context,
-      builder: (BuildContext context){
+      builder: (BuildContext context) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(32)),
+          title: Text(
+            'Select type of Event',
+            style: GoogleFonts.lato(),
           ),
-          contentPadding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
-          content: Container(
-            width: SizeConfig.blockSizeHorizontal * 50,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Text('Correct'),
-                SizedBox(height: SizeConfig.blockSizeVertical * 1,),
-                Divider(
-                  color: Colors.grey,
-                  height: 4.0,
-                ),
-                Container(
-                  height: SizeConfig.blockSizeVertical * 10,
-                  padding: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 2, right: SizeConfig.blockSizeHorizontal * 3),
-                  child: Column(
-                    children: <Widget>[
-                      Text(vietnamese),
-                      Text(english)
-                    ],
-                  ),
-                ),
-                InkWell(
-                  onTap: (){
-                    action();
-                    Navigator.pop(context);
-                  },
-                  child: Container(
-                    padding: EdgeInsets.only(
-                        top: SizeConfig.blockSizeVertical * 2,
-                        bottom: SizeConfig.blockSizeVertical * 2),
-                    decoration: BoxDecoration(
-                      color: Color.fromRGBO(30, 193, 194, 30),
-                      borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(32.0),
-                          bottomRight: Radius.circular(32.0)),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20))),
+          actions: <Widget>[
+            TextButton(
+                onPressed: () {
+                  Navigator.pop(context, selectedTopic);
+                },
+                child: Text('CANCEL',
+                    style: GoogleFonts.lato(
+                        color: AppColors.MAIN_COLOR,
+                        fontWeight: FontWeight.w700))),
+            TextButton(
+                onPressed: () {
+                  Navigator.pop(context, selectedTopic);
+                },
+                child: Text('CONFIRM',
+                    style: GoogleFonts.lato(
+                        color: AppColors.MAIN_COLOR,
+                        fontWeight: FontWeight.w700)))
+          ],
+          content: SingleChildScrollView(
+            child: StatefulBuilder(
+                builder: (BuildContext context, StateSetter setState) {
+              return Container(
+                width: double.maxFinite,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Divider(),
+                    ConstrainedBox(
+                      constraints: BoxConstraints(
+                        maxHeight: SizeConfig.blockSizeVertical * 40,
+                      ),
+                      child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: topics.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return RadioListTile(
+                                activeColor: AppColors.MAIN_COLOR,
+                                title: Text(
+                                  topics[index].topicDesc,
+                                  style: GoogleFonts.lato(),
+                                ),
+                                value: index,
+                                groupValue: selected,
+                                onChanged: (value) {
+                                  setState(() {
+                                    selected = index;
+                                    selectedTopic = topics[index];
+                                  });
+                                });
+                          }),
                     ),
-                    child: Text(
-                      "Next",
-                      style: TextStyle(color: Colors.white),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                )
-              ],
-            ),
+                    Divider(),
+                  ],
+                ),
+              );
+            }),
           ),
         );
-      }
-  );
+      });
 }

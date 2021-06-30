@@ -247,7 +247,7 @@ class _BlogsScreenState extends State<BlogsScreen>{
               padding: EdgeInsets.only(
                   left: SizeConfig.blockSizeHorizontal * 1,
                   right: SizeConfig.blockSizeHorizontal * 1),
-              height: SizeConfig.blockSizeVertical * 66,
+              height: SizeConfig.blockSizeVertical * 62,
               child: ListView(
                 children: <Widget>[
                   Container(

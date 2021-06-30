@@ -10,18 +10,15 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:outline_search_bar/outline_search_bar.dart';
 
+// ignore: must_be_immutable
 class HomeScreen extends StatefulWidget {
-  Function changeTab;
+  HomeScreen();
 
-  HomeScreen({@required this.changeTab});
-
-  _HomeScreenState createState() => _HomeScreenState(changeTab);
+  _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  Function _changeTab;
-
-  _HomeScreenState(this._changeTab);
+  _HomeScreenState();
 
   @override
   Widget build(BuildContext context) {
@@ -60,21 +57,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           SizedBox(
-            width: SizeConfig.blockSizeHorizontal * 5,
-          ),
-          InkWell(
-            onTap: () {
-              Navigator.pushNamed(context, RouteName.PROFILE);
-            },
-            child: Container(
-              child: Image(
-                width: SizeConfig.blockSizeHorizontal * 11,
-                height: SizeConfig.blockSizeVertical * 11,
-                image: AssetImage('assets/images/profile.png'),
-              ),
-            ),
-          ),
-          SizedBox(
             width: SizeConfig.blockSizeHorizontal * 3,
           )
         ],
@@ -108,13 +90,21 @@ class _HomeScreenState extends State<HomeScreen> {
                 scrollDirection: Axis.horizontal,
                 children: <Widget>[
                   ThumbnailCard(),
-                  SizedBox(width: SizeConfig.blockSizeHorizontal * 2,),
+                  SizedBox(
+                    width: SizeConfig.blockSizeHorizontal * 2,
+                  ),
                   ThumbnailCard(),
-                  SizedBox(width: SizeConfig.blockSizeHorizontal * 2,),
+                  SizedBox(
+                    width: SizeConfig.blockSizeHorizontal * 2,
+                  ),
                   ThumbnailCard(),
-                  SizedBox(width: SizeConfig.blockSizeHorizontal * 2,),
+                  SizedBox(
+                    width: SizeConfig.blockSizeHorizontal * 2,
+                  ),
                   ThumbnailCard(),
-                  SizedBox(width: SizeConfig.blockSizeHorizontal * 2,),
+                  SizedBox(
+                    width: SizeConfig.blockSizeHorizontal * 2,
+                  ),
                 ],
               ),
             ),
@@ -138,7 +128,9 @@ class _HomeScreenState extends State<HomeScreen> {
               child: ListView(
                 scrollDirection: Axis.horizontal,
                 children: <Widget>[
-                  SizedBox(width: SizeConfig.blockSizeHorizontal * 2,),
+                  SizedBox(
+                    width: SizeConfig.blockSizeHorizontal * 2,
+                  ),
                   Container(
                     //width: SizeConfig.blockSizeHorizontal * 30,
                     padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
@@ -154,13 +146,19 @@ class _HomeScreenState extends State<HomeScreen> {
                         ]),
                     child: Row(
                       children: <Widget>[
-                        Icon(LineIcons.hamburger,),
-                        SizedBox(width: SizeConfig.blockSizeHorizontal * 1,),
+                        Icon(
+                          LineIcons.hamburger,
+                        ),
+                        SizedBox(
+                          width: SizeConfig.blockSizeHorizontal * 1,
+                        ),
                         Text('Nearby Restaurants', style: GoogleFonts.lato())
                       ],
                     ),
                   ),
-                  SizedBox(width: SizeConfig.blockSizeHorizontal * 2,),
+                  SizedBox(
+                    width: SizeConfig.blockSizeHorizontal * 2,
+                  ),
                   Container(
                     padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
                     decoration: BoxDecoration(
@@ -175,15 +173,19 @@ class _HomeScreenState extends State<HomeScreen> {
                         ]),
                     child: Row(
                       children: <Widget>[
-                        Icon(LineIcons.phoneVolume,),
-                        SizedBox(width: SizeConfig.blockSizeHorizontal * 1,),
-                        Text('Incoming Appointments', style: GoogleFonts.lato(
-
-                        ))
+                        Icon(
+                          LineIcons.phoneVolume,
+                        ),
+                        SizedBox(
+                          width: SizeConfig.blockSizeHorizontal * 1,
+                        ),
+                        Text('Incoming Appointments', style: GoogleFonts.lato())
                       ],
                     ),
                   ),
-                  SizedBox(width: SizeConfig.blockSizeHorizontal * 2,),
+                  SizedBox(
+                    width: SizeConfig.blockSizeHorizontal * 2,
+                  ),
                   Container(
                     padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
                     decoration: BoxDecoration(
@@ -198,13 +200,19 @@ class _HomeScreenState extends State<HomeScreen> {
                         ]),
                     child: Row(
                       children: <Widget>[
-                        Icon(LineIcons.calendarCheck,),
-                        SizedBox(width: SizeConfig.blockSizeHorizontal * 1,),
+                        Icon(
+                          LineIcons.calendarCheck,
+                        ),
+                        SizedBox(
+                          width: SizeConfig.blockSizeHorizontal * 1,
+                        ),
                         Text('Incoming Events', style: GoogleFonts.lato())
                       ],
                     ),
                   ),
-                  SizedBox(width: SizeConfig.blockSizeHorizontal * 2,),
+                  SizedBox(
+                    width: SizeConfig.blockSizeHorizontal * 2,
+                  ),
                   Container(
                     padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
                     decoration: BoxDecoration(
@@ -219,9 +227,14 @@ class _HomeScreenState extends State<HomeScreen> {
                         ]),
                     child: Row(
                       children: <Widget>[
-                        Icon(LineIcons.book,),
-                        SizedBox(width: SizeConfig.blockSizeHorizontal * 1,),
-                        Text('Latest Vietnamese Lessons', style: GoogleFonts.lato())
+                        Icon(
+                          LineIcons.book,
+                        ),
+                        SizedBox(
+                          width: SizeConfig.blockSizeHorizontal * 1,
+                        ),
+                        Text('Latest Vietnamese Lessons',
+                            style: GoogleFonts.lato())
                       ],
                     ),
                   )
@@ -257,21 +270,27 @@ class _HomeScreenState extends State<HomeScreen> {
                   right: SizeConfig.blockSizeHorizontal * 1),
               child: ChannelCard(),
             ),
-            SizedBox(height: SizeConfig.blockSizeVertical * 2,),
+            SizedBox(
+              height: SizeConfig.blockSizeVertical * 2,
+            ),
             Container(
               padding: EdgeInsets.only(
                   left: SizeConfig.blockSizeHorizontal * 1,
                   right: SizeConfig.blockSizeHorizontal * 1),
               child: ChannelCard(),
             ),
-            SizedBox(height: SizeConfig.blockSizeVertical * 2,),
+            SizedBox(
+              height: SizeConfig.blockSizeVertical * 2,
+            ),
             Container(
               padding: EdgeInsets.only(
                   left: SizeConfig.blockSizeHorizontal * 1,
                   right: SizeConfig.blockSizeHorizontal * 1),
               child: ChannelCard(),
             ),
-            SizedBox(height: SizeConfig.blockSizeVertical * 2,),
+            SizedBox(
+              height: SizeConfig.blockSizeVertical * 2,
+            ),
             Container(
               padding: EdgeInsets.only(
                   left: SizeConfig.blockSizeHorizontal * 1,

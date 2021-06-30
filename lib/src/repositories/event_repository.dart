@@ -9,4 +9,13 @@ class EventRepository {
       {@required int page, @required String token}) {
     return _eventProvider.getEventsPagingation(page: page, token: token);
   }
+
+  Future<Content> getEventContentById(
+      {@required int eventId, @required String token}) {
+    return _eventProvider.getEventContentById(eventId: eventId, token: token);
+  }
+
+  Future<List<Content>> searchEventByTitle({@required String keyWord, @required String token}){
+    return _eventProvider.searchEventByTitle(keyWord: keyWord, token: token);
+  }
 }

@@ -1,4 +1,3 @@
-
 import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/screens/events_screen.dart';
 import 'package:expat_assistant/src/screens/home_screen.dart';
@@ -20,11 +19,22 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int currentIndex = 0;
 
+  List<Widget> pageList = [];
+
+  @override
+  void initState() {
+    pageList.add(HomeScreen());
+    pageList.add(RestaurantsScreen());
+    pageList.add(EventsScreen());
+    pageList.add(ProfileScreen());
+    super.initState();
+  }
+
   Widget pageCaller(int index) {
     switch (index) {
       case 0:
         {
-          return HomeScreen(changeTab: onTappedBar,);
+          return HomeScreen();
         }
       case 1:
         {
@@ -56,10 +66,13 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setEnabledSystemUIOverlays ([]);
+    //SystemChrome.setEnabledSystemUIOverlays ([SystemUiOverlay.bottom]);
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: pageCaller(currentIndex),
+      body: IndexedStack(
+        index: currentIndex,
+        children: pageList,
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: new FloatingActionButton(
         backgroundColor: Color.fromRGBO(64, 201, 162, 1),
@@ -71,8 +84,7 @@ class _HomePageState extends State<HomePage> {
         child: new Icon(Ionicons.file_tray_full_outline),
       ),
       bottomNavigationBar: FABBottomAppBar(
-        notchedShape: CircularNotchedRectangle(
-        ),
+        notchedShape: CircularNotchedRectangle(),
         centerItemText: 'Services',
         //backgroundColor: Color.fromRGBO(30, 193, 194, 30),
         backgroundColor: Colors.white,
@@ -86,9 +98,12 @@ class _HomePageState extends State<HomePage> {
             text: 'Home',
             iconData: Ionicons.home_outline,
           ),
-          FABBottomAppBarItem(iconData: Ionicons.fast_food_outline, text: 'Food'),
-          FABBottomAppBarItem(iconData: Ionicons.calendar_outline, text: 'Event'),
-          FABBottomAppBarItem(iconData: Ionicons.person_outline, text: 'Profile')
+          FABBottomAppBarItem(
+              iconData: Ionicons.fast_food_outline, text: 'Food'),
+          FABBottomAppBarItem(
+              iconData: Ionicons.calendar_outline, text: 'Event'),
+          FABBottomAppBarItem(
+              iconData: Ionicons.person_outline, text: 'Profile')
         ],
       ),
       // bottomNavigationBar: BottomNavigationBar(

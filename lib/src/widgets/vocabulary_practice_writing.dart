@@ -14,11 +14,7 @@ class VocabularyPracticeWriting extends StatelessWidget {
   BuildContext upperContext;
   final SweetSheet _sweetSheet = SweetSheet();
   TextEditingController _textEditingController = TextEditingController();
-  FocusNode _focus = new FocusNode();
 
-    void _onFocusChange(){
-        SystemChrome.setEnabledSystemUIOverlays([]); // hide status + action buttons
-    }
 
   VocabularyPracticeWriting(
       {@required this.vocabulary,
@@ -74,7 +70,6 @@ class VocabularyPracticeWriting extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    _focus.addListener(_onFocusChange);
     SizeConfig().init(context);
     return Container(
       padding: EdgeInsets.only(
@@ -100,7 +95,6 @@ class VocabularyPracticeWriting extends StatelessWidget {
           TextFormField(
             controller: _textEditingController,
             textInputAction: TextInputAction.go,
-            focusNode: _focus,
             decoration: InputDecoration(
               hintText: 'Write english meaning here...',
               hintStyle: GoogleFonts.lato(),

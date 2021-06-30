@@ -116,7 +116,7 @@ class RestaurantCard extends StatelessWidget {
                         )),
                   ),
                   SizedBox(
-                    height: SizeConfig.blockSizeVertical * 4.8,
+                    height: SizeConfig.blockSizeVertical * 4.3,
                   ),
                   Container(
                     padding: EdgeInsets.only(

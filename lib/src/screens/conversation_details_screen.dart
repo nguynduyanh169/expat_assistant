@@ -133,7 +133,7 @@ class _ConversationDetailState extends State<ConversationDetailScreen> {
               ),
             ),
             Container(
-              height: SizeConfig.blockSizeVertical * 57,
+              height: SizeConfig.blockSizeVertical * 53.5,
               child: ListView.separated(
                 itemCount: conversationLocal.length,
                 separatorBuilder: (context, index) => SizedBox(

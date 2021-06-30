@@ -64,6 +64,7 @@ dependencies:
   ionicons: ^0.1.2
   intl: ^0.17.0
   cached_network_image: ^3.0.0
+  url_launcher: ^6.0.7
 
 dev_dependencies:
   build_runner: ^2.0.4

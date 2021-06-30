@@ -40,6 +40,8 @@ class ApiName {
   static const String GET_EVENTS_PAGINGATION = BASE_URL + "/api/events/event/";
   static const String GET_LOCATIONS_BY_EVENTID = BASE_URL + "/api/location/";
   static const String GET_TOPICS_BY_EVENTID = BASE_URL + "/api/topic/";
+  static const String GET_EVENT_CONTENT_BY_ID = BASE_URL + "/api/events/";
+  static const String GET_EVENTS_BY_TITLE = BASE_URL + "/api/events/title/";
 }
 
 class HiveBoxName {

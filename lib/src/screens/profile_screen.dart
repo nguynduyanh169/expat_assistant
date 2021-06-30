@@ -54,15 +54,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           body: Container(
             width: SizeConfig.blockSizeHorizontal * 100,
-            padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
+            padding: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 4, right: SizeConfig.blockSizeHorizontal * 4),
+            child: ListView(
+              //crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[   
                 SizedBox(
-                  height: SizeConfig.blockSizeVertical * 1,
-                ),
+                  height: SizeConfig.blockSizeVertical * 4,
+                ),           
                 CircleAvatar(
-                  radius: SizeConfig.blockSizeHorizontal * 15,
+                  radius: SizeConfig.blockSizeHorizontal * 13,
                   child: ClipOval(
                     child: Image(
                       image: AssetImage('assets/images/profile.png'),
@@ -72,10 +72,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 SizedBox(
                   height: SizeConfig.blockSizeVertical * 1,
                 ),
-                Text(
-                  'Ho Quang Bao',
-                  style: GoogleFonts.lato(
-                      fontSize: 25, fontWeight: FontWeight.w700),
+                Center(
+                  child: Text(
+                    'Ho Quang Bao',
+                    style: GoogleFonts.lato(
+                        fontSize: 25, fontWeight: FontWeight.w700),
+                  ),
                 ),
                 SizedBox(
                   height: SizeConfig.blockSizeVertical * 3.75,
