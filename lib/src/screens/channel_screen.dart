@@ -24,7 +24,7 @@ class _ChannelState extends State<ChannelScreen>{
             preferredSize: Size.fromHeight(0.25)),
         elevation: 0.5,
         backgroundColor: Colors.white,
-        toolbarHeight: SizeConfig.blockSizeVertical * 10,
+        //toolbarHeight: SizeConfig.blockSizeVertical * 10,
         automaticallyImplyLeading: true,
         iconTheme: IconThemeData(color: Colors.black),
         centerTitle: true,

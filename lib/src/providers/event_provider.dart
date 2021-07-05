@@ -69,4 +69,66 @@ class EventProvider {
     }
     return result;
   }
+
+  Future<List<Content>> getEventByExpatId(
+      {@required String token, @required int expatId}) async {
+    List<Content> result;
+    try {
+      Map<String, dynamic> headers = {
+        Headers.contentTypeHeader: "application/json",
+        Headers.acceptHeader: "application/json",
+        'Authorization': 'Bearer $token',
+      };
+      Response response = await _dio.get(
+          ApiName.GET_EVENTS_BY_EXPATID + "?expatId=$expatId",
+          options: Options(headers: headers));
+      result = (response.data as List<dynamic>)
+          .map((i) => Content.fromJson(i))
+          .toList()
+          .cast<Content>();
+    } catch (e) {
+      print(e.toString());
+    }
+    return result;
+  }
+
+  Future<EventExpat> joinAnEvent(
+      {@required String token,
+      @required int expatId,
+      @required int eventId}) async {
+    EventExpat result;
+    try {
+      Map<String, dynamic> headers = {
+        Headers.contentTypeHeader: "application/json",
+        Headers.acceptHeader: "application/json",
+        'Authorization': 'Bearer $token',
+      };
+      Response response = await _dio.post(
+          ApiName.JOIN_EVENT + "?eventId=$eventId&expatId=$expatId",
+          options: Options(headers: headers));
+      result = EventExpat.fromJson(response.data);
+    } catch (e) {
+      print(e.toString());
+    }
+    return result;
+  }
+
+  Future<int> unjoinAnEvent(
+      {@required String token,
+      @required int expatId,
+      @required int eventId}) async {
+    int result = 0;
+    try {
+      Map<String, dynamic> headers = {
+        Headers.contentTypeHeader: "application/json",
+        'Authorization': 'Bearer $token',
+      };
+      Response response = await _dio
+          .put(ApiName.UNJOIN_EVENT + "?eventId=$eventId&expatId=$expatId", options: Options(headers: headers));
+      result = response.data;
+    } catch (e) {
+      print(e.toString());
+    }
+    return result;
+  }
 }

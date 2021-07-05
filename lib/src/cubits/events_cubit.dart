@@ -30,6 +30,7 @@ class EventsCubit extends Cubit<EventsState> {
       Event eventJson;
       List<EventShow> oldEvents = [];
       List<Content> contents = [];
+      List<Content> contentsExpatId = [];
       List<Location> locations = [];
       List<Topic> topics = [];
       List<Topic> topicList = [];
@@ -45,8 +46,7 @@ class EventsCubit extends Cubit<EventsState> {
       eventJson =
           await _eventRepository.getEventsPagination(page: page, token: token);
       if (page == 0) {
-        topicList =
-            await _topicRepository.getAllTopic(token: token);
+        topicList = await _topicRepository.getAllTopic(token: token);
       }
       page++;
       final events = state.oldEvents;
@@ -56,21 +56,37 @@ class EventsCubit extends Cubit<EventsState> {
             token: token, eventId: content.eventId);
         topics = await _topicRepository.getTopicByEventId(
             token: token, eventId: content.eventId);
-        event = EventShow(
-            location: locations[0], topic: topics[0], content: content);
+        contentsExpatId =
+            await _eventRepository.getEventByExpatId(token: token, expatId: 6);
+        Content contentExpatId = contentsExpatId.firstWhere(
+            (element) => content.eventId == element.eventId,
+            orElse: () => null);
+        if (contentExpatId == null) {
+          event = EventShow(
+              location: locations[0],
+              topic: topics[0],
+              content: content,
+              isJoined: false);
+        } else {
+          event = EventShow(
+              location: locations[0],
+              topic: topics[0],
+              content: content,
+              isJoined: true);
+        }
         events.add(event);
       }
       emit(state.copyWith(
-          status: EventsStatus.loaded, events: events, page: page, topicList: topicList));
+          status: EventsStatus.loaded,
+          events: events,
+          page: page,
+          topicList: topicList));
     } on Exception {
       emit(state.copyWith(status: EventsStatus.loadError));
     }
   }
 
   Future<void> chooseTopic(BuildContext context, List<Topic> topics) async {
-    Map<dynamic, dynamic> loginResponse =
-        _hiveUtils.getUserAuth(boxName: HiveBoxName.USER_AUTH);
-    String token = loginResponse['token'].toString();
     Topic seletedTopic;
     if (topics.length == 0 || topics != null) {
       showConfimationDialogForCategory(
@@ -79,6 +95,37 @@ class EventsCubit extends Cubit<EventsState> {
         seletedTopic = value;
         print(seletedTopic.topicDesc);
       });
+    }
+  }
+
+  Future<void> pressJoinedIn() async {
+    emit(state.copyWith(status: EventsStatus.loadingJoinedInEvent));
+    try {
+      Map<dynamic, dynamic> loginResponse =
+          _hiveUtils.getUserAuth(boxName: HiveBoxName.USER_AUTH);
+      String token = loginResponse['token'].toString();
+      List<Content> contentsExpatId = [];
+      List<Location> locations = [];
+      List<Topic> topics = [];
+      List<EventShow> events = [];
+      contentsExpatId =
+          await _eventRepository.getEventByExpatId(token: token, expatId: 6);
+      for (Content content in contentsExpatId) {
+        locations = await _locationRepository.getLocationsByEventId(
+            token: token, eventId: content.eventId);
+        topics = await _topicRepository.getTopicByEventId(
+            token: token, eventId: content.eventId);
+        EventShow event = EventShow(
+            content: content,
+            topic: topics[0],
+            location: locations[0],
+            isJoined: true);
+        events.add(event);
+      }
+      emit(state.copyWith(status: EventsStatus.loadJoinedInEventSuccess, joinedEvents: events));
+      
+    } on Exception catch (e) {
+      emit(state.copyWith(status: EventsStatus.loadJoinedInEventFailed));
     }
   }
 }

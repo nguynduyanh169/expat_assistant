@@ -82,6 +82,7 @@ class VNlearnCubit extends Cubit<VNlearnState> {
             status: VNlearnStatus.loadFailed, error: 'Load Failed!'));
       }
     } on Exception catch (e) {
+      print(e.toString());
       emit(state.copyWith(
           status: VNlearnStatus.loadFailed, error: e.toString()));
     }

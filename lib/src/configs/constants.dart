@@ -27,6 +27,8 @@ class RouteName {
   static const FOOD_CAMERA = "/foodCamera";
   static const FINISH = "/finish";
   static const FINISH_CONVERSATION = "/finishConversation";
+  static const NOTIFICATION = "/notification";
+  static const CALLING = "/calling";
 }
 
 class ApiName {
@@ -41,7 +43,13 @@ class ApiName {
   static const String GET_LOCATIONS_BY_EVENTID = BASE_URL + "/api/location/";
   static const String GET_TOPICS_BY_EVENTID = BASE_URL + "/api/topic/";
   static const String GET_EVENT_CONTENT_BY_ID = BASE_URL + "/api/events/";
-  static const String GET_EVENTS_BY_TITLE = BASE_URL + "/api/events/title/";
+  static const String GET_EVENTS_BY_TITLE = BASE_URL + "/api/events/title";
+  static const String GET_EVENTS_BY_EXPATID =
+      BASE_URL + "/api/events/expatEvent";
+  static const String JOIN_EVENT = BASE_URL + "/api/events/confirm";
+  static const String UNJOIN_EVENT = BASE_URL + "/api/events/join";
+  static const String GET_BLOGS = BASE_URL + "/api/blogs/blog";
+  static const String GET_BLOGS_BY_PRIORITY = BASE_URL + "/api/blogs/priority";
 }
 
 class HiveBoxName {
@@ -54,4 +62,10 @@ class HiveBoxName {
 
 class AppColors {
   static const Color MAIN_COLOR = Color.fromRGBO(64, 201, 162, 1);
+}
+
+class Agora {
+  static const APP_ID = "9aff35de497443c9be8469665d87176b";
+  static const TOKEN =
+      '0069aff35de497443c9be8469665d87176bIADowCtzQ+ZbqMfdCIPk9MCT26SAI8QAIhHRHuuGNcJAVm+82jMAAAAAEAAm+nFWmrThYAEAAQCatOFg';
 }

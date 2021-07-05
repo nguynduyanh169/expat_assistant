@@ -5,11 +5,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class BlogsScreen extends StatefulWidget{
-  _BlogsScreenState createState()=> _BlogsScreenState();
+class BlogsScreen extends StatefulWidget {
+  _BlogsScreenState createState() => _BlogsScreenState();
 }
 
-class _BlogsScreenState extends State<BlogsScreen>{
+class _BlogsScreenState extends State<BlogsScreen> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -24,7 +24,6 @@ class _BlogsScreenState extends State<BlogsScreen>{
             preferredSize: Size.fromHeight(0.25)),
         elevation: 0.5,
         backgroundColor: Colors.white,
-        toolbarHeight: SizeConfig.blockSizeVertical * 10,
         automaticallyImplyLeading: true,
         iconTheme: IconThemeData(color: Colors.black),
         centerTitle: true,
@@ -53,10 +52,11 @@ class _BlogsScreenState extends State<BlogsScreen>{
               height: SizeConfig.blockSizeVertical * 13,
               color: Colors.white,
               padding: EdgeInsets.only(
-                  left: SizeConfig.blockSizeHorizontal * 1,
-                  top: SizeConfig.blockSizeHorizontal * 2,
-                  right: SizeConfig.blockSizeHorizontal * 1,
-                bottom: SizeConfig.blockSizeHorizontal * 2,),
+                left: SizeConfig.blockSizeHorizontal * 1,
+                top: SizeConfig.blockSizeHorizontal * 2,
+                right: SizeConfig.blockSizeHorizontal * 1,
+                bottom: SizeConfig.blockSizeHorizontal * 2,
+              ),
               child: Row(
                 children: <Widget>[
                   Container(
@@ -80,17 +80,21 @@ class _BlogsScreenState extends State<BlogsScreen>{
                                   child: Image(
                                     width: SizeConfig.blockSizeHorizontal * 15,
                                     height: SizeConfig.blockSizeVertical * 7,
-                                    image: AssetImage('assets/images/demo_channel.png'),
+                                    image: AssetImage(
+                                        'assets/images/demo_channel.png'),
                                     fit: BoxFit.cover,
                                   ),
                                 ),
-                                SizedBox(height: SizeConfig.blockSizeVertical * 1,),
+                                SizedBox(
+                                  height: SizeConfig.blockSizeVertical * 1,
+                                ),
                                 Container(
                                   width: SizeConfig.blockSizeHorizontal * 15,
                                   child: Text(
                                     'Travel News',
                                     style: GoogleFonts.lato(),
-                                    overflow: TextOverflow.ellipsis,),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 )
                               ],
                             ),
@@ -112,17 +116,21 @@ class _BlogsScreenState extends State<BlogsScreen>{
                                   child: Image(
                                     width: SizeConfig.blockSizeHorizontal * 15,
                                     height: SizeConfig.blockSizeVertical * 7,
-                                    image: AssetImage('assets/images/demo_channel.png'),
+                                    image: AssetImage(
+                                        'assets/images/demo_channel.png'),
                                     fit: BoxFit.cover,
                                   ),
                                 ),
-                                SizedBox(height: SizeConfig.blockSizeVertical * 1,),
+                                SizedBox(
+                                  height: SizeConfig.blockSizeVertical * 1,
+                                ),
                                 Container(
                                   width: SizeConfig.blockSizeHorizontal * 15,
                                   child: Text(
                                     'Travel News',
                                     style: GoogleFonts.lato(),
-                                    overflow: TextOverflow.ellipsis,),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 )
                               ],
                             ),
@@ -144,17 +152,21 @@ class _BlogsScreenState extends State<BlogsScreen>{
                                   child: Image(
                                     width: SizeConfig.blockSizeHorizontal * 15,
                                     height: SizeConfig.blockSizeVertical * 7,
-                                    image: AssetImage('assets/images/demo_channel.png'),
+                                    image: AssetImage(
+                                        'assets/images/demo_channel.png'),
                                     fit: BoxFit.cover,
                                   ),
                                 ),
-                                SizedBox(height: SizeConfig.blockSizeVertical * 1,),
+                                SizedBox(
+                                  height: SizeConfig.blockSizeVertical * 1,
+                                ),
                                 Container(
                                   width: SizeConfig.blockSizeHorizontal * 15,
                                   child: Text(
                                     'Travel News',
                                     style: GoogleFonts.lato(),
-                                    overflow: TextOverflow.ellipsis,),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 )
                               ],
                             ),
@@ -176,17 +188,21 @@ class _BlogsScreenState extends State<BlogsScreen>{
                                   child: Image(
                                     width: SizeConfig.blockSizeHorizontal * 15,
                                     height: SizeConfig.blockSizeVertical * 7,
-                                    image: AssetImage('assets/images/demo_channel.png'),
+                                    image: AssetImage(
+                                        'assets/images/demo_channel.png'),
                                     fit: BoxFit.cover,
                                   ),
                                 ),
-                                SizedBox(height: SizeConfig.blockSizeVertical * 1,),
+                                SizedBox(
+                                  height: SizeConfig.blockSizeVertical * 1,
+                                ),
                                 Container(
                                   width: SizeConfig.blockSizeHorizontal * 15,
                                   child: Text(
                                     'Travel News',
                                     style: GoogleFonts.lato(),
-                                    overflow: TextOverflow.ellipsis,),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 )
                               ],
                             ),
@@ -198,10 +214,11 @@ class _BlogsScreenState extends State<BlogsScreen>{
                   Container(
                     width: SizeConfig.blockSizeHorizontal * 12,
                     child: TextButton(
-                        onPressed: (){
-
-                        },
-                        child: Text('ALL', style: GoogleFonts.lato(),)),
+                        onPressed: () {},
+                        child: Text(
+                          'ALL',
+                          style: GoogleFonts.lato(),
+                        )),
                   )
                 ],
               ),
@@ -219,7 +236,7 @@ class _BlogsScreenState extends State<BlogsScreen>{
                     },
                     child: Container(
                       padding:
-                      EdgeInsets.all(SizeConfig.blockSizeHorizontal * 3),
+                          EdgeInsets.all(SizeConfig.blockSizeHorizontal * 3),
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.black12),
                         color: Colors.white,
@@ -234,7 +251,10 @@ class _BlogsScreenState extends State<BlogsScreen>{
                           SizedBox(
                             width: SizeConfig.blockSizeHorizontal * 1,
                           ),
-                          Text('Category', style: GoogleFonts.lato(),)
+                          Text(
+                            'Category',
+                            style: GoogleFonts.lato(),
+                          )
                         ],
                       ),
                     ),
@@ -242,12 +262,14 @@ class _BlogsScreenState extends State<BlogsScreen>{
                 ],
               ),
             ),
-            SizedBox(height: SizeConfig.blockSizeVertical * 2,),
+            SizedBox(
+              height: SizeConfig.blockSizeVertical * 2,
+            ),
             Container(
               padding: EdgeInsets.only(
                   left: SizeConfig.blockSizeHorizontal * 1,
                   right: SizeConfig.blockSizeHorizontal * 1),
-              height: SizeConfig.blockSizeVertical * 62,
+              height: SizeConfig.blockSizeVertical * 64.3,
               child: ListView(
                 children: <Widget>[
                   Container(
@@ -256,21 +278,27 @@ class _BlogsScreenState extends State<BlogsScreen>{
                         right: SizeConfig.blockSizeHorizontal * 1),
                     child: ChannelCard(),
                   ),
-                  SizedBox(height: SizeConfig.blockSizeVertical * 2,),
+                  SizedBox(
+                    height: SizeConfig.blockSizeVertical * 2,
+                  ),
                   Container(
                     padding: EdgeInsets.only(
                         left: SizeConfig.blockSizeHorizontal * 1,
                         right: SizeConfig.blockSizeHorizontal * 1),
                     child: ChannelCard(),
                   ),
-                  SizedBox(height: SizeConfig.blockSizeVertical * 2,),
+                  SizedBox(
+                    height: SizeConfig.blockSizeVertical * 2,
+                  ),
                   Container(
                     padding: EdgeInsets.only(
                         left: SizeConfig.blockSizeHorizontal * 1,
                         right: SizeConfig.blockSizeHorizontal * 1),
                     child: ChannelCard(),
                   ),
-                  SizedBox(height: SizeConfig.blockSizeVertical * 2,),
+                  SizedBox(
+                    height: SizeConfig.blockSizeVertical * 2,
+                  ),
                   Container(
                     padding: EdgeInsets.only(
                         left: SizeConfig.blockSizeHorizontal * 1,
@@ -285,6 +313,4 @@ class _BlogsScreenState extends State<BlogsScreen>{
       ),
     );
   }
-
-
 }

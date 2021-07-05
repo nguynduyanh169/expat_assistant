@@ -21,12 +21,28 @@ class LessonCard extends StatelessWidget {
   final String description;
   final String image;
   const LessonCard(
-      {@required this.vocabularyAction, @required this.conversationAction,@required this.downloadConversation, @required this.title, @required this.description, @required this.image, @required this.conversations, @required this.downloadVocabulary, @required this.vocabularies});
-  
+      {@required this.vocabularyAction,
+      @required this.conversationAction,
+      @required this.downloadConversation,
+      @required this.title,
+      @required this.description,
+      @required this.image,
+      @required this.conversations,
+      @required this.downloadVocabulary,
+      @required this.vocabularies});
+
   @override
   Widget build(BuildContext context) {
     HiveUtils _hiveUtils = HiveUtils();
-    String filePath = _hiveUtils.getFilePath(boxName: HiveBoxName.LESSON_SRC, key: image).srcPath;
+    String filePath = _hiveUtils
+                .getFilePath(boxName: HiveBoxName.LESSON_SRC, key: image)
+                .srcPath !=
+            null
+        ? _hiveUtils
+            .getFilePath(boxName: HiveBoxName.LESSON_SRC, key: image)
+            .srcPath
+        : null;
+    print(filePath);
     SizeConfig().init(context);
     return Container(
       padding: EdgeInsets.only(
@@ -49,13 +65,18 @@ class LessonCard extends StatelessWidget {
           width: SizeConfig.blockSizeHorizontal * 15,
           height: SizeConfig.blockSizeVertical * 6,
           fit: BoxFit.cover,
-          image: FileImage(File(filePath)),
+          image: filePath != null
+              ? FileImage(File(filePath))
+              : AssetImage('assets/images/demo_lesson.png'),
         ),
         title: Text(
           title,
           style: GoogleFonts.lato(fontSize: 20, fontWeight: FontWeight.bold),
         ),
-        subtitle: Text(description, style: GoogleFonts.lato(),),
+        subtitle: Text(
+          description,
+          style: GoogleFonts.lato(),
+        ),
         children: <Widget>[
           Container(
             decoration: BoxDecoration(
@@ -78,12 +99,19 @@ class LessonCard extends StatelessWidget {
                 height: SizeConfig.blockSizeVertical * 10,
                 image: AssetImage('assets/images/vocabulary_icon.png'),
               ),
-              title: Text('Vocabulary', style: GoogleFonts.lato(),),
-              trailing: (vocabularies == null) || (vocabularies.length == 0) ? IconButton(
-                icon: Icon(CupertinoIcons.square_arrow_down),
-                onPressed: downloadVocabulary,
-              ): Container(width: SizeConfig.blockSizeHorizontal * 10,
-                height: SizeConfig.blockSizeVertical * 10,),
+              title: Text(
+                'Vocabulary',
+                style: GoogleFonts.lato(),
+              ),
+              trailing: (vocabularies == null) || (vocabularies.length == 0)
+                  ? IconButton(
+                      icon: Icon(CupertinoIcons.square_arrow_down),
+                      onPressed: downloadVocabulary,
+                    )
+                  : Container(
+                      width: SizeConfig.blockSizeHorizontal * 10,
+                      height: SizeConfig.blockSizeVertical * 10,
+                    ),
             ),
           ),
           ListTile(
@@ -93,12 +121,19 @@ class LessonCard extends StatelessWidget {
               height: SizeConfig.blockSizeVertical * 10,
               image: AssetImage('assets/images/conversation_icon.png'),
             ),
-            title: Text('Conversation', style: GoogleFonts.lato(),),
-            trailing: (conversations == null) || (conversations.length == 0) ? IconButton(
-              icon: Icon(CupertinoIcons.square_arrow_down),
-              onPressed: downloadConversation,
-            ): Container(width: SizeConfig.blockSizeHorizontal * 10,
-              height: SizeConfig.blockSizeVertical * 10,),
+            title: Text(
+              'Conversation',
+              style: GoogleFonts.lato(),
+            ),
+            trailing: (conversations == null) || (conversations.length == 0)
+                ? IconButton(
+                    icon: Icon(CupertinoIcons.square_arrow_down),
+                    onPressed: downloadConversation,
+                  )
+                : Container(
+                    width: SizeConfig.blockSizeHorizontal * 10,
+                    height: SizeConfig.blockSizeVertical * 10,
+                  ),
           )
         ],
       ),

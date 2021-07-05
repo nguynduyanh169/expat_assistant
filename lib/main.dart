@@ -1,15 +1,16 @@
+import 'package:event_bus/event_bus.dart';
 import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/cubits/authentication_cubit.dart';
 import 'package:expat_assistant/src/models/auth_status.dart';
 import 'package:expat_assistant/src/models/hive_object.dart';
 import 'package:expat_assistant/src/route.dart';
 import 'package:expat_assistant/src/states/authentication_state.dart';
+import 'package:expat_assistant/src/utils/event_bus_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:intl/date_symbol_data_local.dart';
-
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,6 +39,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void dispose() {
     Hive.close();
+    EventBusUtils.instance.destroy();
     super.dispose();
   }
 
@@ -69,7 +71,8 @@ class _MyAppState extends State<MyApp> {
             ),
             debugShowCheckedModeBanner: false,
             routes: routes,
-            initialRoute: isLoggedIn == true ? RouteName.HOME_PAGE : RouteName.LOGIN,
+            initialRoute:
+                isLoggedIn == true ? RouteName.HOME_PAGE : RouteName.LOGIN,
           );
         },
       ),

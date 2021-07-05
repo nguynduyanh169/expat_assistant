@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:event_bus/event_bus.dart';
 import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/configs/size_config.dart';
 import 'package:expat_assistant/src/cubits/events_cubit.dart';
@@ -11,6 +12,7 @@ import 'package:expat_assistant/src/repositories/location_repository.dart';
 import 'package:expat_assistant/src/repositories/topic_repository.dart';
 import 'package:expat_assistant/src/screens/event_details_screen.dart';
 import 'package:expat_assistant/src/states/events_state.dart';
+import 'package:expat_assistant/src/utils/event_bus_utils.dart';
 import 'package:expat_assistant/src/widgets/event_card.dart';
 import 'package:expat_assistant/src/widgets/loading.dart';
 import 'package:expat_assistant/src/widgets/search_events.dart';
@@ -23,10 +25,13 @@ class EventsScreen extends StatefulWidget {
   _EventsScreenState createState() => _EventsScreenState();
 }
 
-class _EventsScreenState extends State<EventsScreen> {
+class _EventsScreenState extends State<EventsScreen>
+    with AutomaticKeepAliveClientMixin<EventsScreen> {
   final ScrollController scrollController = ScrollController();
   int currentPage = 0;
   List<Topic> topicList = [];
+  List<EventShow> events = [];
+  bool checkFilterJoined = false;
 
   void setupScrollController(BuildContext context) {
     scrollController.addListener(() {
@@ -38,7 +43,13 @@ class _EventsScreenState extends State<EventsScreen> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     SizeConfig().init(context);
     return Scaffold(
       backgroundColor: Color.fromRGBO(245, 244, 244, 30),
@@ -51,7 +62,7 @@ class _EventsScreenState extends State<EventsScreen> {
             preferredSize: Size.fromHeight(0.25)),
         elevation: 0.5,
         backgroundColor: Colors.white,
-        toolbarHeight: SizeConfig.blockSizeVertical * 10,
+        //toolbarHeight: SizeConfig.blockSizeVertical * 10,
         automaticallyImplyLeading: false,
         centerTitle: true,
         title: Text(
@@ -65,12 +76,20 @@ class _EventsScreenState extends State<EventsScreen> {
               child: Builder(
                 builder: (context) => IconButton(
                     onPressed: () {
-                      print('ok');
                       showSearch<EventShow>(
                           context: context,
                           delegate: SearchEvents(
                               eventSearchCubit:
                                   BlocProvider.of<SearchEventCubit>(context)));
+                      EventBusUtils.getInstance()
+                          .on<JoinedInEvent>()
+                          .listen((result) {
+                        print(result.joinedIn);
+                        final event = events.firstWhere(
+                            (item) => item.content.eventId == result.eventId,
+                            orElse: () => null);
+                        setState(() => event.isJoined = result.joinedIn);
+                      });
                     },
                     icon: Icon(
                       CupertinoIcons.search,
@@ -95,6 +114,10 @@ class _EventsScreenState extends State<EventsScreen> {
                     if (state.isFirstFetched == true) {
                       topicList = state.topicList;
                     }
+                  }
+                  if (state.status.isLoadingJoinedInEvent) {
+                    currentPage = 0;
+                    checkFilterJoined = true;
                   }
                   return Container(
                     width: SizeConfig.blockSizeHorizontal * 100,
@@ -172,13 +195,18 @@ class _EventsScreenState extends State<EventsScreen> {
                           width: SizeConfig.blockSizeHorizontal * 2,
                         ),
                         InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            BlocProvider.of<EventsCubit>(context)
+                                .pressJoinedIn();
+                          },
                           child: Container(
                             padding: EdgeInsets.all(
                                 SizeConfig.blockSizeHorizontal * 3),
                             decoration: BoxDecoration(
                               border: Border.all(color: Colors.black12),
-                              color: Colors.white,
+                              color: checkFilterJoined == true
+                                  ? AppColors.MAIN_COLOR
+                                  : Colors.white,
                               borderRadius: BorderRadius.circular(20.0),
                             ),
                             child: Row(
@@ -186,12 +214,18 @@ class _EventsScreenState extends State<EventsScreen> {
                                 Icon(
                                   CupertinoIcons.ticket,
                                   size: 16,
-                                  color: AppColors.MAIN_COLOR,
+                                  color: checkFilterJoined == true
+                                      ? Colors.white
+                                      : AppColors.MAIN_COLOR,
                                 ),
                                 SizedBox(
                                   width: SizeConfig.blockSizeHorizontal * 1,
                                 ),
-                                Text('Joined In', style: GoogleFonts.lato())
+                                Text('Joined In',
+                                    style: GoogleFonts.lato(
+                                        color: checkFilterJoined == true
+                                            ? Colors.white
+                                            : Colors.black))
                               ],
                             ),
                           ),
@@ -238,7 +272,15 @@ class _EventsScreenState extends State<EventsScreen> {
                           width: SizeConfig.blockSizeHorizontal * 2,
                         ),
                         InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            setState(() {
+                              currentPage = 0;
+                              events.clear();
+                              checkFilterJoined = false;
+                            });
+                            BlocProvider.of<EventsCubit>(context)
+                                .loadEvents(currentPage);
+                          },
                           child: Container(
                             padding: EdgeInsets.all(
                                 SizeConfig.blockSizeHorizontal * 3),
@@ -269,17 +311,17 @@ class _EventsScreenState extends State<EventsScreen> {
               ),
               BlocBuilder<EventsCubit, EventsState>(builder: (context, state) {
                 setupScrollController(context);
-                if (state.isFirstFetched && state.status.isLoading) {
+                if ((state.isFirstFetched && state.status.isLoading) ||
+                    state.status.isLoadingJoinedInEvent) {
                   return Column(
                     children: <Widget>[
                       SizedBox(
                         height: SizeConfig.blockSizeVertical * 30,
                       ),
-                      LoadingView(message: 'Loading')
+                      LoadingView(message: 'Loading...')
                     ],
                   );
                 }
-                List<EventShow> events = [];
                 bool isLoading = false;
                 if (state.status.isLoading) {
                   events = state.oldEvents;
@@ -287,15 +329,18 @@ class _EventsScreenState extends State<EventsScreen> {
                 } else if (state.status.isLoaded) {
                   events = state.events;
                   currentPage = state.page;
-                }
+                } else if (state.status.isLoadJoinedInEventSuccess) {
+                  events = state.joinedEvents;
+                } 
                 return Container(
-                  height: SizeConfig.blockSizeVertical * 67.6,
+                  height: SizeConfig.blockSizeVertical * 69.6,
                   child: RefreshIndicator(
                     onRefresh: () async {
                       setState(() {
                         currentPage = 0;
                         isLoading = false;
                         events.clear();
+                        checkFilterJoined = false;
                       });
                       BlocProvider.of<EventsCubit>(context)
                           .loadEvents(currentPage);
@@ -305,7 +350,8 @@ class _EventsScreenState extends State<EventsScreen> {
                           left: SizeConfig.blockSizeHorizontal * 2,
                           right: SizeConfig.blockSizeHorizontal * 2,
                           top: SizeConfig.blockSizeVertical * 2),
-                      controller: scrollController,
+                      controller:
+                          checkFilterJoined == false ? scrollController : null,
                       separatorBuilder: (context, index) => SizedBox(
                         height: SizeConfig.blockSizeVertical * 2,
                       ),
@@ -315,6 +361,13 @@ class _EventsScreenState extends State<EventsScreen> {
                           return EventCard(
                             content: events[index],
                             eventAction: () {
+                              EventBusUtils.getInstance()
+                                  .on<JoinedInEvent>()
+                                  .listen((event) {
+                                setState(() {
+                                  events[index].isJoined = event.joinedIn;
+                                });
+                              });
                               Navigator.pushNamed(
                                   context, RouteName.EVENT_DETAILS,
                                   arguments: EventDetailsScreenArguments(
@@ -342,4 +395,13 @@ class _EventsScreenState extends State<EventsScreen> {
       ),
     );
   }
+
+  @override
+  void updateKeepAlive() {
+    // TODO: implement updateKeepAlive
+  }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

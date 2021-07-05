@@ -3,13 +3,10 @@ import 'package:expat_assistant/src/screens/events_screen.dart';
 import 'package:expat_assistant/src/screens/home_screen.dart';
 import 'package:expat_assistant/src/screens/profile_screen.dart';
 import 'package:expat_assistant/src/screens/restaurants_screen.dart';
-import 'package:expat_assistant/src/screens/utilities_screen.dart';
 import 'package:expat_assistant/src/widgets/FAB_bottom_app_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:line_icons/line_icons.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -20,6 +17,7 @@ class _HomePageState extends State<HomePage> {
   int currentIndex = 0;
 
   List<Widget> pageList = [];
+  PageController _pageController;
 
   @override
   void initState() {
@@ -27,41 +25,21 @@ class _HomePageState extends State<HomePage> {
     pageList.add(RestaurantsScreen());
     pageList.add(EventsScreen());
     pageList.add(ProfileScreen());
+    _pageController = PageController(initialPage: currentIndex);
     super.initState();
   }
 
-  Widget pageCaller(int index) {
-    switch (index) {
-      case 0:
-        {
-          return HomeScreen();
-        }
-      case 1:
-        {
-          return RestaurantsScreen();
-        }
-      case 2:
-        {
-          return EventsScreen();
-        }
-      case 3:
-        {
-          return ProfileScreen();
-        }
-    }
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
   }
 
   void onTappedBar(int i) {
     setState(() {
       currentIndex = i;
+      _pageController.jumpToPage(currentIndex);
     });
-    // if(i != 2) {
-    //   setState(() {
-    //     currentIndex = i;
-    //   });
-    // }else{
-    //   Navigator.pushNamed(context, '/restaurants');
-    // }
   }
 
   @override
@@ -69,21 +47,24 @@ class _HomePageState extends State<HomePage> {
     //SystemChrome.setEnabledSystemUIOverlays ([SystemUiOverlay.bottom]);
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: IndexedStack(
-        index: currentIndex,
+      body: PageView(
+        controller: _pageController,
+        physics: NeverScrollableScrollPhysics(),
         children: pageList,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: new FloatingActionButton(
-        backgroundColor: Color.fromRGBO(64, 201, 162, 1),
+        shape: StadiumBorder(side: BorderSide(color: Colors.black12)),
+        backgroundColor: Colors.white,
         onPressed: () {
           Navigator.pushNamed(context, RouteName.UTILS);
         },
         tooltip: 'Services',
         elevation: 0,
-        child: new Icon(Ionicons.file_tray_full_outline),
+        child: new Icon(Ionicons.file_tray_full_outline, color: Colors.black54,),
       ),
       bottomNavigationBar: FABBottomAppBar(
+        
         notchedShape: CircularNotchedRectangle(),
         centerItemText: 'Services',
         //backgroundColor: Color.fromRGBO(30, 193, 194, 30),

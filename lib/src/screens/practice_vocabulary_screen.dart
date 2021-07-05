@@ -48,7 +48,7 @@ class _PracticeVocabularyState extends State<PracticeVocabularyScreen> {
                   index = state.index;
                 }
                 return Container(
-                  padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 3),
+                  padding: EdgeInsets.only(top: SizeConfig.blockSizeHorizontal * 6, bottom: SizeConfig.blockSizeHorizontal * 3, left: SizeConfig.blockSizeHorizontal * 3, right: SizeConfig.blockSizeHorizontal * 3),
                   child: Row(
                     children: [
                       IconButton(
@@ -80,7 +80,7 @@ class _PracticeVocabularyState extends State<PracticeVocabularyScreen> {
                 );
               }),
               SizedBox(
-                height: SizeConfig.blockSizeVertical * 5,
+                height: SizeConfig.blockSizeVertical * 4,
               ),
               BlocConsumer<PracticeVocabularyCubit, PracticeVocabularyState>(
                   listener: (context, state) {
@@ -101,8 +101,11 @@ class _PracticeVocabularyState extends State<PracticeVocabularyScreen> {
                   index = state.index;
                   return VocabularyPracticeWriting(
                     vocabulary: args.vocabularyList[index],
-                    openListening: openListening,
-                    upperContext: context,
+                    openListening: (){
+                      BlocProvider.of<PracticeVocabularyCubit>(context).practiceListening(index);
+                    },
+                    vocabularyList: args.vocabularyList,
+                    
                   );
                 } else {
                   index = state.index;

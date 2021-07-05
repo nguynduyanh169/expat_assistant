@@ -13,11 +13,12 @@ class RestaurantsScreen extends StatefulWidget {
   _RestaurantsScreenState createState() => _RestaurantsScreenState();
 }
 
-class _RestaurantsScreenState extends State<RestaurantsScreen> {
-  String _addressText = "abchdhhdh";
+class _RestaurantsScreenState extends State<RestaurantsScreen> with AutomaticKeepAliveClientMixin<RestaurantsScreen>{
+  String _addressText = "Locating....";
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     SizeConfig().init(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -31,7 +32,7 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
             preferredSize: Size.fromHeight(0.25)),
         elevation: 0.5,
         backgroundColor: Colors.white,
-        toolbarHeight: SizeConfig.blockSizeVertical * 10,
+        //toolbarHeight: SizeConfig.blockSizeVertical * 10,
         automaticallyImplyLeading: false,
         centerTitle: true,
         iconTheme: IconThemeData(color: Colors.black),
@@ -282,7 +283,7 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
                     Container(
                       padding: EdgeInsets.only(
                           top: SizeConfig.blockSizeHorizontal * 1),
-                      height: SizeConfig.blockSizeVertical * 43.3,
+                      height: SizeConfig.blockSizeVertical * 45.2,
                       child: ListView(
                         children: [
                           RestaurantCard(
@@ -339,4 +340,9 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
       ),
     );
   }
+
+  @override
+  // ignore: todo
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

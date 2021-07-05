@@ -1,11 +1,9 @@
+import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/configs/size_config.dart';
 import 'package:expat_assistant/src/models/event.dart';
 import 'package:expat_assistant/src/utils/date_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:getwidget/components/button/gf_icon_button.dart';
-import 'package:getwidget/shape/gf_icon_button_shape.dart';
-import 'package:getwidget/types/gf_border_type.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 // ignore: must_be_immutable
@@ -71,7 +69,7 @@ class EventCard extends StatelessWidget {
                   Container(
                     width: SizeConfig.blockSizeHorizontal * 70,
                     child: Text(
-                      content.content.eventTitle,
+                      content.content.eventTitle.trim(),
                       style: GoogleFonts.lato(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -157,7 +155,7 @@ class EventCard extends StatelessWidget {
                       style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
-                          color: Color.fromRGBO(30, 193, 194, 30)),
+                          color: AppColors.MAIN_COLOR),
                     ),
                     Text(
                       _dateUtils
@@ -166,7 +164,7 @@ class EventCard extends StatelessWidget {
                           .toUpperCase(),
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          color: Color.fromRGBO(30, 193, 194, 30)),
+                          color: AppColors.MAIN_COLOR),
                     )
                   ],
                 ),
@@ -210,7 +208,15 @@ class EventCard extends StatelessWidget {
             Positioned(
               left: SizeConfig.blockSizeHorizontal * 2,
               top: SizeConfig.blockSizeVertical * 2,
-              child: Icon(CupertinoIcons.ticket_fill, color: Colors.green,),
+              child: content.isJoined == true
+                  ? Icon(
+                      CupertinoIcons.ticket_fill,
+                      color: Colors.green,
+                    )
+                  : Icon(
+                      CupertinoIcons.ticket_fill,
+                      color: Colors.white,
+                    ),
             ),
           ],
         ),

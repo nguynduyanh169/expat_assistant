@@ -19,7 +19,6 @@ class SearchEventCubit extends Cubit<SearchEventState> {
       : super(const SearchEventState(status: SearchEventStatus.init));
 
   Future<void> searchEvents(String searchKeyWord) async {
-    searchKeyWord = 'Launch Wine Flights Event';
     emit(state.copyWith(status: SearchEventStatus.searching));
     try {
       Map<dynamic, dynamic> loginResponse =
@@ -34,8 +33,25 @@ class SearchEventCubit extends Cubit<SearchEventState> {
             .getLocationsByEventId(token: token, eventId: content.eventId);
         List<Topic> topics = await _topicRepository.getTopicByEventId(
             token: token, eventId: content.eventId);
-        EventShow event = EventShow(
-            location: locations[0], topic: topics[0], content: content);
+        EventShow event ;
+        List<Content> contentsExpatId =
+            await _eventRepository.getEventByExpatId(token: token, expatId: 6);
+        Content contentExpatId = contentsExpatId.firstWhere(
+            (element) => content.eventId == element.eventId,
+            orElse: () => null);
+        if (contentExpatId == null) {
+          event = EventShow(
+              location: locations[0],
+              topic: topics[0],
+              content: content,
+              isJoined: false);
+        } else {
+          event = EventShow(
+              location: locations[0],
+              topic: topics[0],
+              content: content,
+              isJoined: true);
+        }
         events.add(event);
       }
       emit(state.copyWith(

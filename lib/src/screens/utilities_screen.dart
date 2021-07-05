@@ -20,7 +20,6 @@ class UtilitiesScreen extends StatelessWidget {
             preferredSize: Size.fromHeight(0.25)),
         elevation: 0.5,
         backgroundColor: Colors.white,
-        toolbarHeight: SizeConfig.blockSizeVertical * 10,
         automaticallyImplyLeading: true,
         centerTitle: true,
         iconTheme: IconThemeData(color: Colors.black),
@@ -53,7 +52,8 @@ class UtilitiesScreen extends StatelessWidget {
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                           colors: [
-                            const Color.fromRGBO(30, 193, 194, 100),
+                            const Color.fromRGBO(64, 201, 162, 1),
+                            const Color.fromRGBO(64, 201, 162, 1),
                             const Color.fromRGBO(30, 193, 194, 30),
                           ],
                         ),
@@ -86,7 +86,7 @@ class UtilitiesScreen extends StatelessWidget {
                         ),
                         Container(
                           child: Text(
-                            'Balance',
+                            'Your balance',
                             style: GoogleFonts.lato(
                                 fontSize: 20, color: Colors.white),
                           ),

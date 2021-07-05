@@ -1,25 +1,49 @@
 import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/configs/size_config.dart';
 import 'package:expat_assistant/src/models/hive_object.dart';
+import 'package:expat_assistant/src/utils/vn_learn_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:getwidget/components/radio_list_tile/gf_radio_list_tile.dart';
+import 'package:getwidget/types/gf_radio_type.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sweetsheet/sweetsheet.dart';
 
 // ignore: must_be_immutable
-class VocabularyPracticeWriting extends StatelessWidget {
+class VocabularyPracticeWriting extends StatefulWidget {
   VocabularyLocal vocabulary;
+  List<VocabularyLocal> vocabularyList;
   Function openListening;
-  BuildContext upperContext;
-  final SweetSheet _sweetSheet = SweetSheet();
-  TextEditingController _textEditingController = TextEditingController();
-
 
   VocabularyPracticeWriting(
       {@required this.vocabulary,
       @required this.openListening,
-      @required this.upperContext});
+      @required this.vocabularyList});
+
+  @override
+  _VocabularyPracticeWritingState createState() =>
+      _VocabularyPracticeWritingState(
+          vocabulary, openListening, vocabularyList);
+}
+
+class _VocabularyPracticeWritingState extends State<VocabularyPracticeWriting> {
+  final SweetSheet _sweetSheet = SweetSheet();
+  VocabularyLocal vocabulary;
+  List<VocabularyLocal> vocabularyList;
+  Function openListening;
+  int groupValue = 0;
+  List<VocabularyLocal> vocabularyOptions = [];
+
+  _VocabularyPracticeWritingState(
+      this.vocabulary, this.openListening, this.vocabularyList);
+
+  @override
+  void initState() {
+    vocabularyOptions =
+        VNLearnUtils().getQuizOption(vocabularyList, vocabulary);
+    print(vocabularyOptions[0].description);
+    super.initState();
+  }
 
   void checkAnswer(String learnerAnswer, String english, BuildContext context) {
     if (learnerAnswer.toLowerCase().trim() == english.toLowerCase().trim()) {
@@ -38,7 +62,7 @@ class VocabularyPracticeWriting extends StatelessWidget {
         icon: CupertinoIcons.check_mark_circled_solid,
         positive: SweetSheetAction(
           onPressed: () {
-            openListening(upperContext);
+            openListening();
             Navigator.of(context).pop();
           },
           title: 'NEXT',
@@ -58,7 +82,7 @@ class VocabularyPracticeWriting extends StatelessWidget {
         icon: CupertinoIcons.xmark_circle_fill,
         positive: SweetSheetAction(
           onPressed: () {
-            _textEditingController.clear();
+            //_textEditingController.clear();
             Navigator.of(context).pop();
           },
           title: 'DO AGAIN',
@@ -86,32 +110,55 @@ class VocabularyPracticeWriting extends StatelessWidget {
             height: SizeConfig.blockSizeVertical * 5,
           ),
           Text(
-            vocabulary.vocabulary,
+            widget.vocabulary.vocabulary,
             style: GoogleFonts.lato(fontSize: 30, fontWeight: FontWeight.w600),
           ),
           SizedBox(
             height: SizeConfig.blockSizeVertical * 2,
           ),
-          TextFormField(
-            controller: _textEditingController,
-            textInputAction: TextInputAction.go,
-            decoration: InputDecoration(
-              hintText: 'Write english meaning here...',
-              hintStyle: GoogleFonts.lato(),
-              filled: true,
-              fillColor: Colors.black12,
-              focusColor: Color.fromRGBO(30, 193, 194, 30),
-              focusedBorder: new OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                  borderSide: new BorderSide(color: Colors.black12)),
-              enabledBorder: new OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                  borderSide: new BorderSide(color: Colors.black12)),
-            ),
-            minLines: 12,
-            // any number you need (It works as the rows for the textarea)
-            keyboardType: TextInputType.multiline,
-            maxLines: null,
+          Container(
+            height: SizeConfig.blockSizeVertical * 40,
+            child: ListView.separated(
+                itemBuilder: (context, index) => Container(
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10.0),
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.black26.withOpacity(0.05),
+                                offset: Offset(0.0, 6.0),
+                                blurRadius: 10.0,
+                                spreadRadius: 0.10)
+                          ]),
+                      child: GFRadioListTile(
+                        title: Text(
+                          vocabularyOptions[index]
+                              .description
+                              .toUpperCase()
+                              .trim(),
+                          style: GoogleFonts.lato(fontSize: 15),
+                        ),
+                        size: 25,
+                        activeBorderColor: AppColors.MAIN_COLOR,
+                        focusColor: AppColors.MAIN_COLOR,
+                        type: GFRadioType.basic,
+                        inactiveBorderColor: Colors.black38,
+                        value: vocabularyOptions[index].id,
+                        groupValue: groupValue,
+                        onChanged: (value) {
+                          print(value);
+                          setState(() {
+                            groupValue = value;
+                          });
+                        },
+                        
+                        inactiveIcon: null,
+                      ),
+                    ),
+                separatorBuilder: (context, index) => SizedBox(
+                      height: SizeConfig.blockSizeVertical * 1.5,
+                    ),
+                itemCount: vocabularyOptions.length),
           ),
           SizedBox(
             height: SizeConfig.blockSizeVertical * 21,
@@ -130,9 +177,9 @@ class VocabularyPracticeWriting extends StatelessWidget {
                   //: Color.fromRGBO(30, 193, 194, 30),
                   child: Text("Check"),
                   onPressed: () {
-                    checkAnswer(
-                        _textEditingController.text, vocabulary.description, context);
-                    //openListening(upperContext);
+                    print(groupValue);
+                    checkAnswer(vocabularyOptions.firstWhere((element) => element.id == groupValue, orElse: () => null).description,
+                        vocabulary.description, context);
                   }),
             ),
           )

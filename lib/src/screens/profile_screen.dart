@@ -2,7 +2,6 @@ import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/configs/size_config.dart';
 import 'package:expat_assistant/src/cubits/profile_cubit.dart';
 import 'package:expat_assistant/src/states/profile_state.dart';
-import 'package:expat_assistant/src/utils/hive_utils.dart';
 import 'package:expat_assistant/src/widgets/loading_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -14,11 +13,12 @@ class ProfileScreen extends StatefulWidget {
   _ProfileScreenState createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _ProfileScreenState extends State<ProfileScreen>
+    with AutomaticKeepAliveClientMixin<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     SizeConfig().init(context);
-    //BuildContext screenContext = context;
     return BlocProvider(
       create: (context) => ProfileCubit(),
       child:
@@ -43,7 +43,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 preferredSize: Size.fromHeight(0.25)),
             elevation: 0.5,
             backgroundColor: Colors.white,
-            toolbarHeight: SizeConfig.blockSizeVertical * 10,
+            //toolbarHeight: SizeConfig.blockSizeVertical * 10,
             automaticallyImplyLeading: false,
             centerTitle: true,
             iconTheme: IconThemeData(color: Colors.black),
@@ -54,13 +54,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           body: Container(
             width: SizeConfig.blockSizeHorizontal * 100,
-            padding: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 4, right: SizeConfig.blockSizeHorizontal * 4),
+            padding: EdgeInsets.only(
+                left: SizeConfig.blockSizeHorizontal * 4,
+                right: SizeConfig.blockSizeHorizontal * 4),
             child: ListView(
               //crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[   
+              children: <Widget>[
                 SizedBox(
                   height: SizeConfig.blockSizeVertical * 4,
-                ),           
+                ),
                 CircleAvatar(
                   radius: SizeConfig.blockSizeHorizontal * 13,
                   child: ClipOval(
@@ -255,4 +257,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
       }),
     );
   }
+
+  @override
+  void updateKeepAlive() {
+    // ignore: todo
+    // TODO: implement updateKeepAlive
+  }
+
+  @override
+  // ignore: todo
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

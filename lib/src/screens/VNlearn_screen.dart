@@ -2,7 +2,6 @@ import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/configs/size_config.dart';
 import 'package:expat_assistant/src/cubits/vn_learn_cubit.dart';
 import 'package:expat_assistant/src/models/hive_object.dart';
-import 'package:expat_assistant/src/models/topic.dart';
 import 'package:expat_assistant/src/repositories/conversation_repository.dart';
 import 'package:expat_assistant/src/repositories/topic_repository.dart';
 import 'package:expat_assistant/src/repositories/vocabulary_repository.dart';
@@ -49,7 +48,7 @@ class _VNlearnScreenState extends State<VNlearnScreen> {
             preferredSize: Size.fromHeight(0.25)),
         elevation: 0.5,
         backgroundColor: Colors.white,
-        toolbarHeight: SizeConfig.blockSizeVertical * 10,
+        
         automaticallyImplyLeading: true,
         iconTheme: IconThemeData(color: Colors.black),
         title: Text(

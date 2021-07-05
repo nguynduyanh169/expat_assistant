@@ -1,5 +1,6 @@
 import 'dart:collection';
 import 'dart:convert';
+import 'package:expat_assistant/src/models/expat.dart';
 import 'package:expat_assistant/src/models/location.dart';
 import 'package:expat_assistant/src/models/topic.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -113,6 +114,7 @@ class Content {
     this.eventEndDate,
     this.createBy,
     this.createDate,
+    this.organizers
   });
 
   int eventId;
@@ -124,6 +126,7 @@ class Content {
   List<int> eventEndDate;
   String createBy;
   List<int> createDate;
+  String organizers;
 
   factory Content.fromJson(Map<String, dynamic> json) => Content(
         eventId: json["eventId"],
@@ -135,6 +138,7 @@ class Content {
         eventEndDate: List<int>.from(json["eventEndDate"].map((x) => x)),
         createBy: json["createBy"],
         createDate: List<int>.from(json["createDate"].map((x) => x)),
+        organizers: json["organizers"]
       );
 
   Map<String, dynamic> toJson() => {
@@ -147,6 +151,7 @@ class Content {
         "eventEndDate": List<dynamic>.from(eventEndDate.map((x) => x)),
         "createBy": createBy,
         "createDate": List<dynamic>.from(createDate.map((x) => x)),
+        "organizers": organizers
       };
 }
 
@@ -210,10 +215,35 @@ class Sort {
       };
 }
 
+class EventExpat {
+  EventExpat({
+    this.expatEventId,
+    this.expatId,
+    this.eventId,
+  });
+
+  int expatEventId;
+  Expat expatId;
+  Content eventId;
+
+  factory EventExpat.fromJson(Map<String, dynamic> json) => EventExpat(
+        expatEventId: json["expatEventId"],
+        expatId: Expat.fromJson(json["expatId"]),
+        eventId: Content.fromJson(json["eventId"]),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "expatEventId": expatEventId,
+        "expatId": expatId.toJson(),
+        "eventId": eventId.toJson(),
+      };
+}
+
 class EventShow {
   Content content;
   Location location;
   Topic topic;
+  bool isJoined;
 
-  EventShow({this.content, this.topic, this.location});
+  EventShow({this.content, this.topic, this.location, this.isJoined});
 }

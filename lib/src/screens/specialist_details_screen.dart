@@ -61,7 +61,7 @@ class _SpecialistDetailsState extends State<SpecialistDetailsScreen> {
         elevation: 0.5,
         iconTheme: IconThemeData(color: Colors.black),
         backgroundColor: Colors.white,
-        toolbarHeight: SizeConfig.blockSizeVertical * 10,
+        //toolbarHeight: SizeConfig.blockSizeVertical * 10,
         automaticallyImplyLeading: true,
         centerTitle: true,
         title: Text(
@@ -86,7 +86,7 @@ class _SpecialistDetailsState extends State<SpecialistDetailsScreen> {
           children: [
             Container(
               padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
-              height: SizeConfig.blockSizeVertical * 80,
+              height: SizeConfig.blockSizeVertical * 79,
               child: ListView(
                 children: <Widget>[
                   Container(

@@ -1,17 +1,15 @@
-import 'package:bloc/bloc.dart';
 import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/configs/size_config.dart';
 import 'package:expat_assistant/src/cubits/search_event_cubit.dart';
 import 'package:expat_assistant/src/models/event.dart';
 import 'package:expat_assistant/src/screens/event_details_screen.dart';
 import 'package:expat_assistant/src/states/search_event_state.dart';
+import 'package:expat_assistant/src/utils/event_bus_utils.dart';
 import 'package:expat_assistant/src/widgets/event_card.dart';
 import 'package:expat_assistant/src/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:line_icons/line_icon.dart';
-import 'package:line_icons/line_icons.dart';
 
 class SearchEvents extends SearchDelegate<EventShow> {
   final SearchEventCubit eventSearchCubit;
@@ -94,39 +92,55 @@ class SearchEvents extends SearchDelegate<EventShow> {
           );
         } else {
           return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: SizeConfig.blockSizeVertical * 2,),
-              Container(padding: EdgeInsets.only(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: SizeConfig.blockSizeVertical * 2,
+                ),
+                Container(
+                    padding: EdgeInsets.only(
                       left: SizeConfig.blockSizeHorizontal * 2,
                       right: SizeConfig.blockSizeHorizontal * 2,
-                      ),child: Text('Found ${state.searchEventList.length} results', style: GoogleFonts.lato(fontSize: 18),)),
-              SizedBox(height: SizeConfig.blockSizeVertical * 1,),
-              Container(
-                height: SizeConfig.blockSizeVertical * 81.8,
-                child: ListView.separated(
-                  padding: EdgeInsets.only(
-                      left: SizeConfig.blockSizeHorizontal * 2,
-                      right: SizeConfig.blockSizeHorizontal * 2,
-                      top: SizeConfig.blockSizeVertical * 2),
-                  separatorBuilder: (context, index) => SizedBox(
-                    height: SizeConfig.blockSizeVertical * 2,
-                  ),
-                  itemCount: state.searchEventList.length,
-                  itemBuilder: (context, index) {
-                    return EventCard(
+                    ),
+                    child: Text(
+                      'Found ${state.searchEventList.length} results',
+                      style: GoogleFonts.lato(fontSize: 18),
+                    )),
+                SizedBox(
+                  height: SizeConfig.blockSizeVertical * 1,
+                ),
+                Container(
+                  height: SizeConfig.blockSizeVertical * 81.8,
+                  child: ListView.separated(
+                    padding: EdgeInsets.only(
+                        left: SizeConfig.blockSizeHorizontal * 2,
+                        right: SizeConfig.blockSizeHorizontal * 2,
+                        top: SizeConfig.blockSizeVertical * 2),
+                    separatorBuilder: (context, index) => SizedBox(
+                      height: SizeConfig.blockSizeVertical * 2,
+                    ),
+                    itemCount: state.searchEventList.length,
+                    itemBuilder: (context, index) {
+                      return EventCard(
                         content: state.searchEventList[index],
                         eventAction: () {
+                          EventBusUtils.getInstance()
+                              .on<JoinedInEvent>()
+                              .listen((event) {
+                            state.searchEventList[index].isJoined =
+                                  event.joinedIn;
+                          });
+                          EventBusUtils.getInstance().fire(JoinedInEvent(state.searchEventList[index].content.eventId, state.searchEventList[index].isJoined));
                           Navigator.pushNamed(context, RouteName.EVENT_DETAILS,
-                              arguments: EventDetailsScreenArguments(
-                                  state.searchEventList[index].content.eventId));
+                              arguments: EventDetailsScreenArguments(state
+                                  .searchEventList[index].content.eventId));
                         },
                       );
-                  },
+                    },
+                  ),
                 ),
-              ),
-            ],
-          );
+              ],
+            );
         }
       },
       bloc: eventSearchCubit,

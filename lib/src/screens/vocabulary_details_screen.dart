@@ -33,7 +33,6 @@ class _VocabularyDetailState extends State<VocabularyDetailScreen> {
             preferredSize: Size.fromHeight(0.25)),
         elevation: 0.5,
         backgroundColor: Colors.white,
-        toolbarHeight: SizeConfig.blockSizeVertical * 10,
         centerTitle: true,
         iconTheme: IconThemeData(color: Colors.black),
         title: Text(
@@ -46,7 +45,7 @@ class _VocabularyDetailState extends State<VocabularyDetailScreen> {
         children: <Widget>[
           Container(
             padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
-            height: SizeConfig.blockSizeVertical * 77.5,
+            height: SizeConfig.blockSizeVertical * 79.3,
             child: ListView.separated(
               itemCount: vocabularyList.length,
               separatorBuilder: (context, index) => SizedBox(
@@ -102,6 +101,7 @@ class _VocabularyDetailState extends State<VocabularyDetailScreen> {
                                 GoogleFonts.lato(fontSize: 17))),
                         child: Text("Practice"),
                         onPressed: () {
+                          print('object');
                           Navigator.pushNamed(
                               context, RouteName.PRACTICE_VOCABULARY,
                               arguments: PracticeVocabularyScreenArguments(

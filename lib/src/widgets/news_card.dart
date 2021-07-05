@@ -1,10 +1,12 @@
+import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/configs/size_config.dart';
+import 'package:expat_assistant/src/models/blog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class NewsCard extends StatelessWidget{
-
+// ignore: must_be_immutable
+class NewsCard extends StatelessWidget {
   Function newsAction;
 
   NewsCard({@required this.newsAction});
@@ -27,28 +29,53 @@ class NewsCard extends StatelessWidget{
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            SizedBox(height: SizeConfig.blockSizeVertical * 2,),
+            SizedBox(
+              height: SizeConfig.blockSizeVertical * 2,
+            ),
             Container(
-              padding: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 2),
+              padding:
+                  EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 2),
               width: SizeConfig.blockSizeHorizontal * 90,
-              child: Text('Nha Trang Whale Worship Festival, as Portrayed in This Stunning Graduation Project', style: GoogleFonts.lato(fontSize: 15, fontWeight: FontWeight.bold),),
+              child: Text(
+                'Nha Trang Whale Worship Festival, as Portrayed in This Stunning Graduation Project',
+                style:
+                    GoogleFonts.lato(fontSize: 15, fontWeight: FontWeight.bold),
+              ),
             ),
             Container(
-              padding: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 2),
-              child: Text('Travel', style: GoogleFonts.lato(fontSize: 15, color: Colors.black54),),
+              padding:
+                  EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 2),
+              child: Text(
+                'Travel',
+                style: GoogleFonts.lato(fontSize: 15, color: Colors.black54),
+              ),
             ),
-            SizedBox(height: SizeConfig.blockSizeVertical * 1,),
+            SizedBox(
+              height: SizeConfig.blockSizeVertical * 1,
+            ),
             Container(
-              padding: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 2),
+              padding:
+                  EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 2),
               child: Row(
                 children: <Widget>[
-                  Icon(CupertinoIcons.clock, size: 15, color: Color.fromRGBO(30, 193, 194, 30),),
-                  SizedBox(width: SizeConfig.blockSizeHorizontal * 2,),
-                  Text('Monday, 31 May 2021 at 4:00 PM', style: GoogleFonts.lato(fontSize: 12),),
+                  Icon(
+                    CupertinoIcons.clock,
+                    size: 15,
+                    color: Color.fromRGBO(30, 193, 194, 30),
+                  ),
+                  SizedBox(
+                    width: SizeConfig.blockSizeHorizontal * 2,
+                  ),
+                  Text(
+                    'Monday, 31 May 2021 at 4:00 PM',
+                    style: GoogleFonts.lato(fontSize: 12),
+                  ),
                 ],
               ),
             ),
-            SizedBox(height: SizeConfig.blockSizeVertical * 2,),
+            SizedBox(
+              height: SizeConfig.blockSizeVertical * 2,
+            ),
             ClipRRect(
               child: Image(
                 width: SizeConfig.blockSizeHorizontal * 100,
@@ -61,14 +88,18 @@ class NewsCard extends StatelessWidget{
       ),
     );
   }
-
 }
 
-class ChannelCard extends StatelessWidget{
+// ignore: must_be_immutable
+class ChannelCard extends StatelessWidget {
+  ListBlog blog;
+  ChannelCard({@required this.blog});
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(top: SizeConfig.blockSizeVertical * 1, bottom: SizeConfig.blockSizeVertical * 1),
+      padding: EdgeInsets.only(
+          top: SizeConfig.blockSizeVertical * 1,
+          bottom: SizeConfig.blockSizeVertical * 1),
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(10.0),
@@ -88,46 +119,75 @@ class ChannelCard extends StatelessWidget{
               child: Image(
                 width: SizeConfig.blockSizeHorizontal * 15,
                 height: SizeConfig.blockSizeVertical * 20,
-                image: AssetImage('assets/images/demo_channel.png'),
+                image: NetworkImage(blog.channel.image),
                 fit: BoxFit.cover,
               ),
             ),
-            title: Text('Travel News', style: GoogleFonts.lato(fontSize: 20, fontWeight: FontWeight.w700),),
-            subtitle: Text('5 hours ago', style: GoogleFonts.lato(),),
+            title: Text(
+              blog.channel.channelName,
+              style:
+                  GoogleFonts.lato(fontSize: 20, fontWeight: FontWeight.w700),
+            ),
+            subtitle: Text(
+              '5 hours ago',
+              style: GoogleFonts.lato(),
+            ),
           ),
           Divider(
             color: Colors.black45,
             height: 2,
           ),
-          SizedBox(height: SizeConfig.blockSizeVertical * 1,),
+          SizedBox(
+            height: SizeConfig.blockSizeVertical * 1,
+          ),
           ClipRRect(
             child: Image(
               fit: BoxFit.cover,
               width: SizeConfig.blockSizeHorizontal * 101,
               height: SizeConfig.blockSizeVertical * 24.5,
-              image: AssetImage(
-                  'assets/images/demo_news.png',
-              ),
+              image: NetworkImage(blog.coverLink),
             ),
           ),
-          SizedBox(height: SizeConfig.blockSizeVertical * 1,),
+          SizedBox(
+            height: SizeConfig.blockSizeVertical * 1,
+          ),
           Container(
             padding: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 2),
-            child: Text('Travel', style: GoogleFonts.lato(fontSize: 15, color: Colors.black54),),
+            child: Text(
+              blog.category.categoryName,
+              style: GoogleFonts.lato(fontSize: 15, color: Colors.black54),
+            ),
           ),
           Container(
             padding: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 2),
             width: SizeConfig.blockSizeHorizontal * 90,
-            child: Text('Nha Trang Whale Worship Festival, as Portrayed in This Stunning Graduation Project', style: GoogleFonts.lato(fontSize: 15, fontWeight: FontWeight.bold),),
+            child: Text(
+              blog.blogTitle,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 2,
+              style:
+                  GoogleFonts.lato(fontSize: 15, fontWeight: FontWeight.bold),
+            ),
           ),
-          SizedBox(height: SizeConfig.blockSizeVertical * 1,),
+          SizedBox(
+            height: SizeConfig.blockSizeVertical * 1,
+          ),
           Container(
             padding: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 2),
             child: Row(
               children: <Widget>[
-                Icon(CupertinoIcons.clock, size: 15, color: Color.fromRGBO(30, 193, 194, 30),),
-                SizedBox(width: SizeConfig.blockSizeHorizontal * 2,),
-                Text('Monday, 31 May 2021 at 4:00 PM', style: GoogleFonts.lato(fontSize: 12),),
+                Icon(
+                  CupertinoIcons.clock,
+                  size: 15,
+                  color: AppColors.MAIN_COLOR,
+                ),
+                SizedBox(
+                  width: SizeConfig.blockSizeHorizontal * 2,
+                ),
+                Text(
+                  'Monday, 31 May 2021 at 4:00 PM',
+                  style: GoogleFonts.lato(fontSize: 12),
+                ),
               ],
             ),
           ),
@@ -135,5 +195,4 @@ class ChannelCard extends StatelessWidget{
       ),
     );
   }
-
 }

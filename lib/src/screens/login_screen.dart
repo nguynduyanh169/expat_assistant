@@ -20,7 +20,6 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    SystemChrome.setEnabledSystemUIOverlays([]);
     return Scaffold(
       body: BlocProvider(
         create: (context) => LoginCubit(UserRepository()),

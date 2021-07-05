@@ -15,7 +15,25 @@ class EventRepository {
     return _eventProvider.getEventContentById(eventId: eventId, token: token);
   }
 
-  Future<List<Content>> searchEventByTitle({@required String keyWord, @required String token}){
+  Future<List<Content>> searchEventByTitle(
+      {@required String keyWord, @required String token}) {
     return _eventProvider.searchEventByTitle(keyWord: keyWord, token: token);
+  }
+
+  Future<List<Content>> getEventByExpatId(
+      {@required String token, @required int expatId}) {
+    return _eventProvider.getEventByExpatId(token: token, expatId: expatId);
+  }
+
+  Future<EventExpat> joinAnEvent(
+      {@required String token, @required int expatId, @required int eventId}) {
+    return _eventProvider.joinAnEvent(
+        token: token, expatId: expatId, eventId: eventId);
+  }
+
+  Future<int> unjoinAnEvent(
+      {@required String token, @required int expatId, @required int eventId}) {
+    return _eventProvider.unjoinAnEvent(
+        token: token, expatId: expatId, eventId: eventId);
   }
 }

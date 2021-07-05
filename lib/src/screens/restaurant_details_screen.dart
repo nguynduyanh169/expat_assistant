@@ -22,7 +22,7 @@ class RestaurantDetailsScreen extends StatelessWidget {
         elevation: 0.5,
         iconTheme: IconThemeData(color: Colors.black),
         backgroundColor: Colors.white,
-        toolbarHeight: SizeConfig.blockSizeVertical * 10,
+        //toolbarHeight: SizeConfig.blockSizeVertical * 10,
         automaticallyImplyLeading: true,
         centerTitle: true,
         title: Text(
