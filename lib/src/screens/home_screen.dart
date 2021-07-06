@@ -5,6 +5,7 @@ import 'package:expat_assistant/src/configs/size_config.dart';
 import 'package:expat_assistant/src/cubits/home_cubit.dart';
 import 'package:expat_assistant/src/models/blog.dart';
 import 'package:expat_assistant/src/repositories/blog_repository.dart';
+import 'package:expat_assistant/src/screens/channel_screen.dart';
 import 'package:expat_assistant/src/states/home_state.dart';
 import 'package:expat_assistant/src/widgets/loading.dart';
 import 'package:expat_assistant/src/widgets/news_card.dart';
@@ -111,214 +112,236 @@ class _HomeScreenState extends State<HomeScreen>
                 news = state.blogs;
                 currentPage = state.pageOfLatestNews;
               }
-              return ListView(
-                scrollDirection: Axis.vertical,
-                controller: newsScrollController,
-                children: <Widget>[
-                  SizedBox(
-                    height: SizeConfig.blockSizeVertical * 2,
-                  ),
-                  Container(
-                    child: Text(
-                      'Welcome Bao!',
-                      style: GoogleFonts.lato(
-                          fontSize: 30, fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                  SizedBox(
-                    height: SizeConfig.blockSizeHorizontal * 2,
-                  ),
-                  ThumbnailsList(),
-                  Container(
-                    padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(
-                          'Services',
-                          style: GoogleFonts.lato(
-                              fontSize: 22,
-                              fontWeight: FontWeight.w500,
-                              color: Color.fromRGBO(0, 99, 99, 30)),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    height: SizeConfig.blockSizeVertical * 5,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: <Widget>[
-                        SizedBox(
-                          width: SizeConfig.blockSizeHorizontal * 2,
-                        ),
-                        Container(
-                          //width: SizeConfig.blockSizeHorizontal * 30,
-                          padding: EdgeInsets.all(
-                              SizeConfig.blockSizeHorizontal * 2),
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10.0),
-                              boxShadow: [
-                                BoxShadow(
-                                    color: Colors.black26.withOpacity(0.05),
-                                    offset: Offset(0.0, 6.0),
-                                    blurRadius: 10.0,
-                                    spreadRadius: 0.10)
-                              ]),
-                          child: Row(
-                            children: <Widget>[
-                              Icon(
-                                LineIcons.hamburger,
-                              ),
-                              SizedBox(
-                                width: SizeConfig.blockSizeHorizontal * 1,
-                              ),
-                              Text('Nearby Restaurants',
-                                  style: GoogleFonts.lato())
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          width: SizeConfig.blockSizeHorizontal * 2,
-                        ),
-                        Container(
-                          padding: EdgeInsets.all(
-                              SizeConfig.blockSizeHorizontal * 2),
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10.0),
-                              boxShadow: [
-                                BoxShadow(
-                                    color: Colors.black26.withOpacity(0.05),
-                                    offset: Offset(0.0, 6.0),
-                                    blurRadius: 10.0,
-                                    spreadRadius: 0.10)
-                              ]),
-                          child: Row(
-                            children: <Widget>[
-                              Icon(
-                                LineIcons.phoneVolume,
-                              ),
-                              SizedBox(
-                                width: SizeConfig.blockSizeHorizontal * 1,
-                              ),
-                              Text('Incoming Appointments',
-                                  style: GoogleFonts.lato())
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          width: SizeConfig.blockSizeHorizontal * 2,
-                        ),
-                        Container(
-                          padding: EdgeInsets.all(
-                              SizeConfig.blockSizeHorizontal * 2),
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10.0),
-                              boxShadow: [
-                                BoxShadow(
-                                    color: Colors.black26.withOpacity(0.05),
-                                    offset: Offset(0.0, 6.0),
-                                    blurRadius: 10.0,
-                                    spreadRadius: 0.10)
-                              ]),
-                          child: Row(
-                            children: <Widget>[
-                              Icon(
-                                LineIcons.calendarCheck,
-                              ),
-                              SizedBox(
-                                width: SizeConfig.blockSizeHorizontal * 1,
-                              ),
-                              Text('Incoming Events', style: GoogleFonts.lato())
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          width: SizeConfig.blockSizeHorizontal * 2,
-                        ),
-                        Container(
-                          padding: EdgeInsets.all(
-                              SizeConfig.blockSizeHorizontal * 2),
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10.0),
-                              boxShadow: [
-                                BoxShadow(
-                                    color: Colors.black26.withOpacity(0.05),
-                                    offset: Offset(0.0, 6.0),
-                                    blurRadius: 10.0,
-                                    spreadRadius: 0.10)
-                              ]),
-                          child: Row(
-                            children: <Widget>[
-                              Icon(
-                                LineIcons.book,
-                              ),
-                              SizedBox(
-                                width: SizeConfig.blockSizeHorizontal * 1,
-                              ),
-                              Text('Latest Vietnamese Lessons',
-                                  style: GoogleFonts.lato())
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(
-                          'Lasted News',
-                          style: GoogleFonts.lato(
-                              fontSize: 22,
-                              fontWeight: FontWeight.w500,
-                              color: Color.fromRGBO(0, 99, 99, 30)),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            Navigator.pushNamed(context, RouteName.BLOGS);
-                          },
-                          child: Text('See more',
-                              style: GoogleFonts.lato(
-                                  color: Color.fromRGBO(30, 193, 194, 30))),
-                        )
-                      ],
-                    ),
-                  ),
-                  ListView.separated(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    separatorBuilder: (context, index) => SizedBox(
+              return RefreshIndicator(
+                onRefresh: () async {
+                  setState(() {
+                    currentPage = 0;
+                    isLoadingNews = false;
+                    news.clear();
+                  });
+                  BlocProvider.of<HomeCubit>(context)
+                      .getLatestNews(currentPage);
+                },
+                child: ListView(
+                  scrollDirection: Axis.vertical,
+                  controller: newsScrollController,
+                  children: <Widget>[
+                    SizedBox(
                       height: SizeConfig.blockSizeVertical * 2,
                     ),
-                    itemBuilder: (context, index) {
-                      if (index < news.length) {
-                        return Container(
-                          padding: EdgeInsets.only(
-                              left: SizeConfig.blockSizeHorizontal * 1,
-                              right: SizeConfig.blockSizeHorizontal * 1),
-                          child: ChannelCard(blog: news[index],),
-                        );
-                      } else {
-                        Timer(Duration(milliseconds: 30), () {
-                          newsScrollController.jumpTo(
-                              newsScrollController.position.maxScrollExtent);
-                        });
-                        return Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Center(child: CupertinoActivityIndicator()),
-                        );
-                      }
-                    },
-                    itemCount: news.length + (isLoadingNews ? 1 : 0),
-                  ),
-                ],
+                    Container(
+                      child: Text(
+                        'Welcome Bao!',
+                        style: GoogleFonts.lato(
+                            fontSize: 30, fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                    SizedBox(
+                      height: SizeConfig.blockSizeHorizontal * 2,
+                    ),
+                    ThumbnailsList(),
+                    Container(
+                      padding:
+                          EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(
+                            'Services',
+                            style: GoogleFonts.lato(
+                                fontSize: 22,
+                                fontWeight: FontWeight.w500,
+                                color: Color.fromRGBO(0, 99, 99, 30)),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      height: SizeConfig.blockSizeVertical * 5,
+                      child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        children: <Widget>[
+                          SizedBox(
+                            width: SizeConfig.blockSizeHorizontal * 2,
+                          ),
+                          Container(
+                            //width: SizeConfig.blockSizeHorizontal * 30,
+                            padding: EdgeInsets.all(
+                                SizeConfig.blockSizeHorizontal * 2),
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10.0),
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: Colors.black26.withOpacity(0.05),
+                                      offset: Offset(0.0, 6.0),
+                                      blurRadius: 10.0,
+                                      spreadRadius: 0.10)
+                                ]),
+                            child: Row(
+                              children: <Widget>[
+                                Icon(
+                                  LineIcons.hamburger,
+                                ),
+                                SizedBox(
+                                  width: SizeConfig.blockSizeHorizontal * 1,
+                                ),
+                                Text('Nearby Restaurants',
+                                    style: GoogleFonts.lato())
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            width: SizeConfig.blockSizeHorizontal * 2,
+                          ),
+                          Container(
+                            padding: EdgeInsets.all(
+                                SizeConfig.blockSizeHorizontal * 2),
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10.0),
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: Colors.black26.withOpacity(0.05),
+                                      offset: Offset(0.0, 6.0),
+                                      blurRadius: 10.0,
+                                      spreadRadius: 0.10)
+                                ]),
+                            child: Row(
+                              children: <Widget>[
+                                Icon(
+                                  LineIcons.phoneVolume,
+                                ),
+                                SizedBox(
+                                  width: SizeConfig.blockSizeHorizontal * 1,
+                                ),
+                                Text('Incoming Appointments',
+                                    style: GoogleFonts.lato())
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            width: SizeConfig.blockSizeHorizontal * 2,
+                          ),
+                          Container(
+                            padding: EdgeInsets.all(
+                                SizeConfig.blockSizeHorizontal * 2),
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10.0),
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: Colors.black26.withOpacity(0.05),
+                                      offset: Offset(0.0, 6.0),
+                                      blurRadius: 10.0,
+                                      spreadRadius: 0.10)
+                                ]),
+                            child: Row(
+                              children: <Widget>[
+                                Icon(
+                                  LineIcons.calendarCheck,
+                                ),
+                                SizedBox(
+                                  width: SizeConfig.blockSizeHorizontal * 1,
+                                ),
+                                Text('Incoming Events',
+                                    style: GoogleFonts.lato())
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            width: SizeConfig.blockSizeHorizontal * 2,
+                          ),
+                          Container(
+                            padding: EdgeInsets.all(
+                                SizeConfig.blockSizeHorizontal * 2),
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10.0),
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: Colors.black26.withOpacity(0.05),
+                                      offset: Offset(0.0, 6.0),
+                                      blurRadius: 10.0,
+                                      spreadRadius: 0.10)
+                                ]),
+                            child: Row(
+                              children: <Widget>[
+                                Icon(
+                                  LineIcons.book,
+                                ),
+                                SizedBox(
+                                  width: SizeConfig.blockSizeHorizontal * 1,
+                                ),
+                                Text('Latest Vietnamese Lessons',
+                                    style: GoogleFonts.lato())
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    Container(
+                      padding:
+                          EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(
+                            'Lasted News',
+                            style: GoogleFonts.lato(
+                                fontSize: 22,
+                                fontWeight: FontWeight.w500,
+                                color: Color.fromRGBO(0, 99, 99, 30)),
+                          ),
+                          InkWell(
+                            onTap: () {
+                              Navigator.pushNamed(context, RouteName.BLOGS);
+                            },
+                            child: Text('See more',
+                                style: GoogleFonts.lato(
+                                    color: Color.fromRGBO(30, 193, 194, 30))),
+                          )
+                        ],
+                      ),
+                    ),
+                    ListView.separated(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      separatorBuilder: (context, index) => SizedBox(
+                        height: SizeConfig.blockSizeVertical * 2,
+                      ),
+                      itemBuilder: (context, index) {
+                        if (index < news.length) {
+                          return Container(
+                            padding: EdgeInsets.only(
+                                left: SizeConfig.blockSizeHorizontal * 1,
+                                right: SizeConfig.blockSizeHorizontal * 1),
+                            child: ChannelCard(
+                              blog: news[index],
+                              openChannel: () => Navigator.pushNamed(
+                                  context, RouteName.CHANNEL,
+                                  arguments: ChannelDetailsArguments(
+                                      news[index].channel.channelId)),
+                              openNews: () => Navigator.pushNamed(
+                                  context, RouteName.BLOG_DETAILS),
+                            ),
+                          );
+                        } else {
+                          Timer(Duration(milliseconds: 30), () {
+                            newsScrollController.jumpTo(
+                                newsScrollController.position.maxScrollExtent);
+                          });
+                          return Padding(
+                            padding: const EdgeInsets.all(30.0),
+                            child: Center(child: CupertinoActivityIndicator()),
+                          );
+                        }
+                      },
+                      itemCount: news.length + (isLoadingNews ? 1 : 0),
+                    ),
+                  ],
+                ),
               );
             }
           }),

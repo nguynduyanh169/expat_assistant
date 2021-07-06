@@ -33,11 +33,8 @@ class BlogProvider {
     return blog;
   }
 
-  Future<dynamic> getBlogs(
-      {@required String token,
-      @required int page,
-      @required int priority}) async {
-    Blog blog;
+  Future<dynamic> getBlogs({@required String token, @required int page}) async {
+    List<ListBlog> blogs;
     int size = 3;
     try {
       Map<String, dynamic> headers = {
@@ -51,11 +48,74 @@ class BlogProvider {
       if (response.statusCode == 204) {
         return 204;
       } else {
-        blog = Blog.fromJson(response.data);
+        blogs = (response.data['content'] as List<dynamic>)
+            .map((i) => ListBlog.fromJson(i))
+            .toList()
+            .cast<ListBlog>();
       }
     } catch (e) {
       print(e.toString());
     }
-    return blog;
+    return blogs;
+  }
+
+  Future<dynamic> getBlogsByChannel(
+      {@required String token,
+      @required int page,
+      @required int channelId}) async {
+    List<ListBlog> blogs;
+    int size = 3;
+    try {
+      Map<String, dynamic> headers = {
+        Headers.contentTypeHeader: "application/json",
+        Headers.acceptHeader: "application/json",
+        'Authorization': 'Bearer $token',
+      };
+      Response response = await _dio.get(
+          ApiName.GET_BLOGS_BY_CHANNEL +
+              "?channelId=$channelId&page=$page&size=$size&sortBy=blogId",
+          options: Options(headers: headers));
+      if (response.statusCode == 204) {
+        return 204;
+      } else {
+        blogs = (response.data['listBlog'] as List<dynamic>)
+            .map((i) => ListBlog.fromJson(i))
+            .toList()
+            .cast<ListBlog>();
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+    return blogs;
+  }
+
+  Future<dynamic> getBlogsByTitle(
+      {@required String token,
+      @required int page,
+      @required String keywords}) async {
+    List<ListBlog> blogs;
+    int size = 3;
+    try {
+      Map<String, dynamic> headers = {
+        Headers.contentTypeHeader: "application/json",
+        Headers.acceptHeader: "application/json",
+        'Authorization': 'Bearer $token',
+      };
+      Response response = await _dio.get(
+          ApiName.GET_BLOGS_BY_TITLE +
+              "?page=$page&size=$size&sortBy=blogId&title=$keywords",
+          options: Options(headers: headers));
+      if (response.statusCode == 204) {
+        return 204;
+      } else {
+        blogs = (response.data['listBlog'] as List<dynamic>)
+            .map((i) => ListBlog.fromJson(i))
+            .toList()
+            .cast<ListBlog>();
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+    return blogs;
   }
 }

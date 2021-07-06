@@ -84,7 +84,6 @@ class _EventsScreenState extends State<EventsScreen>
                       EventBusUtils.getInstance()
                           .on<JoinedInEvent>()
                           .listen((result) {
-                        print(result.joinedIn);
                         final event = events.firstWhere(
                             (item) => item.content.eventId == result.eventId,
                             orElse: () => null);

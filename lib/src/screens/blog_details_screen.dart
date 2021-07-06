@@ -2,28 +2,39 @@ import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/configs/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:html/parser.dart' as htmlparser;
+import 'package:html/dom.dart' as dom;
 
 class BlogDetailsScreen extends StatelessWidget {
+  String test = "<div ><h2>TITLE HEADING</h2><h5>Title description, Sep 2, 2017</h5><img src='https://cdn.tuoitre.vn/thumb_w/586/2021/7/5/logo-hk-1625514745021872118477.jpg' alt='Flowers in Chania' width='560' height='345'><p>Some text..</p><p>Sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p></div>";
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
+    dom.Document document = htmlparser.parse(test);
     return Scaffold(
       appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Color.fromRGBO(30, 193, 194, 30),
-        toolbarHeight: SizeConfig.blockSizeVertical * 10,
+        bottom: PreferredSize(
+            child: Container(
+              color: Colors.black38,
+              height: 0.25,
+            ),
+            preferredSize: Size.fromHeight(0.25)),
+        elevation: 0.5,
+        backgroundColor: Colors.white,
         automaticallyImplyLeading: true,
-        // centerTitle: true,
-        // title: Text(
-        //   'Event Details',
-        //   style: GoogleFonts.ubuntu(fontSize: 22),
-        // ),
+        iconTheme: IconThemeData(color: Colors.black),
+        centerTitle: true,
+        title: Text(
+            "Nha Trang's Whale Worship Festival, as Portrayed in This Stunning Graduation Project",
+            style: GoogleFonts.lato(fontSize: 20, color: Colors.black),
+          ),
         actions: [
           IconButton(
               onPressed: () {
-                print('tapped');
-                Navigator.popUntil(context, ModalRoute.withName(RouteName.HOME_PAGE));
+                Navigator.popUntil(
+                    context, ModalRoute.withName(RouteName.HOME_PAGE));
               },
               icon: Icon(CupertinoIcons.home)),
           SizedBox(
@@ -54,7 +65,10 @@ class BlogDetailsScreen extends StatelessWidget {
                     style: GoogleFonts.lato(fontWeight: FontWeight.bold),
                   ),
                   Text(' | '),
-                  Text('7:50 PM, 31/05/2021', style: GoogleFonts.lato(),)
+                  Text(
+                    '7:50 PM, 31/05/2021',
+                    style: GoogleFonts.lato(),
+                  )
                 ],
               ),
             ),
@@ -77,9 +91,10 @@ class BlogDetailsScreen extends StatelessWidget {
               padding: EdgeInsets.only(
                   left: SizeConfig.blockSizeHorizontal * 2,
                   right: SizeConfig.blockSizeHorizontal * 2),
-              child: Text(
-                  'Every February on the lunar calendar, generations of villagers from Nha Trang in Khanh Hoa gather at the coastal ward of Vinh Truong to observe a special ceremony called lễ tế đức Ông as part of their New Year celebration. The ceremony is meant to be an occasion for locals to show their gratitude to the sea, and offer their prayers for a season of “calm water and bountiful harvest.” As an homage to her upbringing, graphic designer Tường Vân created a series of illustrations exploring the folktales behind these traditions to bring them to the mainstream.Vân is an alumni of Van Lang University. In 2018, she graduated at the top of her class in Graphic Design with her Lễ Cầu Ngư illustrations, which received considerable praise from faculty members. The project took inspiration from her affection for her hometown. “I grew up in Nha Trang, and I just thought that maybe I should use my artworks to represent my roots,” she acknowledged. The product of a three-month creative process, the project recapitulates the lively scenes of ',
-              style: GoogleFonts.lato(fontSize: 13),),
+              child: Html(
+                data: test,
+                // document: document,
+              ),
             ),
           ],
         ),

@@ -26,7 +26,6 @@ class SearchEventCubit extends Cubit<SearchEventState> {
       String token = loginResponse['token'].toString();
       List<Content> contentList = await _eventRepository.searchEventByTitle(
           keyWord: searchKeyWord, token: token);
-      print(contentList.length);
       List<EventShow> events = [];
       for (Content content in contentList) {
         List<Location> locations = await _locationRepository

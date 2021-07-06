@@ -42,8 +42,7 @@ class HomeCubit extends Cubit<HomeState> {
 
         blogs.addAll(thisBlogs);
         blogs.addAll(blog.listBlog);
-        // print('old news' + thisBlogs.length.toString());
-        // print('news length' + blogs.length.toString());
+       
         emit(state.copyWith(
             pageOfLatestNews: page,
             status: HomeStatus.loadBlogsSuccess,

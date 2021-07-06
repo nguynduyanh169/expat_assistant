@@ -1,9 +1,11 @@
 import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/configs/size_config.dart';
 import 'package:expat_assistant/src/models/blog.dart';
+import 'package:expat_assistant/src/utils/date_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ionicons/ionicons.dart';
 
 // ignore: must_be_immutable
 class NewsCard extends StatelessWidget {
@@ -13,6 +15,7 @@ class NewsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
+    DateTimeUtils _dateUtils = DateTimeUtils();
     return InkWell(
       onTap: newsAction,
       child: Container(
@@ -93,9 +96,13 @@ class NewsCard extends StatelessWidget {
 // ignore: must_be_immutable
 class ChannelCard extends StatelessWidget {
   ListBlog blog;
-  ChannelCard({@required this.blog});
+  Function openChannel;
+  Function openNews;
+  ChannelCard({@required this.blog, this.openChannel, this.openNews});
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
+    DateTimeUtils _dateUtils = DateTimeUtils();
     return Container(
       padding: EdgeInsets.only(
           top: SizeConfig.blockSizeVertical * 1,
@@ -114,6 +121,7 @@ class ChannelCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           ListTile(
+            onTap: openChannel,
             leading: ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: Image(
@@ -129,7 +137,8 @@ class ChannelCard extends StatelessWidget {
                   GoogleFonts.lato(fontSize: 20, fontWeight: FontWeight.w700),
             ),
             subtitle: Text(
-              '5 hours ago',
+              _dateUtils.caculateDays(date: blog.createDate).toString() +
+                  " days ago",
               style: GoogleFonts.lato(),
             ),
           ),
@@ -158,15 +167,18 @@ class ChannelCard extends StatelessWidget {
               style: GoogleFonts.lato(fontSize: 15, color: Colors.black54),
             ),
           ),
-          Container(
-            padding: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 2),
-            width: SizeConfig.blockSizeHorizontal * 90,
-            child: Text(
-              blog.blogTitle,
-              overflow: TextOverflow.ellipsis,
-              maxLines: 2,
-              style:
-                  GoogleFonts.lato(fontSize: 15, fontWeight: FontWeight.bold),
+          InkWell(
+            onTap: openNews,
+            child: Container(
+              padding: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 2),
+              width: SizeConfig.blockSizeHorizontal * 90,
+              child: Text(
+                blog.blogTitle,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
+                style:
+                    GoogleFonts.lato(fontSize: 15, fontWeight: FontWeight.bold),
+              ),
             ),
           ),
           SizedBox(
@@ -177,7 +189,7 @@ class ChannelCard extends StatelessWidget {
             child: Row(
               children: <Widget>[
                 Icon(
-                  CupertinoIcons.clock,
+                  Ionicons.time_outline,
                   size: 15,
                   color: AppColors.MAIN_COLOR,
                 ),
@@ -185,7 +197,7 @@ class ChannelCard extends StatelessWidget {
                   width: SizeConfig.blockSizeHorizontal * 2,
                 ),
                 Text(
-                  'Monday, 31 May 2021 at 4:00 PM',
+                  _dateUtils.getDateTimeForNews(startDateTime: blog.createDate),
                   style: GoogleFonts.lato(fontSize: 12),
                 ),
               ],

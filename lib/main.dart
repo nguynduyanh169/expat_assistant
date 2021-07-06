@@ -50,7 +50,6 @@ class _MyAppState extends State<MyApp> {
       child: BlocBuilder<AuthenticationCubit, AuthenticationState>(
         builder: (context, state) {
           if (state.status.isAuthenticated) {
-            print('OK');
             isLoggedIn = true;
           } else if (state.status.isUnauthenticated) {
             isLoggedIn = false;

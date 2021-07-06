@@ -68,4 +68,16 @@ class DateTimeUtils {
         DateTime(startDateTime[0], startDateTime[1], startDateTime[2]);
     return DateFormat.yMMMMd().format(_date);
   }
+
+  String getDateTimeForNews({List<int> startDateTime}) {
+    DateTime _date = DateTime(startDateTime[0], startDateTime[1],
+        startDateTime[2], startDateTime[3], startDateTime[4]);
+    return DateFormat("dd/MM/yyyy HH:mm").format(_date);
+  }
+
+  int caculateDays({List<int> date}) {
+    DateTime _date = DateTime(date[0], date[1], date[2], date[3], date[4]);
+    DateTime to = DateTime.now();
+    return (to.difference(_date).inHours / 24).round();
+  }
 }

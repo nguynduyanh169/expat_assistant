@@ -50,6 +50,9 @@ class ApiName {
   static const String UNJOIN_EVENT = BASE_URL + "/api/events/join";
   static const String GET_BLOGS = BASE_URL + "/api/blogs/blog";
   static const String GET_BLOGS_BY_PRIORITY = BASE_URL + "/api/blogs/priority";
+  static const String GET_CHANNELS_STATUS = BASE_URL + "/api/channels/status";
+  static const String GET_BLOGS_BY_CHANNEL = BASE_URL + "/api/blogs/channel";
+  static const String GET_BLOGS_BY_TITLE = BASE_URL + "/api/blogs/title";
 }
 
 class HiveBoxName {
