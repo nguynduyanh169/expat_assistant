@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:event_bus/event_bus.dart';
 import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/configs/size_config.dart';
 import 'package:expat_assistant/src/cubits/events_cubit.dart';
@@ -61,13 +60,13 @@ class _EventsScreenState extends State<EventsScreen>
             ),
             preferredSize: Size.fromHeight(0.25)),
         elevation: 0.5,
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.MAIN_COLOR,
         //toolbarHeight: SizeConfig.blockSizeVertical * 10,
         automaticallyImplyLeading: false,
         centerTitle: true,
         title: Text(
           'Events',
-          style: GoogleFonts.lato(fontSize: 22, color: Colors.black),
+          style: GoogleFonts.lato(fontSize: 22, color: Colors.white, fontWeight: FontWeight.w700),
         ),
         actions: [
           BlocProvider(
@@ -92,7 +91,7 @@ class _EventsScreenState extends State<EventsScreen>
                     },
                     icon: Icon(
                       CupertinoIcons.search,
-                      color: Colors.black,
+                      color: Colors.white,
                     )),
               )),
           SizedBox(
@@ -379,7 +378,7 @@ class _EventsScreenState extends State<EventsScreen>
                                 scrollController.position.maxScrollExtent);
                           });
                           return Padding(
-                            padding: const EdgeInsets.all(15.0),
+                            padding: const EdgeInsets.all(30.0),
                             child: Center(child: CupertinoActivityIndicator()),
                           );
                         }

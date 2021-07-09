@@ -51,17 +51,17 @@ class SearchBlogs extends SearchDelegate<ListBlog> {
       appBarTheme: AppBarTheme(
         elevation: 0.5,
       ),
-      primaryColor: Colors.white,
+      primaryColor: AppColors.MAIN_COLOR,
       textTheme:
-          TextTheme(title: GoogleFonts.lato(fontSize: 20, color: Colors.black)),
+          TextTheme(title: GoogleFonts.lato(fontSize: 20, color: Colors.white)),
       primaryIconTheme: IconThemeData(
         size: 50,
-        color: Colors.black,
+        color: Colors.white,
       ),
       inputDecorationTheme: InputDecorationTheme(
-        prefixStyle: GoogleFonts.lato(fontSize: 20, color: Colors.black54),
+        prefixStyle: GoogleFonts.lato(fontSize: 20, color: Colors.white54),
         border: InputBorder.none,
-        hintStyle: GoogleFonts.lato(fontSize: 20, color: Colors.black54),
+        hintStyle: GoogleFonts.lato(fontSize: 20, color: Colors.white),
       ),
     );
   }

@@ -72,7 +72,7 @@ class _ChannelListState extends State<ChannelList>
                             alignment: Alignment.topLeft,
                             children: <Widget>[
                               Image(
-                                width: SizeConfig.blockSizeHorizontal * 20,
+                                width: SizeConfig.blockSizeHorizontal * 30,
                                 height: SizeConfig.blockSizeVertical * 15,
                                 image: NetworkImage(channels[index].image),
                                 fit: BoxFit.cover,
@@ -80,8 +80,8 @@ class _ChannelListState extends State<ChannelList>
                               Container(
                                 decoration: BoxDecoration(
                                     gradient: LinearGradient(
-                                        begin: FractionalOffset.bottomCenter,
-                                        end: FractionalOffset.topCenter,
+                                        begin: FractionalOffset.topCenter,
+                                        end: FractionalOffset.bottomCenter,
                                         colors: [
                                       Colors.grey.withOpacity(0),
                                       Colors.black,
@@ -91,8 +91,8 @@ class _ChannelListState extends State<ChannelList>
                                       2.0
                                     ])),
                                 padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
-                                alignment: Alignment.topLeft,
-                                width: SizeConfig.blockSizeHorizontal * 20,
+                                alignment: Alignment.bottomLeft,
+                                width: SizeConfig.blockSizeHorizontal * 30,
                                 height: SizeConfig.blockSizeVertical * 15,
                                 child: Text(
                                   channels[index].channelName.trim(),

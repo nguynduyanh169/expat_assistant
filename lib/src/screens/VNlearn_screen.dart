@@ -47,13 +47,13 @@ class _VNlearnScreenState extends State<VNlearnScreen> {
             ),
             preferredSize: Size.fromHeight(0.25)),
         elevation: 0.5,
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.MAIN_COLOR,
         
         automaticallyImplyLeading: true,
-        iconTheme: IconThemeData(color: Colors.black),
+        iconTheme: IconThemeData(color: Colors.white),
         title: Text(
           'Learn Vietnamese',
-          style: GoogleFonts.lato(fontSize: 22, color: Colors.black),
+          style: GoogleFonts.lato(fontSize: 22, color: Colors.white),
         ),
         actions: [
           InkWell(

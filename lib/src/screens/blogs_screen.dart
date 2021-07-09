@@ -6,8 +6,10 @@ import 'package:expat_assistant/src/cubits/blogs_cubit.dart';
 import 'package:expat_assistant/src/cubits/search_blogs_cubit.dart';
 import 'package:expat_assistant/src/models/blog.dart';
 import 'package:expat_assistant/src/repositories/blog_repository.dart';
+import 'package:expat_assistant/src/screens/blog_details_screen.dart';
 import 'package:expat_assistant/src/screens/channel_screen.dart';
 import 'package:expat_assistant/src/states/blogs_state.dart';
+import 'package:expat_assistant/src/widgets/alert_dialog_vocabulary.dart';
 import 'package:expat_assistant/src/widgets/channel_list.dart';
 import 'package:expat_assistant/src/widgets/loading.dart';
 import 'package:expat_assistant/src/widgets/news_card.dart';
@@ -16,6 +18,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 class BlogsScreen extends StatefulWidget {
   _BlogsScreenState createState() => _BlogsScreenState();
@@ -25,12 +28,29 @@ class _BlogsScreenState extends State<BlogsScreen> {
   int currentPage = 0;
   final ScrollController newsScrollController = ScrollController();
   List<ListBlog> news = [];
+  List<Category> categoryList = [
+    Category(categoryId: 1, categoryName: 'Health'),
+    Category(categoryId: 2, categoryName: 'Travel'),
+    Category(categoryId: 3, categoryName: 'Greetings')
+  ];
+  Category category = Category(categoryId: 0, categoryName: 'Category');
+  DateTime selectedDate = DateTime.now();
+  bool isFilterByDate = false;
+  bool isFilterByCategory = false;
 
   void setupScrollController(BuildContext context) {
     newsScrollController.addListener(() {
       if (newsScrollController.position.pixels ==
           newsScrollController.position.maxScrollExtent) {
-        BlocProvider.of<BlogsCubit>(context).getBlogsPaging(currentPage);
+        if (isFilterByCategory == true) {
+          BlocProvider.of<BlogsCubit>(context)
+              .getBlogByCategory(currentPage, category.categoryId);
+        } else if (isFilterByDate == true) {
+          BlocProvider.of<BlogsCubit>(context).getBlogByDate(
+              currentPage, DateFormat('yyyy-MM-dd').format(selectedDate));
+        } else {
+          BlocProvider.of<BlogsCubit>(context).getBlogsPaging(currentPage);
+        }
       }
     });
   }
@@ -51,13 +71,14 @@ class _BlogsScreenState extends State<BlogsScreen> {
               ),
               preferredSize: Size.fromHeight(0.25)),
           elevation: 0.5,
-          backgroundColor: Colors.white,
+          backgroundColor: AppColors.MAIN_COLOR,
           automaticallyImplyLeading: true,
-          iconTheme: IconThemeData(color: Colors.black),
+          iconTheme: IconThemeData(color: Colors.white),
           centerTitle: true,
           title: Text(
             'News',
-            style: GoogleFonts.lato(fontSize: 22, color: Colors.black),
+            style: GoogleFonts.lato(
+                fontSize: 22, color: Colors.white, fontWeight: FontWeight.w700),
           ),
           actions: [
             BlocProvider(
@@ -73,7 +94,7 @@ class _BlogsScreenState extends State<BlogsScreen> {
                       },
                       icon: Icon(
                         CupertinoIcons.search,
-                        color: Colors.black,
+                        color: Colors.white,
                       )),
                 )),
             SizedBox(
@@ -83,7 +104,9 @@ class _BlogsScreenState extends State<BlogsScreen> {
         ),
         body: BlocBuilder<BlogsCubit, BlogsState>(builder: (context, state) {
           setupScrollController(context);
-          if (state.isFirstFetch && state.status.isLoadingBlogs) {
+          if ((state.isFirstFetch && state.status.isLoadingBlogs) ||
+              (state.status.isLoadingBlogCategory && state.isFirstFetch) ||
+              (state.status.isLoadingBlogDate && state.isFirstFetch)) {
             return Column(
               children: <Widget>[
                 SizedBox(
@@ -100,14 +123,40 @@ class _BlogsScreenState extends State<BlogsScreen> {
           } else if (state.status.isLoadBlogsSuccess) {
             news = state.blogs;
             currentPage = state.page;
+          } else if (state.status.isLoadingBlogCategory) {
+            news = state.oldBlogsCategory;
+            isLoadingNews = true;
+          } else if (state.status.isLoadBlogCategorySuccess) {
+            news = state.blogsCategory;
+            currentPage = state.page;
+          } else if (state.status.isLoadingBlogDate) {
+            news = state.oldBlogsDate;
+            isLoadingNews = true;
+          } else if (state.status.isLoadBlogDateSuccess) {
+            news = state.blogsDate;
+            currentPage = state.page;
           }
           return Container(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
+                SizedBox(
+                  height: SizeConfig.blockSizeVertical * 1,
+                ),
+                Container(
+                  padding:
+                      EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 2),
+                  child: Text(
+                    'Channels',
+                    style: GoogleFonts.lato(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
+                        color: Color.fromRGBO(0, 99, 99, 30)),
+                  ),
+                ),
                 Container(
                     width: SizeConfig.blockSizeHorizontal * 100,
                     height: SizeConfig.blockSizeVertical * 15,
-                    color: Colors.white,
                     padding: EdgeInsets.only(
                       left: SizeConfig.blockSizeHorizontal * 1,
                       top: SizeConfig.blockSizeHorizontal * 2,
@@ -116,15 +165,141 @@ class _BlogsScreenState extends State<BlogsScreen> {
                     ),
                     child: ChannelList()),
                 Container(
+                  width: SizeConfig.blockSizeHorizontal * 100,
+                  height: SizeConfig.blockSizeVertical * 7.5,
                   padding: EdgeInsets.only(
                       left: SizeConfig.blockSizeHorizontal * 1,
                       top: SizeConfig.blockSizeHorizontal * 3,
                       right: SizeConfig.blockSizeHorizontal * 1),
-                  child: Row(
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
                     children: <Widget>[
                       InkWell(
                         onTap: () {
-                          print('Category');
+                          showCategory(context: context, list: categoryList)
+                              .then((value) {
+                            if (value != null) {
+                              setState(() {
+                                category = value;
+                                currentPage = 0;
+                                isFilterByCategory = true;
+                                isFilterByDate = false;
+                                news.clear();
+                              });
+                              BlocProvider.of<BlogsCubit>(context)
+                                  .getBlogByCategory(
+                                      currentPage, category.categoryId);
+                            }
+                          });
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(
+                              SizeConfig.blockSizeHorizontal * 3),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.black12),
+                            color: isFilterByCategory == true
+                                ? AppColors.MAIN_COLOR
+                                : Colors.white,
+                            borderRadius: BorderRadius.circular(20.0),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Icon(
+                                CupertinoIcons.square_list,
+                                size: 16,
+                                color: isFilterByCategory == true
+                                    ? Colors.white
+                                    : AppColors.MAIN_COLOR,
+                              ),
+                              SizedBox(
+                                width: SizeConfig.blockSizeHorizontal * 1,
+                              ),
+                              Text(category.categoryName,
+                                  style: GoogleFonts.lato(
+                                      color: isFilterByCategory == true
+                                          ? Colors.white
+                                          : Colors.black))
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: SizeConfig.blockSizeHorizontal * 2,
+                      ),
+                      InkWell(
+                        onTap: () async {
+                          final DateTime picked = await showDatePicker(
+                              context: context,
+                              initialDate: selectedDate,
+                              firstDate: DateTime(2015, 8),
+                              lastDate: DateTime(2101));
+                          if (picked != null && picked != selectedDate)
+                            setState(() {
+                              selectedDate = picked;
+                              currentPage = 0;
+                              isFilterByCategory = false;
+                              isFilterByDate = true;
+                              news.clear();
+                            });
+                          BlocProvider.of<BlogsCubit>(context).getBlogByDate(
+                              currentPage,
+                              DateFormat('yyyy-MM-dd').format(selectedDate));
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(
+                              SizeConfig.blockSizeHorizontal * 3),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.black12),
+                            color: isFilterByDate == true
+                                ? AppColors.MAIN_COLOR
+                                : Colors.white,
+                            borderRadius: BorderRadius.circular(20.0),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Icon(
+                                CupertinoIcons.calendar,
+                                size: 16,
+                                color: isFilterByDate == true
+                                    ? Colors.white
+                                    : AppColors.MAIN_COLOR,
+                              ),
+                              SizedBox(
+                                width: SizeConfig.blockSizeHorizontal * 1,
+                              ),
+                              Text(
+                                  isFilterByDate == true
+                                      ? DateFormat('yyyy-MM-dd')
+                                          .format(selectedDate)
+                                      : 'Date',
+                                  style: GoogleFonts.lato(
+                                      color: isFilterByDate == true
+                                          ? Colors.white
+                                          : Colors.black))
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: SizeConfig.blockSizeHorizontal * 2,
+                      ),
+                      InkWell(
+                        onTap: () {
+                          setState(() {
+                            category = Category(
+                                categoryId: 0, categoryName: 'Category');
+                            selectedDate = DateTime.now();
+                            currentPage = 0;
+                            isFilterByCategory = false;
+                            isFilterByDate = false;
+                            news.clear();
+                          });
+                          BlocProvider.of<BlogsCubit>(context)
+                              .getBlogsPaging(currentPage);
                         },
                         child: Container(
                           padding: EdgeInsets.all(
@@ -135,18 +310,18 @@ class _BlogsScreenState extends State<BlogsScreen> {
                             borderRadius: BorderRadius.circular(20.0),
                           ),
                           child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
                               Icon(
-                                CupertinoIcons.square_list,
-                                color: Color.fromRGBO(30, 193, 194, 30),
+                                CupertinoIcons.refresh_bold,
+                                size: 16,
+                                color: AppColors.MAIN_COLOR,
                               ),
                               SizedBox(
                                 width: SizeConfig.blockSizeHorizontal * 1,
                               ),
-                              Text(
-                                'Category',
-                                style: GoogleFonts.lato(),
-                              )
+                              Text('Refresh', style: GoogleFonts.lato())
                             ],
                           ),
                         ),
@@ -155,13 +330,25 @@ class _BlogsScreenState extends State<BlogsScreen> {
                   ),
                 ),
                 SizedBox(
-                  height: SizeConfig.blockSizeVertical * 2,
+                  height: SizeConfig.blockSizeVertical * 1,
                 ),
+                Container(
+                  padding:
+                      EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 2),
+                  child: Text(
+                    'Latest News',
+                    style: GoogleFonts.lato(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
+                        color: Color.fromRGBO(0, 99, 99, 30)),
+                  ),
+                ),
+                SizedBox(height: SizeConfig.blockSizeVertical * 1,),
                 Container(
                   padding: EdgeInsets.only(
                       left: SizeConfig.blockSizeHorizontal * 1,
                       right: SizeConfig.blockSizeHorizontal * 1),
-                  height: SizeConfig.blockSizeVertical * 64.3,
+                  height: SizeConfig.blockSizeVertical * 55.3,
                   child: ListView.separated(
                     controller: newsScrollController,
                     separatorBuilder: (context, index) => SizedBox(
@@ -181,7 +368,9 @@ class _BlogsScreenState extends State<BlogsScreen> {
                                 arguments: ChannelDetailsArguments(
                                     news[index].channel.channelId)),
                             openNews: () => Navigator.pushNamed(
-                                context, RouteName.BLOG_DETAILS),
+                                context, RouteName.BLOG_DETAILS,
+                                arguments:
+                                    BlogDetailsArguments(news[index].blogId)),
                           ),
                         );
                       } else {

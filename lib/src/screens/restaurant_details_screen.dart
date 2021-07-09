@@ -1,5 +1,6 @@
 import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/configs/size_config.dart';
+import 'package:expat_assistant/src/widgets/image_restaurant_card.dart';
 import 'package:expat_assistant/src/widgets/thumbnail_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -20,14 +21,14 @@ class RestaurantDetailsScreen extends StatelessWidget {
             ),
             preferredSize: Size.fromHeight(0.25)),
         elevation: 0.5,
-        iconTheme: IconThemeData(color: Colors.black),
-        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.white),
+        backgroundColor: AppColors.MAIN_COLOR,
         //toolbarHeight: SizeConfig.blockSizeVertical * 10,
         automaticallyImplyLeading: true,
         centerTitle: true,
         title: Text(
           'Restaurant Details',
-          style: GoogleFonts.lato(fontSize: 22, color: Colors.black),
+          style: GoogleFonts.lato(fontSize: 22, color: Colors.white),
         ),
         actions: [
           IconButton(
@@ -37,7 +38,7 @@ class RestaurantDetailsScreen extends StatelessWidget {
               },
               icon: Icon(
                 CupertinoIcons.home,
-                color: Colors.black,
+                color: Colors.white,
               )),
           SizedBox(
             width: SizeConfig.blockSizeHorizontal * 4,
@@ -463,13 +464,11 @@ class RestaurantDetailsScreen extends StatelessWidget {
                       child: ListView(
                         scrollDirection: Axis.horizontal,
                         children: <Widget>[
-                          ThumbnailCard(),
+                          ImageRestaurantCard(title: 'Foods',),
                           SizedBox(width: SizeConfig.blockSizeHorizontal * 2,),
-                          ThumbnailCard(),
+                          ImageRestaurantCard(title: 'Menus',),
                           SizedBox(width: SizeConfig.blockSizeHorizontal * 2,),
-                          ThumbnailCard(),
-                          SizedBox(width: SizeConfig.blockSizeHorizontal * 2,),
-                          ThumbnailCard(),
+                          ImageRestaurantCard(title: 'Space',),
                           SizedBox(width: SizeConfig.blockSizeHorizontal * 2,),
                         ],
                       ),

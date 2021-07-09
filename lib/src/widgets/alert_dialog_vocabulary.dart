@@ -1,5 +1,6 @@
 import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/configs/size_config.dart';
+import 'package:expat_assistant/src/models/blog.dart';
 import 'package:expat_assistant/src/models/topic.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -68,6 +69,83 @@ Future<Topic> showConfimationDialogForCategory(
                                   setState(() {
                                     selected = index;
                                     selectedTopic = topics[index];
+                                  });
+                                });
+                          }),
+                    ),
+                    Divider(),
+                  ],
+                ),
+              );
+            }),
+          ),
+        );
+      });
+}
+
+Future<Category> showCategory(
+    {@required BuildContext context,
+    @required List<Category> list}) async {
+  int selected = 0;
+  Category selectedCategory;
+  SizeConfig().init(context);
+  return await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'Select priority',
+            style: GoogleFonts.lato(),
+          ),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20))),
+          actions: <Widget>[
+            TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('CANCEL',
+                    style: GoogleFonts.lato(
+                        color: AppColors.MAIN_COLOR,
+                        fontWeight: FontWeight.w700))),
+            TextButton(
+                onPressed: () {
+                  Navigator.pop(context, selectedCategory);
+                },
+                child: Text('CONFIRM',
+                    style: GoogleFonts.lato(
+                        color: AppColors.MAIN_COLOR,
+                        fontWeight: FontWeight.w700)))
+          ],
+          content: SingleChildScrollView(
+            child: StatefulBuilder(
+                builder: (BuildContext context, StateSetter setState) {
+              return Container(
+                width: double.maxFinite,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Divider(),
+                    ConstrainedBox(
+                      constraints: BoxConstraints(
+                        maxHeight: SizeConfig.blockSizeVertical * 40,
+                      ),
+                      child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: list.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return RadioListTile(
+                                activeColor: AppColors.MAIN_COLOR,
+                                title: Text(
+                                  list[index].categoryName,
+                                  style: GoogleFonts.lato(),
+                                ),
+                                value: index,
+                                groupValue: selected,
+                                onChanged: (value) {
+                                  setState(() {
+                                    selected = index;
+                                    selectedCategory = list[selected];
                                   });
                                 });
                           }),

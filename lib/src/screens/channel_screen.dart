@@ -78,13 +78,13 @@ class _ChannelState extends State<ChannelScreen> {
                   ),
                   preferredSize: Size.fromHeight(0.25)),
               elevation: 0.5,
-              backgroundColor: Colors.white,
+              backgroundColor: AppColors.MAIN_COLOR,
               automaticallyImplyLeading: true,
-              iconTheme: IconThemeData(color: Colors.black),
+              iconTheme: IconThemeData(color: Colors.white),
               centerTitle: true,
               title: Text(
-                channel.channelName != null ? channel.channelName : 'Test',
-                style: GoogleFonts.lato(fontSize: 22, color: Colors.black),
+                channel.channelName != null ? channel.channelName : 'Error',
+                style: GoogleFonts.lato(fontSize: 22, color: Colors.white),
               ),
               actions: [
                 IconButton(
@@ -138,7 +138,7 @@ class _ChannelState extends State<ChannelScreen> {
                         child: Text(
                           channel.channelName != null
                               ? channel.channelName
-                              : 'Test',
+                              : 'Error',
                           style: GoogleFonts.lato(
                               fontSize: 30,
                               fontWeight: FontWeight.w700,
@@ -170,7 +170,7 @@ class _ChannelState extends State<ChannelScreen> {
                     child: ExpandableText(
                       channel.description != null
                           ? channel.description
-                          : 'Test',
+                          : 'Error',
                       expandText: 'read more',
                       collapseText: 'read less',
                       linkStyle: GoogleFonts.lato(),

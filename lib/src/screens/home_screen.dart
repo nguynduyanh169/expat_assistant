@@ -5,6 +5,7 @@ import 'package:expat_assistant/src/configs/size_config.dart';
 import 'package:expat_assistant/src/cubits/home_cubit.dart';
 import 'package:expat_assistant/src/models/blog.dart';
 import 'package:expat_assistant/src/repositories/blog_repository.dart';
+import 'package:expat_assistant/src/screens/blog_details_screen.dart';
 import 'package:expat_assistant/src/screens/channel_screen.dart';
 import 'package:expat_assistant/src/states/home_state.dart';
 import 'package:expat_assistant/src/widgets/loading.dart';
@@ -14,6 +15,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:line_icons/line_icons.dart';
 
 // ignore: must_be_immutable
@@ -54,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen>
                 height: 0.25,
               ),
               preferredSize: Size.fromHeight(0.25)),
-          backgroundColor: Colors.white,
+          backgroundColor: AppColors.MAIN_COLOR,
           //toolbarHeight: SizeConfig.blockSizeVertical * 10,
           elevation: 0.5,
           foregroundColor: Colors.black54,
@@ -68,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen>
           ),
           title: Text(
             'Home',
-            style: GoogleFonts.lato(fontSize: 22, color: Colors.black),
+            style: GoogleFonts.lato(fontSize: 22, color: Colors.white, fontWeight: FontWeight.w700),
           ),
           actions: [
             InkWell(
@@ -76,8 +78,8 @@ class _HomeScreenState extends State<HomeScreen>
                 Navigator.pushNamed(context, RouteName.NOTIFICATION);
               },
               child: Icon(
-                CupertinoIcons.bell,
-                color: Colors.black,
+                LineIcons.bellAlt,
+                color: Colors.white,
                 size: 30,
               ),
             ),
@@ -85,7 +87,7 @@ class _HomeScreenState extends State<HomeScreen>
               width: SizeConfig.blockSizeHorizontal * 3,
             )
           ],
-          centerTitle: false,
+          centerTitle: true,
         ),
         body: Container(
           height: SizeConfig.blockSizeVertical * 90,
@@ -324,7 +326,7 @@ class _HomeScreenState extends State<HomeScreen>
                                   arguments: ChannelDetailsArguments(
                                       news[index].channel.channelId)),
                               openNews: () => Navigator.pushNamed(
-                                  context, RouteName.BLOG_DETAILS),
+                                  context, RouteName.BLOG_DETAILS, arguments: BlogDetailsArguments(news[index].blogId)),
                             ),
                           );
                         } else {

@@ -115,11 +115,10 @@ class _ConversationDetailState extends State<ConversationDetailScreen> {
             ),
             preferredSize: Size.fromHeight(0.25)),
         elevation: 0.5,
-        backgroundColor: Colors.white,
-        toolbarHeight: SizeConfig.blockSizeVertical * 10,
+        backgroundColor: AppColors.MAIN_COLOR,
         centerTitle: true,
-        iconTheme: IconThemeData(color: Colors.black),
-        title: Text(args.title, style: GoogleFonts.lato(fontSize: 22, color: Colors.black),),
+        iconTheme: IconThemeData(color: Colors.white),
+        title: Text(args.title, style: GoogleFonts.lato(fontSize: 22, color: Colors.white),),
       ),
       body: Container(
         child: Column(

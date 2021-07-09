@@ -1,4 +1,3 @@
-import 'package:event_bus/event_bus.dart';
 import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/cubits/authentication_cubit.dart';
 import 'package:expat_assistant/src/models/auth_status.dart';

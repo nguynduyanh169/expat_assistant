@@ -93,7 +93,6 @@ class EventsCubit extends Cubit<EventsState> {
               context: context, action: () {}, topics: topics)
           .then((value) {
         seletedTopic = value;
-        print(seletedTopic.topicDesc);
       });
     }
   }

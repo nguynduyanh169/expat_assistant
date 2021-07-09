@@ -19,13 +19,13 @@ class UtilitiesScreen extends StatelessWidget {
             ),
             preferredSize: Size.fromHeight(0.25)),
         elevation: 0.5,
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.MAIN_COLOR,
         automaticallyImplyLeading: true,
         centerTitle: true,
-        iconTheme: IconThemeData(color: Colors.black),
+        iconTheme: IconThemeData(color: Colors.white),
         title: Text(
-          'Utilities',
-          style: GoogleFonts.lato(fontSize: 22, color: Colors.black),
+          'Services',
+          style: GoogleFonts.lato(fontSize: 22, color: Colors.white, fontWeight: FontWeight.w700),
         ),
       ),
       body: Container(
@@ -76,9 +76,9 @@ class UtilitiesScreen extends StatelessWidget {
                         ),
                         Container(
                           child: Text(
-                            '3.362.000 VND',
+                            'Your balance',
                             style: GoogleFonts.lato(
-                                fontSize: 25, color: Colors.white),
+                                fontSize: 20, color: Colors.white),
                           ),
                         ),
                         SizedBox(
@@ -86,11 +86,11 @@ class UtilitiesScreen extends StatelessWidget {
                         ),
                         Container(
                           child: Text(
-                            'Your balance',
+                            '3.362.000 VND',
                             style: GoogleFonts.lato(
-                                fontSize: 20, color: Colors.white),
+                                fontSize: 25, color: Colors.white),
                           ),
-                        )
+                        ),
                       ],
                     ),
                   ),

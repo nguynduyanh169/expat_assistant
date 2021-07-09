@@ -2,6 +2,7 @@ import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/screens/VNlearn_screen.dart';
 import 'package:expat_assistant/src/screens/blog_details_screen.dart';
 import 'package:expat_assistant/src/screens/blogs_screen.dart';
+import 'package:expat_assistant/src/screens/call_room_screen.dart';
 import 'package:expat_assistant/src/screens/calling_screen.dart';
 import 'package:expat_assistant/src/screens/channel_screen.dart';
 import 'package:expat_assistant/src/screens/conversation_details_screen.dart';
@@ -11,6 +12,7 @@ import 'package:expat_assistant/src/screens/finish_screen.dart';
 import 'package:expat_assistant/src/screens/food_camera_screen.dart';
 import 'package:expat_assistant/src/screens/home_page.dart';
 import 'package:expat_assistant/src/screens/home_screen.dart';
+import 'package:expat_assistant/src/screens/invoice_screen.dart';
 import 'package:expat_assistant/src/screens/login_screen.dart';
 import 'package:expat_assistant/src/screens/map_screen.dart';
 import 'package:expat_assistant/src/screens/notification_screen.dart';
@@ -23,6 +25,7 @@ import 'package:expat_assistant/src/screens/restaurants_screen.dart';
 import 'package:expat_assistant/src/screens/sign_up_screen.dart';
 import 'package:expat_assistant/src/screens/specialist_details_screen.dart';
 import 'package:expat_assistant/src/screens/specialists_screen.dart';
+import 'package:expat_assistant/src/screens/test_call.dart';
 import 'package:expat_assistant/src/screens/utilities_screen.dart';
 import 'package:expat_assistant/src/screens/vocabulary_details_screen.dart';
 import 'package:expat_assistant/src/screens/wallet_screen.dart';
@@ -57,5 +60,8 @@ final routes = {
   RouteName.FINISH_CONVERSATION: (BuildContext context) => new FinishScreenForConversation(),
   RouteName.NOTIFICATION: (BuildContext context) => new NotificationScreen(),
   RouteName.CALLING: (BuildContext context) => new CallingScreen(),
+  RouteName.TEST_CALL: (BuildContext context) => new TestCallPage(),
+  RouteName.CALL_ROOM : (BuildContext context) => new CallRoomScreen(),
+  RouteName.INVOICE : (BuildContext context) => new InvoiceScreen()
 };
 

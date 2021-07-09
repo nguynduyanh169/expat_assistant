@@ -118,4 +118,84 @@ class BlogProvider {
     }
     return blogs;
   }
+
+  Future<ListBlog> getBlogInfoById(
+      {@required String token, @required int blogId}) async {
+    ListBlog blog;
+    try {
+      Map<String, dynamic> headers = {
+        Headers.contentTypeHeader: "application/json",
+        Headers.acceptHeader: "application/json",
+        'Authorization': 'Bearer $token',
+      };
+      Response response = await _dio.get(
+          ApiName.GET_BLOGS_BY_ID + blogId.toString(),
+          options: Options(headers: headers));
+      blog = ListBlog.fromJson(response.data);
+    } catch (e) {
+      print(e.toString());
+    }
+    return blog;
+  }
+
+  Future<dynamic> getBlogsByCategory(
+      {@required String token,
+      @required int page,
+      @required int categoryId}) async {
+    List<ListBlog> blogs;
+    int size = 3;
+    try {
+      Map<String, dynamic> headers = {
+        Headers.contentTypeHeader: "application/json",
+        Headers.acceptHeader: "application/json",
+        'Authorization': 'Bearer $token',
+      };
+      Response response = await _dio.get(
+          ApiName.GET_BLOGS_BY_CATEGORYID +
+              "?categoryId=$categoryId&page=$page&size=$size&sortBy=blogId",
+          options: Options(headers: headers));
+      if (response.statusCode == 204) {
+        return 204;
+      } else {
+        blogs = (response.data['listBlog'] as List<dynamic>)
+            .map((i) => ListBlog.fromJson(i))
+            .toList()
+            .cast<ListBlog>();
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+    return blogs;
+  }
+
+  Future<dynamic> getBlogsByDate(
+      {@required String token,
+      @required String date,
+      @required int page}) async {
+    List<ListBlog> blogs;
+    int size = 3;
+    try {
+      Map<String, dynamic> headers = {
+        Headers.contentTypeHeader: "application/json",
+        Headers.acceptHeader: "application/json",
+        'Authorization': 'Bearer $token',
+      };
+      Response response = await _dio.get(
+          ApiName.GET_BLOGS_BY_DATE +
+              "?createDate=$date&page=$page&size=$size&sortBy=blogId",
+          options: Options(headers: headers));
+      print(response.data);
+      if (response.statusCode == 204) {
+        return 204;
+      } else {
+        blogs = (response.data['listBlog'] as List<dynamic>)
+            .map((i) => ListBlog.fromJson(i))
+            .toList()
+            .cast<ListBlog>();
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+    return blogs;
+  }
 }

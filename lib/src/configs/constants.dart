@@ -28,7 +28,10 @@ class RouteName {
   static const FINISH = "/finish";
   static const FINISH_CONVERSATION = "/finishConversation";
   static const NOTIFICATION = "/notification";
+  static const TEST_CALL = "/testCall";
   static const CALLING = "/calling";
+  static const CALL_ROOM = "/callRoom";
+  static const INVOICE = "/invoice";
 }
 
 class ApiName {
@@ -53,6 +56,10 @@ class ApiName {
   static const String GET_CHANNELS_STATUS = BASE_URL + "/api/channels/status";
   static const String GET_BLOGS_BY_CHANNEL = BASE_URL + "/api/blogs/channel";
   static const String GET_BLOGS_BY_TITLE = BASE_URL + "/api/blogs/title";
+  static const String GET_BLOGS_BY_ID = BASE_URL + "/api/blogs/";
+  static const String GET_BLOGS_BY_CATEGORYID =
+      BASE_URL + "/api/blogs/category";
+  static const String GET_BLOGS_BY_DATE = BASE_URL + "/api/blogs/date";
 }
 
 class HiveBoxName {
@@ -70,5 +77,5 @@ class AppColors {
 class Agora {
   static const APP_ID = "9aff35de497443c9be8469665d87176b";
   static const TOKEN =
-      '0069aff35de497443c9be8469665d87176bIADowCtzQ+ZbqMfdCIPk9MCT26SAI8QAIhHRHuuGNcJAVm+82jMAAAAAEAAm+nFWmrThYAEAAQCatOFg';
+      '0069aff35de497443c9be8469665d87176bIABYQYFK//ldgM4NWmtTnCCdd8AJNJ2fUiIVmtz4W51PNwx+f9gAAAAAEAAltn4OTbnmYAEAAQBMueZg';
 }

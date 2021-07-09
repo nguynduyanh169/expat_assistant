@@ -1,8 +1,10 @@
+import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/configs/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+// ignore: must_be_immutable
 class AppointmentCard extends StatelessWidget {
   Function action;
 
@@ -15,7 +17,7 @@ class AppointmentCard extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 3),
         decoration: BoxDecoration(
-            color: Color.fromRGBO(30, 193, 194, 30),
+            color: AppColors.MAIN_COLOR,
             borderRadius: BorderRadius.circular(10.0),
             boxShadow: [
               BoxShadow(

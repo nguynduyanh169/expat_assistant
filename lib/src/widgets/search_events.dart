@@ -20,7 +20,7 @@ class SearchEvents extends SearchDelegate<EventShow> {
   List<Widget> buildActions(BuildContext context) {
     return [
       IconButton(
-        icon: Icon(Icons.clear),
+        icon: Icon(Icons.clear, color: Colors.white,),
         onPressed: () {
           query = '';
         },
@@ -34,17 +34,17 @@ class SearchEvents extends SearchDelegate<EventShow> {
       appBarTheme: AppBarTheme(
         elevation: 0.5,
       ),
-      primaryColor: Colors.white,
+      primaryColor: AppColors.MAIN_COLOR,
       textTheme:
-          TextTheme(title: GoogleFonts.lato(fontSize: 20, color: Colors.black)),
+          TextTheme(title: GoogleFonts.lato(fontSize: 20, color: Colors.white)),
       primaryIconTheme: IconThemeData(
         size: 50,
-        color: Colors.black,
+        color: Colors.white,
       ),
       inputDecorationTheme: InputDecorationTheme(
-        prefixStyle: GoogleFonts.lato(fontSize: 20, color: Colors.black54),
+        prefixStyle: GoogleFonts.lato(fontSize: 20, color: Colors.white),
         border: InputBorder.none,
-        hintStyle: GoogleFonts.lato(fontSize: 20, color: Colors.black54),
+        hintStyle: GoogleFonts.lato(fontSize: 20, color: Colors.white),
       ),
     );
   }

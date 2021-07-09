@@ -5,6 +5,7 @@ import 'package:expat_assistant/src/configs/size_config.dart';
 import 'package:expat_assistant/src/cubits/thumbnails_home_cubits.dart';
 import 'package:expat_assistant/src/models/blog.dart';
 import 'package:expat_assistant/src/repositories/blog_repository.dart';
+import 'package:expat_assistant/src/screens/blog_details_screen.dart';
 import 'package:expat_assistant/src/states/thumbnails_home_state.dart';
 import 'package:expat_assistant/src/widgets/thumbnail_card.dart';
 import 'package:flutter/cupertino.dart';
@@ -64,7 +65,7 @@ class _ThumbnailsListState extends State<ThumbnailsList>
               if (index < blogs.length) {
                 return InkWell(
                   onTap: () {
-                    Navigator.pushNamed(context, RouteName.BLOG_DETAILS);
+                    Navigator.pushNamed(context, RouteName.BLOG_DETAILS, arguments: BlogDetailsArguments(blogs[index].blogId));
                   },
                   child: ThumbnailCard(
                     news: blogs[index],

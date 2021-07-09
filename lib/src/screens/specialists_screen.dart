@@ -25,15 +25,15 @@ class _SpecialistsScreenState extends State<SpecialistsScreen> {
             ),
             preferredSize: Size.fromHeight(0.25)),
         elevation: 0.5,
-        iconTheme: IconThemeData(color: Colors.black),
-        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.white),
+        backgroundColor: AppColors.MAIN_COLOR,
         //toolbarHeight: SizeConfig.blockSizeVertical * 10,
         //leadingWidth: SizeConfig.blockSizeHorizontal * 10,
         automaticallyImplyLeading: true,
         //leading: Text('Learn Vietnamese', style: GoogleFonts.ubuntu(fontSize: 22),),
         title: Text(
           'Find your specialist',
-          style: GoogleFonts.lato(fontSize: 22, color: Colors.black),
+          style: GoogleFonts.lato(fontSize: 22, color: Colors.white, fontWeight: FontWeight.w700),
         ),
         actions: [
           InkWell(
@@ -75,7 +75,7 @@ class _SpecialistsScreenState extends State<SpecialistsScreen> {
                   right: SizeConfig.blockSizeHorizontal * 5),
               child: AppointmentCard(
                 action: () {
-                  Navigator.pushNamed(context, RouteName.CALLING);
+                  Navigator.pushNamed(context, RouteName.CALL_ROOM);
                 },
               ),
             ),
@@ -109,10 +109,9 @@ class _SpecialistsScreenState extends State<SpecialistsScreen> {
                 scrollDirection: Axis.horizontal,
                 children: <Widget>[
                   Container(
-                    //width: SizeConfig.blockSizeHorizontal * 30,
                     padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
                     decoration: BoxDecoration(
-                        color: Color.fromRGBO(30, 193, 194, 30),
+                        color: AppColors.MAIN_COLOR,
                         borderRadius: BorderRadius.circular(10.0),
                         boxShadow: [
                           BoxShadow(

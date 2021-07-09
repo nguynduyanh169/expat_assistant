@@ -31,14 +31,14 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> with AutomaticKee
             ),
             preferredSize: Size.fromHeight(0.25)),
         elevation: 0.5,
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.MAIN_COLOR,
         //toolbarHeight: SizeConfig.blockSizeVertical * 10,
         automaticallyImplyLeading: false,
         centerTitle: true,
-        iconTheme: IconThemeData(color: Colors.black),
+        iconTheme: IconThemeData(color: Colors.white),
         title: Text(
           'Find your restaurant',
-          style: GoogleFonts.lato(fontSize: 22, color: Colors.black),
+          style: GoogleFonts.lato(fontSize: 22, color: Colors.white),
         ),
       ),
       body: BlocProvider(

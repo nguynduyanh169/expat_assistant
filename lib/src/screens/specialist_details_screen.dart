@@ -4,7 +4,9 @@ import 'package:expat_assistant/src/configs/size_config.dart';
 import 'package:expat_assistant/src/models/event.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:getwidget/getwidget.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:line_icons/line_icons.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class SpecialistDetailsScreen extends StatefulWidget {
@@ -16,6 +18,7 @@ class _SpecialistDetailsState extends State<SpecialistDetailsScreen> {
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime _selectedDay = DateTime.now();
+  bool isChecked = false;
 
   @override
   void initState() {
@@ -50,7 +53,6 @@ class _SpecialistDetailsState extends State<SpecialistDetailsScreen> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
-      backgroundColor: Color.fromRGBO(245, 244, 244, 2),
       appBar: AppBar(
         bottom: PreferredSize(
             child: Container(
@@ -59,20 +61,22 @@ class _SpecialistDetailsState extends State<SpecialistDetailsScreen> {
             ),
             preferredSize: Size.fromHeight(0.25)),
         elevation: 0.5,
-        iconTheme: IconThemeData(color: Colors.black),
-        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.white),
+        backgroundColor: AppColors.MAIN_COLOR,
         //toolbarHeight: SizeConfig.blockSizeVertical * 10,
         automaticallyImplyLeading: true,
         centerTitle: true,
         title: Text(
           'Dr. Ho Xuan Cuong',
-          style: GoogleFonts.lato(fontSize: 22, color: Colors.black),
+          style: GoogleFonts.lato(
+              fontSize: 22, color: Colors.white, fontWeight: FontWeight.w700),
         ),
         actions: [
           IconButton(
               onPressed: () {
                 print('tapped');
-                Navigator.popUntil(context, ModalRoute.withName(RouteName.HOME_PAGE));
+                Navigator.popUntil(
+                    context, ModalRoute.withName(RouteName.HOME_PAGE));
               },
               icon: Icon(CupertinoIcons.home)),
           SizedBox(
@@ -86,7 +90,7 @@ class _SpecialistDetailsState extends State<SpecialistDetailsScreen> {
           children: [
             Container(
               padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
-              height: SizeConfig.blockSizeVertical * 79,
+              height: SizeConfig.blockSizeVertical * 78.4,
               child: ListView(
                 children: <Widget>[
                   Container(
@@ -126,27 +130,27 @@ class _SpecialistDetailsState extends State<SpecialistDetailsScreen> {
                               children: [
                                 Icon(
                                   CupertinoIcons.star_fill,
-                                  color: Colors.yellow,
+                                  color: Color.fromRGBO(252, 191, 7, 30),
                                   size: 14,
                                 ),
                                 Icon(
                                   CupertinoIcons.star_fill,
-                                  color: Colors.yellow,
+                                  color: Color.fromRGBO(252, 191, 7, 30),
                                   size: 14,
                                 ),
                                 Icon(
                                   CupertinoIcons.star_fill,
-                                  color: Colors.yellow,
+                                  color: Color.fromRGBO(252, 191, 7, 30),
                                   size: 14,
                                 ),
                                 Icon(
                                   CupertinoIcons.star_fill,
-                                  color: Colors.yellow,
+                                  color: Color.fromRGBO(252, 191, 7, 30),
                                   size: 14,
                                 ),
                                 Icon(
                                   CupertinoIcons.star_fill,
-                                  color: Colors.yellow,
+                                  color: Color.fromRGBO(252, 191, 7, 30),
                                   size: 14,
                                 ),
                                 Text(
@@ -228,13 +232,14 @@ class _SpecialistDetailsState extends State<SpecialistDetailsScreen> {
                           firstDay: kFirstDay,
                           lastDay: kLastDay,
                           focusedDay: _focusedDay,
-                          selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+                          selectedDayPredicate: (day) =>
+                              isSameDay(_selectedDay, day),
                           calendarFormat: _calendarFormat,
                           eventLoader: _getEventsForDay,
                           startingDayOfWeek: StartingDayOfWeek.monday,
                           calendarStyle: CalendarStyle(
-                            // Use `CalendarStyle` to customize the UI
                             outsideDaysVisible: false,
+                            
                           ),
                           onDaySelected: _onDaySelected,
                           onFormatChanged: (format) {
@@ -248,22 +253,33 @@ class _SpecialistDetailsState extends State<SpecialistDetailsScreen> {
                             _focusedDay = focusedDay;
                           },
                         ),
+                        
                         Expanded(
                           child: ValueListenableBuilder<List<EventDemo>>(
                             valueListenable: _selectedEvents,
                             builder: (context, value, _) {
-                              return GridView.builder(
-                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 3,
-                                ),
+                              return ListView.separated(
                                 itemCount: value.length,
                                 itemBuilder: (context, index) {
-                                  return FilterChip(
-                                    label: Text('11:00 - 11:30', style: GoogleFonts.lato(),),
-                                    selected: false,
-                                    onSelected: (bool value) {},
-                                  );
+                                  return GFCheckboxListTile(
+                                      value: isChecked,
+                                      size: 20,
+                                      avatar: Icon(LineIcons.businessTime, color: AppColors.MAIN_COLOR,),
+                                      title: Text('11:00 - 11:30', style: GoogleFonts.lato(),),
+                                      activeBgColor: Colors.green,
+                                      type: GFCheckboxType.circle,
+                                      activeIcon: Icon(
+                                        Icons.check,
+                                        size: 15,
+                                        color: Colors.white,
+                                      ),
+                                      onChanged: (value) {
+                                        setState(() {
+                                          isChecked = value;
+                                        });
+                                      });
                                 },
+                                separatorBuilder: (context, index) => Divider(color: Colors.grey),
                               );
                             },
                           ),
@@ -277,10 +293,16 @@ class _SpecialistDetailsState extends State<SpecialistDetailsScreen> {
             Center(
               child: Container(
                 width: SizeConfig.blockSizeHorizontal * 100,
-                padding: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 10, right: SizeConfig.blockSizeHorizontal * 10, top: SizeConfig.blockSizeVertical * 1.75, bottom: SizeConfig.blockSizeVertical * 1.75),
+                padding: EdgeInsets.only(
+                    left: SizeConfig.blockSizeHorizontal * 10,
+                    right: SizeConfig.blockSizeHorizontal * 10,
+                    top: SizeConfig.blockSizeVertical * 1.75,
+                    bottom: SizeConfig.blockSizeVertical * 1.75),
                 decoration: BoxDecoration(
                     color: Colors.white,
-                     borderRadius: BorderRadius.circular(10.0),
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(10),
+                        topRight: Radius.circular(10)),
                     boxShadow: [
                       BoxShadow(
                           color: Colors.black26.withOpacity(0.2),
@@ -293,14 +315,16 @@ class _SpecialistDetailsState extends State<SpecialistDetailsScreen> {
                   width: SizeConfig.blockSizeHorizontal * 70,
                   child: ElevatedButton(
                       style: ButtonStyle(
-                          padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4)),
-                          backgroundColor: MaterialStateProperty.all<Color>(Color.fromRGBO(30, 193, 194, 30)),
-                          textStyle: MaterialStateProperty.all<TextStyle>(GoogleFonts.lato(fontSize: 17))
-                      ),
+                          padding: MaterialStateProperty.all<EdgeInsets>(
+                              EdgeInsets.all(
+                                  SizeConfig.blockSizeHorizontal * 2)),
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              AppColors.MAIN_COLOR),
+                          textStyle: MaterialStateProperty.all<TextStyle>(
+                              GoogleFonts.lato(fontSize: 17))),
                       child: Text("Make an Appointment"),
-                      onPressed: () {
-
-                      }),
+                      onPressed: () => Navigator.pushNamed(context, RouteName.INVOICE),
+                      ),
                 ),
               ),
             )
