@@ -1,35 +1,29 @@
 import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/configs/size_config.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 // ignore: must_be_immutable
-class WelcomeSignUp extends StatelessWidget {
-
+class FullnameAndPhone extends StatelessWidget {
+  TextEditingController emailController = TextEditingController();
   Function buttonAction;
 
-  WelcomeSignUp({this.buttonAction});
+  FullnameAndPhone({this.buttonAction});
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Container(
+      padding: EdgeInsets.only(
+          left: SizeConfig.blockSizeHorizontal * 2,
+          right: SizeConfig.safeBlockHorizontal * 2),
       child: Column(
         children: <Widget>[
-          ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: Image(
-              width: SizeConfig.blockSizeHorizontal * 100,
-              height: SizeConfig.blockSizeVertical * 25,
-              image: AssetImage('assets/images/sign_up_logo.png'),
-              fit: BoxFit.cover,
-            ),
-          ),
           SizedBox(
-            height: SizeConfig.blockSizeVertical * 7,
+            height: SizeConfig.blockSizeVertical * 5,
           ),
           Text(
-            'Join with us',
+            'Full name and phone number',
             style: GoogleFonts.lato(
                 color: Colors.black, fontWeight: FontWeight.w700, fontSize: 25),
           ),
@@ -39,9 +33,63 @@ class WelcomeSignUp extends StatelessWidget {
           Container(
             width: SizeConfig.blockSizeHorizontal * 70,
             child: Text(
-              'We will help you create a new account in a few easy steps',
+              'First, Please add your full name and phone number',
               style: GoogleFonts.lato(fontSize: 15),
               textAlign: TextAlign.center,
+            ),
+          ),
+          SizedBox(
+            height: SizeConfig.blockSizeVertical * 2,
+          ),
+          Container(
+            alignment: Alignment.topLeft,
+            child: Text(
+              'Full Name',
+              style:
+                  GoogleFonts.lato(fontWeight: FontWeight.bold, fontSize: 17),
+            ),
+          ),
+          Container(
+            child: TextFormField(
+              controller: emailController,
+              decoration: InputDecoration(
+                hintText: 'Enter your full name',
+                hintStyle: GoogleFonts.lato(),
+                hoverColor: Color.fromRGBO(30, 193, 194, 30),
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.grey,
+                  ),
+                ),
+              ),
+              onChanged: (email) {},
+            ),
+          ),
+          SizedBox(
+            height: SizeConfig.blockSizeVertical * 2,
+          ),
+          Container(
+            alignment: Alignment.topLeft,
+            child: Text(
+              'Phone',
+              style:
+                  GoogleFonts.lato(fontWeight: FontWeight.bold, fontSize: 17),
+            ),
+          ),
+          Container(
+            child: TextFormField(
+              controller: emailController,
+              decoration: InputDecoration(
+                hintText: 'Enter your phone',
+                hintStyle: GoogleFonts.lato(),
+                hoverColor: Color.fromRGBO(30, 193, 194, 30),
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.grey,
+                  ),
+                ),
+              ),
+              onChanged: (email) {},
             ),
           ),
           SizedBox(
@@ -57,11 +105,14 @@ class WelcomeSignUp extends StatelessWidget {
                         MaterialStateProperty.all<Color>(AppColors.MAIN_COLOR),
                     textStyle: MaterialStateProperty.all<TextStyle>(
                         GoogleFonts.lato(fontSize: 17, color: Colors.white))),
-                child: Text("Next", style: GoogleFonts.lato(fontSize: 17, color: Colors.white),),
+                child: Text(
+                  "Next",
+                  style: GoogleFonts.lato(fontSize: 17, color: Colors.white),
+                ),
                 onPressed: buttonAction),
           ),
           SizedBox(
-            height: SizeConfig.blockSizeVertical * 26,
+            height: SizeConfig.blockSizeVertical * 30,
           ),
           Container(
             child: Row(

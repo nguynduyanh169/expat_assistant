@@ -1,5 +1,6 @@
 import 'package:expat_assistant/src/configs/size_config.dart';
 import 'package:expat_assistant/src/models/blog.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -21,10 +22,11 @@ class ThumbnailCard extends StatelessWidget {
         child: Stack(
           alignment: Alignment.bottomRight,
           children: <Widget>[
-            Image(
+            ExtendedImage.network(
+              news.coverLink,
+              cache: true,
               width: SizeConfig.blockSizeHorizontal * 40,
               height: SizeConfig.blockSizeVertical * 20,
-              image: NetworkImage(news.coverLink),
               fit: BoxFit.cover,
             ),
             Container(

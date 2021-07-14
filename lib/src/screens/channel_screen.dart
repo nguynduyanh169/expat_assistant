@@ -38,12 +38,13 @@ class _ChannelState extends State<ChannelScreen> {
     SizeConfig().init(context);
     final args =
         ModalRoute.of(context).settings.arguments as ChannelDetailsArguments;
+    channel = args.channel;
     return BlocProvider(
         create: (context) => ChannelDetailsCubit(BlogRepository())
-          ..getBlogsChannel(currentPage, args.channelId),
+          ..getBlogsChannel(currentPage, args.channel.channelId),
         child: BlocBuilder<ChannelDetailsCubit, ChannelDetailsState>(
             builder: (context, state) {
-          setupScrollController(context, args.channelId);
+          setupScrollController(context, args.channel.channelId);
           if (state.isFirstFetch && state.status.isLoadingChannel) {
             return Scaffold(
               body: Column(
@@ -63,10 +64,6 @@ class _ChannelState extends State<ChannelScreen> {
           } else if (state.status.isLoadChannelSuccess) {
             blogs = state.blogs;
             currentPage = state.page;
-            if (state.isFirstFetch == true) {
-              print(state.channel.channelName);
-              channel = state.channel;
-            }
           }
           return Scaffold(
             backgroundColor: Color.fromRGBO(245, 244, 244, 2),
@@ -83,7 +80,7 @@ class _ChannelState extends State<ChannelScreen> {
               iconTheme: IconThemeData(color: Colors.white),
               centerTitle: true,
               title: Text(
-                channel.channelName != null ? channel.channelName : 'Error',
+                channel.channelName,
                 style: GoogleFonts.lato(fontSize: 22, color: Colors.white),
               ),
               actions: [
@@ -136,9 +133,7 @@ class _ChannelState extends State<ChannelScreen> {
                             right: SizeConfig.blockSizeHorizontal * 1,
                             bottom: SizeConfig.blockSizeVertical * 2),
                         child: Text(
-                          channel.channelName != null
-                              ? channel.channelName
-                              : 'Error',
+                          channel.channelName,
                           style: GoogleFonts.lato(
                               fontSize: 30,
                               fontWeight: FontWeight.w700,
@@ -236,7 +231,7 @@ class _ChannelState extends State<ChannelScreen> {
 }
 
 class ChannelDetailsArguments {
-  final int channelId;
+  final Channel channel;
 
-  const ChannelDetailsArguments(this.channelId);
+  const ChannelDetailsArguments(this.channel);
 }

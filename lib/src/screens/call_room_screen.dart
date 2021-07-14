@@ -20,7 +20,7 @@ class _CallRoomScreenState extends State<CallRoomScreen> {
   RtcEngine _engine;
   @override
   void initState() {
-    initialize('test', ClientRole.Broadcaster);
+    initialize(Agora.CHANNEL_NAME, ClientRole.Broadcaster);
     super.initState();
   }
 

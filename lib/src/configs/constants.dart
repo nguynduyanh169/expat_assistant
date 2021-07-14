@@ -32,6 +32,7 @@ class RouteName {
   static const CALLING = "/calling";
   static const CALL_ROOM = "/callRoom";
   static const INVOICE = "/invoice";
+  static const FILTER_SPECIALIST = "/filterSpecialist";
 }
 
 class ApiName {
@@ -60,6 +61,8 @@ class ApiName {
   static const String GET_BLOGS_BY_CATEGORYID =
       BASE_URL + "/api/blogs/category";
   static const String GET_BLOGS_BY_DATE = BASE_URL + "/api/blogs/date";
+  static const String GET_SPECIALISTS_BY_RATING = BASE_URL + "/api/spec/rating";
+  static const String GET_SPECIALISTS_INFO = BASE_URL + "/api/spec/";
 }
 
 class HiveBoxName {
@@ -76,6 +79,7 @@ class AppColors {
 
 class Agora {
   static const APP_ID = "9aff35de497443c9be8469665d87176b";
+  static const CHANNEL_NAME = "baobao";
   static const TOKEN =
-      '0069aff35de497443c9be8469665d87176bIABYQYFK//ldgM4NWmtTnCCdd8AJNJ2fUiIVmtz4W51PNwx+f9gAAAAAEAAltn4OTbnmYAEAAQBMueZg';
+      '0069aff35de497443c9be8469665d87176bIADtQRsyMmdZRCl5evJjpTgUQYwDPyAaoRqaAxs1Q51upzuPUdkAAAAAEAAPHFzYQzXsYAEAAQBDNexg';
 }

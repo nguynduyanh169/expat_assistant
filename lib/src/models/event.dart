@@ -7,8 +7,9 @@ import 'package:table_calendar/table_calendar.dart';
 
 class EventDemo {
   final String title;
+  final DateTime dateTime;
 
-  const EventDemo(this.title);
+  const EventDemo(this.title, this.dateTime);
 
   @override
   String toString() => title;
@@ -30,11 +31,13 @@ int getHashCode(DateTime key) {
 final _kEventSource = Map.fromIterable(List.generate(50, (index) => index),
     key: (item) => DateTime.utc(2020, 10, item * 5),
     value: (item) => List.generate(
-        item % 4 + 1, (index) => EventDemo('Event $item | ${index + 1}')))
+        item % 4 + 1,
+        (index) => EventDemo(
+            'Event $item | ${index + 1}', DateTime.utc(2020, 10, item * 5))))
   ..addAll({
     DateTime.now(): [
-      EventDemo('Today\'s Event 1'),
-      EventDemo('Today\'s Event 2'),
+      EventDemo('Today\'s Event 1', DateTime.now()),
+      EventDemo('Today\'s Event 2', DateTime.now()),
     ],
   });
 
@@ -104,18 +107,17 @@ class Event {
 }
 
 class Content {
-  Content({
-    this.eventId,
-    this.eventTitle,
-    this.eventDesc,
-    this.eventCoverImage,
-    this.eventStatus,
-    this.eventStartDate,
-    this.eventEndDate,
-    this.createBy,
-    this.createDate,
-    this.organizers
-  });
+  Content(
+      {this.eventId,
+      this.eventTitle,
+      this.eventDesc,
+      this.eventCoverImage,
+      this.eventStatus,
+      this.eventStartDate,
+      this.eventEndDate,
+      this.createBy,
+      this.createDate,
+      this.organizers});
 
   int eventId;
   String eventTitle;
@@ -129,17 +131,16 @@ class Content {
   String organizers;
 
   factory Content.fromJson(Map<String, dynamic> json) => Content(
-        eventId: json["eventId"],
-        eventTitle: json["eventTitle"],
-        eventDesc: json["eventDesc"],
-        eventCoverImage: json["eventCoverImage"],
-        eventStatus: json["eventStatus"],
-        eventStartDate: List<int>.from(json["eventStartDate"].map((x) => x)),
-        eventEndDate: List<int>.from(json["eventEndDate"].map((x) => x)),
-        createBy: json["createBy"],
-        createDate: List<int>.from(json["createDate"].map((x) => x)),
-        organizers: json["organizers"]
-      );
+      eventId: json["eventId"],
+      eventTitle: json["eventTitle"],
+      eventDesc: json["eventDesc"],
+      eventCoverImage: json["eventCoverImage"],
+      eventStatus: json["eventStatus"],
+      eventStartDate: List<int>.from(json["eventStartDate"].map((x) => x)),
+      eventEndDate: List<int>.from(json["eventEndDate"].map((x) => x)),
+      createBy: json["createBy"],
+      createDate: List<int>.from(json["createDate"].map((x) => x)),
+      organizers: json["organizers"]);
 
   Map<String, dynamic> toJson() => {
         "eventId": eventId,

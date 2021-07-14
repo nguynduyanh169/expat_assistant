@@ -37,10 +37,14 @@ class RestaurantsCubit extends Cubit<RestaurantsState> {
       myLocation = null;
     }
     try {
-      print(myLocation.latitude.toString() +" - " + myLocation.longitude.toString());
+      print(myLocation.latitude.toString() +
+          " - " +
+          myLocation.longitude.toString());
       Address address = await geoCode.reverseGeocoding(
           latitude: myLocation.latitude, longitude: myLocation.longitude);
-      addressText = (address.streetNumber != null ? address.streetNumber.toString() + " " : "") +
+      addressText = (address.streetNumber != null
+              ? address.streetNumber.toString() + " "
+              : "") +
           address.streetAddress.toString() +
           ", " +
           address.city +
@@ -51,6 +55,7 @@ class RestaurantsCubit extends Cubit<RestaurantsState> {
       print(addressText);
       emit(LoadScreenSuccess(addressText));
     } catch (e) {
+      print(e.toString());
       emit(LoadScreenError(e.toString()));
     }
   }

@@ -1,35 +1,33 @@
 import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/configs/size_config.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pin_code_fields/pin_code_fields.dart';
 
-// ignore: must_be_immutable
-class WelcomeSignUp extends StatelessWidget {
+class ConfirmEmail extends StatefulWidget {
+  @override
+  _ConfirmEmailState createState() => _ConfirmEmailState();
+}
 
+class _ConfirmEmailState extends State<ConfirmEmail> {
   Function buttonAction;
+  TextEditingController otpController = TextEditingController();
+  bool _hasError = false;
 
-  WelcomeSignUp({this.buttonAction});
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Container(
+      padding: EdgeInsets.only(
+          left: SizeConfig.blockSizeHorizontal * 2,
+          right: SizeConfig.safeBlockHorizontal * 2),
       child: Column(
         children: <Widget>[
-          ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: Image(
-              width: SizeConfig.blockSizeHorizontal * 100,
-              height: SizeConfig.blockSizeVertical * 25,
-              image: AssetImage('assets/images/sign_up_logo.png'),
-              fit: BoxFit.cover,
-            ),
-          ),
           SizedBox(
-            height: SizeConfig.blockSizeVertical * 7,
+            height: SizeConfig.blockSizeVertical * 5,
           ),
           Text(
-            'Join with us',
+            'Email verification',
             style: GoogleFonts.lato(
                 color: Colors.black, fontWeight: FontWeight.w700, fontSize: 25),
           ),
@@ -39,11 +37,40 @@ class WelcomeSignUp extends StatelessWidget {
           Container(
             width: SizeConfig.blockSizeHorizontal * 70,
             child: Text(
-              'We will help you create a new account in a few easy steps',
+              'Finally, Please enter code sent to anhnd16091998@gmail.com',
               style: GoogleFonts.lato(fontSize: 15),
               textAlign: TextAlign.center,
             ),
           ),
+          SizedBox(
+            height: SizeConfig.blockSizeVertical * 2,
+          ),
+          PinCodeTextField(
+              keyboardType: TextInputType.number,
+              appContext: context,
+              pastedTextStyle: GoogleFonts.lato(),
+              textStyle: GoogleFonts.lato(),
+              obscureText: false,
+              animationType: AnimationType.fade,
+              length: 6,
+              validator: (v) {
+                if (v.length < 3) {
+                  return "I'm from validator";
+                } else {
+                  return null;
+                }
+              },
+              pinTheme: PinTheme(
+                shape: PinCodeFieldShape.underline,
+                fieldHeight: 60,
+                fieldWidth: 50,
+                activeFillColor: _hasError ? Colors.red : Colors.white,
+              ),
+              cursorColor: Colors.black,
+              animationDuration: Duration(milliseconds: 300),
+              onChanged: (value) {
+                setState(() {});
+              }),
           SizedBox(
             height: SizeConfig.blockSizeVertical * 5,
           ),
@@ -57,11 +84,16 @@ class WelcomeSignUp extends StatelessWidget {
                         MaterialStateProperty.all<Color>(AppColors.MAIN_COLOR),
                     textStyle: MaterialStateProperty.all<TextStyle>(
                         GoogleFonts.lato(fontSize: 17, color: Colors.white))),
-                child: Text("Next", style: GoogleFonts.lato(fontSize: 17, color: Colors.white),),
-                onPressed: buttonAction),
+                child: Text(
+                  "Verify",
+                  style: GoogleFonts.lato(fontSize: 17, color: Colors.white),
+                ),
+                onPressed: (){
+
+                }),
           ),
           SizedBox(
-            height: SizeConfig.blockSizeVertical * 26,
+            height: SizeConfig.blockSizeVertical * 30,
           ),
           Container(
             child: Row(

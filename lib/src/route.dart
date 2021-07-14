@@ -24,6 +24,7 @@ import 'package:expat_assistant/src/screens/restaurant_details_screen.dart';
 import 'package:expat_assistant/src/screens/restaurants_screen.dart';
 import 'package:expat_assistant/src/screens/sign_up_screen.dart';
 import 'package:expat_assistant/src/screens/specialist_details_screen.dart';
+import 'package:expat_assistant/src/screens/specialists_filter_screen.dart';
 import 'package:expat_assistant/src/screens/specialists_screen.dart';
 import 'package:expat_assistant/src/screens/test_call.dart';
 import 'package:expat_assistant/src/screens/utilities_screen.dart';
@@ -62,6 +63,7 @@ final routes = {
   RouteName.CALLING: (BuildContext context) => new CallingScreen(),
   RouteName.TEST_CALL: (BuildContext context) => new TestCallPage(),
   RouteName.CALL_ROOM : (BuildContext context) => new CallRoomScreen(),
-  RouteName.INVOICE : (BuildContext context) => new InvoiceScreen()
+  RouteName.INVOICE : (BuildContext context) => new InvoiceScreen(),
+  RouteName.FILTER_SPECIALIST : (BuildContext context) => new SpecialistFilterScreen()
 };
 

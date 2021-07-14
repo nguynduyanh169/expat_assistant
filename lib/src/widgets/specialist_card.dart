@@ -1,12 +1,16 @@
 import 'package:expat_assistant/src/configs/size_config.dart';
+import 'package:expat_assistant/src/models/specialist.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:line_icons/line_icons.dart';
 
-class SpecialistCard extends StatelessWidget{
+// ignore: must_be_immutable
+class SpecialistCard extends StatelessWidget {
   Function action;
-  SpecialistCard({@required this.action});
+  ListSpec spec;
+  SpecialistCard({@required this.action, @required this.spec});
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -15,7 +19,7 @@ class SpecialistCard extends StatelessWidget{
       child: Container(
         padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
         decoration: BoxDecoration(
-            color:  Colors.white,
+            color: Colors.white,
             borderRadius: BorderRadius.circular(10.0),
             boxShadow: [
               BoxShadow(
@@ -28,67 +32,75 @@ class SpecialistCard extends StatelessWidget{
           children: <Widget>[
             ClipRRect(
               borderRadius: BorderRadius.circular(10.0),
-              child: Image(
+              child: ExtendedImage.network(
+                spec.avatar,
                 fit: BoxFit.cover,
                 width: SizeConfig.blockSizeHorizontal * 18,
                 height: SizeConfig.blockSizeVertical * 10,
-                image: AssetImage('assets/images/demo_expert.jpg'),
               ),
             ),
-            SizedBox(width: SizeConfig.blockSizeHorizontal * 3,),
+            SizedBox(
+              width: SizeConfig.blockSizeHorizontal * 3,
+            ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text('Dr. Xuan Cuong Ho', style: GoogleFonts.lato( fontSize: 18, fontWeight: FontWeight.w700),),
+                Text(
+                  spec.fullname,
+                  style: GoogleFonts.lato(
+                      fontSize: 18, fontWeight: FontWeight.w700),
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Container(
                         child: Text(
-                          'Lawyer',
-                          style: GoogleFonts.lato(fontSize: 12),
-                        )),
+                      'Lawyer',
+                      style: GoogleFonts.lato(fontSize: 12),
+                    )),
                     SizedBox(
                       width: SizeConfig.blockSizeHorizontal * 1,
                     ),
                     Container(
                         child: Text(
-                          '.',
-                          style: GoogleFonts.lato(fontSize: 12),
-                        )),
+                      '.',
+                      style: GoogleFonts.lato(fontSize: 12),
+                    )),
                     SizedBox(
                       width: SizeConfig.blockSizeHorizontal * 1,
                     ),
                     Container(
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Icon(
-                              LineIcons.starAlt,
-                              color: Color.fromRGBO(252, 191, 7, 30),
-                              size: 14,
-                            ),
-                            SizedBox(
-                              width: SizeConfig.blockSizeHorizontal * 1,
-                            ),
-                            Container(
-                                child: Text(
-                                  '4.5',
-                                  style: GoogleFonts.lato(fontSize: 12),
-                                ))
-                          ],
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Icon(
+                          LineIcons.starAlt,
+                          color: Color.fromRGBO(252, 191, 7, 30),
+                          size: 14,
+                        ),
+                        SizedBox(
+                          width: SizeConfig.blockSizeHorizontal * 1,
+                        ),
+                        Container(
+                            child: Text(
+                          spec.rating.toString(),
+                          style: GoogleFonts.lato(fontSize: 12),
                         ))
+                      ],
+                    ))
                   ],
                 ),
-                SizedBox(height: SizeConfig.blockSizeVertical * 0.7,),
+                SizedBox(
+                  height: SizeConfig.blockSizeVertical * 0.7,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
                       'Language: ',
-                      style: GoogleFonts.lato( fontSize: 12,
-                          fontWeight: FontWeight.w700),
+                      style: GoogleFonts.lato(
+                          fontSize: 12, fontWeight: FontWeight.w700),
                     ),
                     Text(
                       'English, Japanese',
@@ -120,5 +132,4 @@ class SpecialistCard extends StatelessWidget{
       ),
     );
   }
-
 }

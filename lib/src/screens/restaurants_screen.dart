@@ -38,7 +38,7 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> with AutomaticKee
         iconTheme: IconThemeData(color: Colors.white),
         title: Text(
           'Find your restaurant',
-          style: GoogleFonts.lato(fontSize: 22, color: Colors.white),
+          style: GoogleFonts.lato(fontSize: 22, color: Colors.white, fontWeight: FontWeight.w700),
         ),
       ),
       body: BlocProvider(

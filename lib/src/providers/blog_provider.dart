@@ -143,7 +143,7 @@ class BlogProvider {
       @required int page,
       @required int categoryId}) async {
     List<ListBlog> blogs;
-    int size = 3;
+    int size = 4;
     try {
       Map<String, dynamic> headers = {
         Headers.contentTypeHeader: "application/json",

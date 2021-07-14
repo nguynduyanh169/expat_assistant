@@ -122,7 +122,7 @@ class SearchBlogs extends SearchDelegate<ListBlog> {
                             openChannel: () => Navigator.pushNamed(
                                 context, RouteName.CHANNEL,
                                 arguments: ChannelDetailsArguments(
-                                    blogs[index].channel.channelId)),
+                                    blogs[index].channel)),
                             openNews: () => Navigator.pushNamed(
                                 context, RouteName.BLOG_DETAILS),
                           ),

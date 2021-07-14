@@ -6,6 +6,7 @@ import 'package:expat_assistant/src/repositories/blog_repository.dart';
 import 'package:expat_assistant/src/states/blog_details_state.dart';
 import 'package:expat_assistant/src/utils/date_utils.dart';
 import 'package:expat_assistant/src/widgets/loading.dart';
+import 'package:expat_assistant/src/widgets/related_news.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -39,7 +40,8 @@ class BlogDetailsScreen extends StatelessWidget {
           centerTitle: true,
           title: Text(
             "Read News",
-            style: GoogleFonts.lato(fontSize: 20, color: Colors.white),
+            style: GoogleFonts.lato(
+                fontSize: 20, color: Colors.white, fontWeight: FontWeight.w700),
           ),
           actions: [
             IconButton(
@@ -88,7 +90,8 @@ class BlogDetailsScreen extends StatelessWidget {
                           ),
                           Text(' | '),
                           Text(
-                            _dateUtils.getDateTimeForNews(startDateTime: blog.createDate),
+                            _dateUtils.getDateTimeForNews(
+                                startDateTime: blog.createDate),
                             style: GoogleFonts.lato(),
                           )
                         ],
@@ -103,7 +106,7 @@ class BlogDetailsScreen extends StatelessWidget {
                           right: SizeConfig.blockSizeHorizontal * 2),
                       child: Text(
                         blog.blogTitle,
-                        style: GoogleFonts.lato(
+                        style: GoogleFonts.literata(
                             fontWeight: FontWeight.bold, fontSize: 20),
                       ),
                     ),
@@ -117,10 +120,14 @@ class BlogDetailsScreen extends StatelessWidget {
                       child: Html(
                         data: blog.blogContent,
                         style: {
-                          "p": Style(fontSize: FontSize(17)),
+                          "p": Style(
+                              fontSize: FontSize(17),
+                              fontFamily: 'Literata',
+                              wordSpacing: 1.75),
                         },
                       ),
                     ),
+                    RelatedNews(existBlog: blog,)
                   ],
                 ),
               );

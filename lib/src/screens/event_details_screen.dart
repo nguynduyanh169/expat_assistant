@@ -35,7 +35,7 @@ class EventDetailsScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.black),
+            icon: Icon(Icons.arrow_back, color: Colors.white),
             onPressed: () => Navigator.popUntil(
                 context, ModalRoute.withName(RouteName.HOME_PAGE)),
           ),
@@ -46,14 +46,14 @@ class EventDetailsScreen extends StatelessWidget {
               ),
               preferredSize: Size.fromHeight(0.25)),
           elevation: 0.5,
-          iconTheme: IconThemeData(color: Colors.black),
-          backgroundColor: Colors.white,
+          iconTheme: IconThemeData(color: Colors.white),
+          backgroundColor: AppColors.MAIN_COLOR,
           //toolbarHeight: SizeConfig.blockSizeVertical * 10,
           automaticallyImplyLeading: true,
           centerTitle: true,
           title: Text(
             'Event Details',
-            style: GoogleFonts.lato(fontSize: 22, color: Colors.black),
+            style: GoogleFonts.lato(fontSize: 22, color: Colors.white, fontWeight: FontWeight.w700),
           ),
           actions: [
             IconButton(
@@ -63,7 +63,7 @@ class EventDetailsScreen extends StatelessWidget {
                 },
                 icon: Icon(
                   CupertinoIcons.home,
-                  color: Colors.black,
+                  color: Colors.white,
                 )),
             SizedBox(
               width: SizeConfig.blockSizeHorizontal * 4,

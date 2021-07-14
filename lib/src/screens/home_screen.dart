@@ -290,7 +290,7 @@ class _HomeScreenState extends State<HomeScreen>
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Text(
-                            'Lasted News',
+                            'Breaking News',
                             style: GoogleFonts.lato(
                                 fontSize: 22,
                                 fontWeight: FontWeight.w500,
@@ -324,7 +324,7 @@ class _HomeScreenState extends State<HomeScreen>
                               openChannel: () => Navigator.pushNamed(
                                   context, RouteName.CHANNEL,
                                   arguments: ChannelDetailsArguments(
-                                      news[index].channel.channelId)),
+                                      news[index].channel)),
                               openNews: () => Navigator.pushNamed(
                                   context, RouteName.BLOG_DETAILS, arguments: BlogDetailsArguments(news[index].blogId)),
                             ),

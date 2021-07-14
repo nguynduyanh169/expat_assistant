@@ -1,13 +1,25 @@
 import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/configs/size_config.dart';
+import 'package:expat_assistant/src/models/session.dart';
+import 'package:expat_assistant/src/models/specialist.dart';
+import 'package:expat_assistant/src/utils/session_utils.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:line_icons/line_icons.dart';
 
+// ignore: must_be_immutable
 class InvoiceScreen extends StatelessWidget {
+  List<SessionDisplay> sessions = [];
+  SpecialistDetails specialistDetails;
+  SessionUtils _sessionUtils = SessionUtils();
   @override
   Widget build(BuildContext context) {
+    final args =
+        ModalRoute.of(context).settings.arguments as InvoiceScreenArguments;
+    sessions.addAll(args.selectedSessions);
+    specialistDetails = args.specialistDetails;
     return Scaffold(
       appBar: AppBar(
         bottom: PreferredSize(
@@ -49,58 +61,52 @@ class InvoiceScreen extends StatelessWidget {
                 children: <Widget>[
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10.0),
-                    child: Image(
+                    child: ExtendedImage.network(
+                      specialistDetails.specialist.avatar,
                       fit: BoxFit.cover,
                       width: SizeConfig.blockSizeHorizontal * 26,
                       height: SizeConfig.blockSizeVertical * 14,
-                      image: AssetImage('assets/images/demo_expert.jpg'),
+                      
                     ),
                   ),
                   SizedBox(
                     height: SizeConfig.blockSizeVertical * 2,
                   ),
                   Text(
-                    'Dr. Ho Xuan Cuong',
+                    specialistDetails.specialist.fullname,
                     style: GoogleFonts.lato(
                         fontSize: 25, fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    'September 21, 11:00',
+                    '${sessions.length} sessions',
                     style: GoogleFonts.lato(
                         fontSize: 15, fontWeight: FontWeight.w500),
                   ),
                   Divider(
                     color: Colors.grey,
                   ),
-                  ListTile(
-                    leading: Icon(LineIcons.businessTime),
-                    title: Text(
-                      '11:00 - 11:30',
-                      style: GoogleFonts.lato(),
-                    ),
-                    trailing: Text('30.000 VND', style: GoogleFonts.lato()),
-                  ),
-                  Divider(
-                    color: Colors.grey,
-                  ),
-                  ListTile(
-                    leading: Icon(LineIcons.businessTime),
-                    title: Text(
-                      '11:00 - 11:30',
-                      style: GoogleFonts.lato(),
-                    ),
-                    trailing: Text('30.000 VND', style: GoogleFonts.lato()),
-                  ),
-                  Divider(
-                    color: Colors.grey,
-                  ),
-                  ListTile(
-                    leading: Icon(LineIcons.businessTime),
-                    title: Text(
-                      '11:00 - 11:30',
-                      style: GoogleFonts.lato(),
-                    ),
-                    trailing: Text('30.000 VND', style: GoogleFonts.lato()),
+                  Container(
+                    height: SizeConfig.blockSizeVertical * 25,
+                    child: ListView.separated(
+                        itemBuilder: (context, index) => ListTile(
+                              leading: Icon(
+                                LineIcons.businessTime,
+                                color: AppColors.MAIN_COLOR,
+                              ),
+                              title: Text(
+                                sessions[index].startTime +
+                                    "-" +
+                                    sessions[index].endTime,
+                                style: GoogleFonts.lato(),
+                              ),
+                              trailing: Text(
+                                  sessions[index].price.toString() + "VND",
+                                  style: GoogleFonts.lato()),
+                            ),
+                        separatorBuilder: (context, index) => Divider(
+                              color: Colors.grey,
+                            ),
+                        itemCount: sessions.length),
                   ),
                   Divider(
                     color: Colors.grey,
@@ -111,7 +117,9 @@ class InvoiceScreen extends StatelessWidget {
                       style: GoogleFonts.lato(
                           fontSize: 20, fontWeight: FontWeight.w700),
                     ),
-                    trailing: Text('90.000 VND', style: GoogleFonts.lato()),
+                    trailing: Text(
+                        '${_sessionUtils.caculateTotalPrice(sessionLists: sessions)}VND',
+                        style: GoogleFonts.lato()),
                   ),
                 ],
               ),
@@ -128,19 +136,16 @@ class InvoiceScreen extends StatelessWidget {
                 child: Container(
                   width: SizeConfig.blockSizeHorizontal * 70,
                   child: ElevatedButton(
-                      style: ButtonStyle(
-                          padding: MaterialStateProperty.all<EdgeInsets>(
-                              EdgeInsets.all(
-                                  SizeConfig.blockSizeHorizontal * 2)),
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                              AppColors.MAIN_COLOR),
-                          textStyle: MaterialStateProperty.all<TextStyle>(
-                              GoogleFonts.lato(fontSize: 17))),
-                      child: Text("Pay Now"),
-                      onPressed: () {
-                        
-                      },
-                      ),
+                    style: ButtonStyle(
+                        padding: MaterialStateProperty.all<EdgeInsets>(
+                            EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2)),
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            AppColors.MAIN_COLOR),
+                        textStyle: MaterialStateProperty.all<TextStyle>(
+                            GoogleFonts.lato(fontSize: 17))),
+                    child: Text("Pay Now"),
+                    onPressed: () {},
+                  ),
                 ),
               ),
             )
@@ -149,4 +154,10 @@ class InvoiceScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+class InvoiceScreenArguments {
+  final List<SessionDisplay> selectedSessions;
+  final SpecialistDetails specialistDetails;
+  const InvoiceScreenArguments(this.selectedSessions, this.specialistDetails);
 }

@@ -10,7 +10,7 @@ Future<Topic> showConfimationDialogForCategory(
     @required Function action,
     @required List<Topic> topics}) async {
   int selected = 0;
-  Topic selectedTopic;
+  Topic selectedTopic = topics.first;
   SizeConfig().init(context);
   return await showDialog(
       context: context,
@@ -87,7 +87,7 @@ Future<Category> showCategory(
     {@required BuildContext context,
     @required List<Category> list}) async {
   int selected = 0;
-  Category selectedCategory;
+  Category category = list.first;
   SizeConfig().init(context);
   return await showDialog(
       context: context,
@@ -110,7 +110,7 @@ Future<Category> showCategory(
                         fontWeight: FontWeight.w700))),
             TextButton(
                 onPressed: () {
-                  Navigator.pop(context, selectedCategory);
+                  Navigator.pop(context, category);
                 },
                 child: Text('CONFIRM',
                     style: GoogleFonts.lato(
@@ -145,7 +145,7 @@ Future<Category> showCategory(
                                 onChanged: (value) {
                                   setState(() {
                                     selected = index;
-                                    selectedCategory = list[selected];
+                                    category = list[selected];
                                   });
                                 });
                           }),

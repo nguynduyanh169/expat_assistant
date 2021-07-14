@@ -52,78 +52,110 @@ class _ChannelListState extends State<ChannelList>
             currentPage = state.page;
           }
           return Container(
-            width: SizeConfig.blockSizeHorizontal * 85,
-            child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                controller: scrollController,
-                itemBuilder: (context, index) {
-                  if (index < channels.length) {
-                    return InkWell(
-                      onTap: () {
-                        Navigator.pushNamed(context, RouteName.CHANNEL, arguments: ChannelDetailsArguments(channels[index].channelId));
-                      },
-                      child: Card(
-                        clipBehavior: Clip.antiAlias,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        child: Container(
-                          child: Stack(
-                            alignment: Alignment.topLeft,
-                            children: <Widget>[
-                              Image(
-                                width: SizeConfig.blockSizeHorizontal * 30,
-                                height: SizeConfig.blockSizeVertical * 15,
-                                image: NetworkImage(channels[index].image),
-                                fit: BoxFit.cover,
+            padding: EdgeInsets.only(
+              left: SizeConfig.blockSizeHorizontal * 1,
+              top: SizeConfig.blockSizeHorizontal * 2,
+              right: SizeConfig.blockSizeHorizontal * 1,
+              bottom: SizeConfig.blockSizeHorizontal * 2,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  padding:
+                      EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 1),
+                  child: Text(
+                    'Channels',
+                    style: GoogleFonts.lato(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
+                        color: Color.fromRGBO(0, 99, 99, 30)),
+                  ),
+                ),
+                Container(
+                  width: SizeConfig.blockSizeHorizontal * 100,
+                  height: SizeConfig.blockSizeVertical * 15,
+                  child: ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      controller: scrollController,
+                      itemBuilder: (context, index) {
+                        if (index < channels.length) {
+                          return InkWell(
+                            onTap: () {
+                              Navigator.pushNamed(context, RouteName.CHANNEL,
+                                  arguments:
+                                      ChannelDetailsArguments(channels[index]));
+                            },
+                            child: Card(
+                              clipBehavior: Clip.antiAlias,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
                               ),
-                              Container(
-                                decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                        begin: FractionalOffset.topCenter,
-                                        end: FractionalOffset.bottomCenter,
-                                        colors: [
-                                      Colors.grey.withOpacity(0),
-                                      Colors.black,
-                                    ],
-                                        stops: [
-                                      0.0,
-                                      2.0
-                                    ])),
-                                padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
-                                alignment: Alignment.bottomLeft,
-                                width: SizeConfig.blockSizeHorizontal * 30,
-                                height: SizeConfig.blockSizeVertical * 15,
-                                child: Text(
-                                  channels[index].channelName.trim(),
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 3,
-                                  style: GoogleFonts.lato(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w800,
-                                      fontSize: 13),
+                              child: Container(
+                                child: Stack(
+                                  alignment: Alignment.topLeft,
+                                  children: <Widget>[
+                                    Image(
+                                      width:
+                                          SizeConfig.blockSizeHorizontal * 30,
+                                      height: SizeConfig.blockSizeVertical * 15,
+                                      image:
+                                          NetworkImage(channels[index].image),
+                                      fit: BoxFit.cover,
+                                    ),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                              begin: FractionalOffset.topCenter,
+                                              end:
+                                                  FractionalOffset.bottomCenter,
+                                              colors: [
+                                            Colors.grey.withOpacity(0),
+                                            Colors.black,
+                                          ],
+                                              stops: [
+                                            0.0,
+                                            2.0
+                                          ])),
+                                      padding: EdgeInsets.all(
+                                          SizeConfig.blockSizeHorizontal * 2),
+                                      alignment: Alignment.bottomLeft,
+                                      width:
+                                          SizeConfig.blockSizeHorizontal * 30,
+                                      height: SizeConfig.blockSizeVertical * 15,
+                                      child: Text(
+                                        channels[index].channelName.trim(),
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 3,
+                                        style: GoogleFonts.lato(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w800,
+                                            fontSize: 13),
+                                      ),
+                                    )
+                                  ],
                                 ),
-                              )
-                            ],
+                              ),
+                            ),
+                          );
+                        } else {
+                          Timer(Duration(milliseconds: 30), () {
+                            scrollController.jumpTo(
+                                scrollController.position.maxScrollExtent);
+                          });
+                          return Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: Center(child: CupertinoActivityIndicator()),
+                          );
+                        }
+                      },
+                      separatorBuilder: (context, index) => SizedBox(
+                            width: SizeConfig.blockSizeHorizontal * 2,
                           ),
-                        ),
-                      ),
-                    );
-                  } else {
-                    Timer(Duration(milliseconds: 30), () {
-                      scrollController
-                          .jumpTo(scrollController.position.maxScrollExtent);
-                    });
-                    return Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: Center(child: CupertinoActivityIndicator()),
-                    );
-                  }
-                },
-                separatorBuilder: (context, index) => SizedBox(
-                      width: SizeConfig.blockSizeHorizontal * 2,
-                    ),
-                itemCount: channels.length + (isLoadingChannels ? 1 : 0)),
+                      itemCount: channels.length + (isLoadingChannels ? 1 : 0)),
+                ),
+              ],
+            ),
           );
         },
       ),

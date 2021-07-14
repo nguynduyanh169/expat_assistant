@@ -42,14 +42,14 @@ class _ProfileScreenState extends State<ProfileScreen>
                 ),
                 preferredSize: Size.fromHeight(0.25)),
             elevation: 0.5,
-            backgroundColor: Colors.white,
+            backgroundColor: AppColors.MAIN_COLOR,
             //toolbarHeight: SizeConfig.blockSizeVertical * 10,
             automaticallyImplyLeading: false,
             centerTitle: true,
-            iconTheme: IconThemeData(color: Colors.black),
+            iconTheme: IconThemeData(color: Colors.white),
             title: Text(
               'Profile',
-              style: GoogleFonts.lato(fontSize: 22, color: Colors.black),
+              style: GoogleFonts.lato(fontSize: 22, color: Colors.white, fontWeight: FontWeight.w700),
             ),
           ),
           body: Container(
@@ -217,8 +217,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                     },
                                     child: Text('CANCEL',
                                         style: GoogleFonts.lato(
-                                            color: Color.fromRGBO(
-                                                30, 193, 194, 30),
+                                            color: AppColors.MAIN_COLOR,
                                             fontWeight: FontWeight.w700))),
                                 TextButton(
                                     onPressed: () {
@@ -226,8 +225,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                     },
                                     child: Text('SIGN OUT',
                                         style: GoogleFonts.lato(
-                                            color: Color.fromRGBO(
-                                                30, 193, 194, 30),
+                                            color: AppColors.MAIN_COLOR,
                                             fontWeight: FontWeight.w700)))
                               ],
                             );
