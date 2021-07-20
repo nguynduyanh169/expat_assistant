@@ -2,6 +2,7 @@ import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/configs/size_config.dart';
 import 'package:expat_assistant/src/models/blog.dart';
 import 'package:expat_assistant/src/utils/date_utils.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -37,10 +38,10 @@ class ChannelCard extends StatelessWidget {
             onTap: openChannel,
             leading: ClipRRect(
               borderRadius: BorderRadius.circular(10),
-              child: Image(
+              child: ExtendedImage.network(
+                blog.channel.image,
                 width: SizeConfig.blockSizeHorizontal * 15,
                 height: SizeConfig.blockSizeVertical * 20,
-                image: NetworkImage(blog.channel.image),
                 fit: BoxFit.cover,
               ),
             ),
@@ -63,11 +64,11 @@ class ChannelCard extends StatelessWidget {
             height: SizeConfig.blockSizeVertical * 1,
           ),
           ClipRRect(
-            child: Image(
+            child: ExtendedImage.network(
+              blog.coverLink,
               fit: BoxFit.cover,
               width: SizeConfig.blockSizeHorizontal * 101,
               height: SizeConfig.blockSizeVertical * 24.5,
-              image: NetworkImage(blog.coverLink),
             ),
           ),
           SizedBox(

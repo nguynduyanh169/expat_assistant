@@ -10,6 +10,8 @@ import 'package:expat_assistant/src/models/specialist.dart';
 import 'package:expat_assistant/src/repositories/specialist_repository.dart';
 import 'package:expat_assistant/src/screens/invoice_screen.dart';
 import 'package:expat_assistant/src/states/specialis_details_state.dart';
+import 'package:expat_assistant/src/utils/session_utils.dart';
+import 'package:expat_assistant/src/utils/text_utils.dart';
 import 'package:expat_assistant/src/widgets/loading.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
@@ -34,6 +36,8 @@ class _SpecialistDetailsState extends State<SpecialistDetailsScreen> {
   SpecialistDetails specialistDetails;
   LinkedHashMap<DateTime, List<SessionDisplay>> kSession;
   List<SessionDisplay> selectedSessions = [];
+  SessionUtils _sessionUtils = SessionUtils();
+  TextUtils _textUtils = TextUtils();
 
   @override
   void initState() {
@@ -60,6 +64,25 @@ class _SpecialistDetailsState extends State<SpecialistDetailsScreen> {
 
       _selectedEvents.value = _getEventsForDay(selectedDay);
     }
+  }
+
+  void _displaySnackBar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(
+        message,
+        style: GoogleFonts.lato(color: Colors.white),
+        textAlign: TextAlign.center,
+      ),
+      duration: const Duration(milliseconds: 1500),
+      // width: SizeConfig.blockSizeHorizontal * 60,
+      // Width of the SnackBar.
+      padding: const EdgeInsets.symmetric(
+        horizontal: 8.0, // Inner padding for SnackBar content.
+      ),
+      backgroundColor: Colors.blueAccent,
+
+      behavior: SnackBarBehavior.floating,
+    ));
   }
 
   @override
@@ -103,41 +126,44 @@ class _SpecialistDetailsState extends State<SpecialistDetailsScreen> {
         ),
         bottomNavigationBar: BottomAppBar(
           child: Container(
-              width: SizeConfig.blockSizeHorizontal * 100,
-              padding: EdgeInsets.only(
-                  left: SizeConfig.blockSizeHorizontal * 10,
-                  right: SizeConfig.blockSizeHorizontal * 10,
-                  top: SizeConfig.blockSizeVertical * 1.75,
-                  bottom: SizeConfig.blockSizeVertical * 1.75),
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(10),
-                      topRight: Radius.circular(10)),
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.black26.withOpacity(0.2),
-                        offset: Offset(0.0, 6.0),
-                        blurRadius: 10.0,
-                        spreadRadius: 0.10)
-                  ]),
-              height: SizeConfig.blockSizeVertical * 10,
-              child: Container(
-                width: SizeConfig.blockSizeHorizontal * 70,
-                child: ElevatedButton(
-                  style: ButtonStyle(
-                      padding: MaterialStateProperty.all<EdgeInsets>(
-                          EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2)),
-                      backgroundColor: MaterialStateProperty.all<Color>(
-                          AppColors.MAIN_COLOR),
-                      textStyle: MaterialStateProperty.all<TextStyle>(
-                          GoogleFonts.lato(fontSize: 17))),
-                  child: Text("Make an Appointment"),
-                  onPressed: () =>
-                      selectedSessions.length == 0 ? null : Navigator.pushNamed(context, RouteName.INVOICE, arguments: InvoiceScreenArguments(selectedSessions, specialistDetails)),
-                ),
+            width: SizeConfig.blockSizeHorizontal * 100,
+            padding: EdgeInsets.only(
+                left: SizeConfig.blockSizeHorizontal * 10,
+                right: SizeConfig.blockSizeHorizontal * 10,
+                top: SizeConfig.blockSizeVertical * 1.75,
+                bottom: SizeConfig.blockSizeVertical * 1.75),
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(10),
+                    topRight: Radius.circular(10)),
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.black26.withOpacity(0.2),
+                      offset: Offset(0.0, 6.0),
+                      blurRadius: 10.0,
+                      spreadRadius: 0.10)
+                ]),
+            height: SizeConfig.blockSizeVertical * 10,
+            child: Container(
+              width: SizeConfig.blockSizeHorizontal * 70,
+              child: ElevatedButton(
+                style: ButtonStyle(
+                    padding: MaterialStateProperty.all<EdgeInsets>(
+                        EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2)),
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(AppColors.MAIN_COLOR),
+                    textStyle: MaterialStateProperty.all<TextStyle>(
+                        GoogleFonts.lato(fontSize: 17))),
+                child: Text("Make an Appointment"),
+                onPressed: () => selectedSessions.length == 0
+                    ? _displaySnackBar(context, 'Please pick your session!')
+                    : Navigator.pushNamed(context, RouteName.INVOICE,
+                        arguments: InvoiceScreenArguments(
+                            selectedSessions, specialistDetails)),
               ),
             ),
+          ),
         ),
         body: BlocBuilder<SpecialistDetailsCubit, SpecialistDetailState>(
           builder: (context, state) {
@@ -236,7 +262,8 @@ class _SpecialistDetailsState extends State<SpecialistDetailsScreen> {
                                               fontWeight: FontWeight.w700),
                                         ),
                                         Text(
-                                          'English, Japanese',
+                                          _textUtils.getLanguages(
+                                              languages: specialistDetails.language),
                                           style: GoogleFonts.lato(),
                                         ),
                                       ],
@@ -333,13 +360,35 @@ class _SpecialistDetailsState extends State<SpecialistDetailsScreen> {
                                               size: 20,
                                               avatar: Icon(
                                                 LineIcons.businessTime,
-                                                color: AppColors.MAIN_COLOR,
+                                                color: _sessionUtils
+                                                        .checkDisableSession(
+                                                            value[index])
+                                                    ? Colors.grey
+                                                    : AppColors.MAIN_COLOR,
                                               ),
                                               title: Text(
                                                 value[index].toString(),
-                                                style: GoogleFonts.lato(),
+                                                style: GoogleFonts.lato(
+                                                    color: _sessionUtils
+                                                            .checkDisableSession(
+                                                                value[index])
+                                                        ? Colors.grey
+                                                        : Colors.black),
                                               ),
+                                              description: Text(
+                                                  value[index]
+                                                          .price
+                                                          .toString() +
+                                                      "VND",
+                                                  style: GoogleFonts.lato(
+                                                      fontSize: 11,
+                                                      color: _sessionUtils
+                                                              .checkDisableSession(
+                                                                  value[index])
+                                                          ? Colors.grey
+                                                          : Colors.black)),
                                               activeBgColor: Colors.green,
+                                              inactiveBorderColor: Colors.grey,
                                               type: GFCheckboxType.circle,
                                               activeIcon: Icon(
                                                 Icons.check,
@@ -347,9 +396,10 @@ class _SpecialistDetailsState extends State<SpecialistDetailsScreen> {
                                                 color: Colors.white,
                                               ),
                                               onChanged: (changeValue) {
-                                                if (value[index]
-                                                    .dateOfSession
-                                                    .isAfter(DateTime.now())) {
+                                                if (_sessionUtils
+                                                        .checkDisableSession(
+                                                            value[index]) ==
+                                                    false) {
                                                   setState(() {
                                                     value[index].isChoosen =
                                                         changeValue;
@@ -366,12 +416,10 @@ class _SpecialistDetailsState extends State<SpecialistDetailsScreen> {
                                                               element
                                                                   .sessionId);
                                                     }
-                                                    print(selectedSessions
-                                                        .length);
                                                   });
                                                 } else {
-                                                  print(
-                                                      'cannot select this session');
+                                                  _displaySnackBar(context,
+                                                      'Cannot select this session!');
                                                 }
                                               });
                                         },

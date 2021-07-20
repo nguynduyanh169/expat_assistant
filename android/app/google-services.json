@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "838310101316",
+    "firebase_url": "https://master-vietnamese.firebaseio.com",
+    "project_id": "master-vietnamese",
+    "storage_bucket": "master-vietnamese.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:838310101316:android:5db9d3b56118c4cda5d711",
+        "android_client_info": {
+          "package_name": "com.capstone.expat_assistant"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "838310101316-mo36mrfl4vd5lpktfv4tj68rp7oi2uu7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVNHu3OVO07jdBRrFk48Ledh8HM52FG8Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "838310101316-mo36mrfl4vd5lpktfv4tj68rp7oi2uu7.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "838310101316-kj8upbn54esdimbqrae7128glkodhdj5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.capstone.vietnameseLearning"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

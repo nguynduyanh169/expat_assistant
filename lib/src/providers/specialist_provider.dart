@@ -7,9 +7,8 @@ class SpecialistProvider {
   final Dio _dio = Dio();
 
   Future<dynamic> getSpecialistsByRating(
-      {@required String token, @required int page}) async {
+      {@required String token, @required int page, @required int size}) async {
     List<ListSpec> result;
-    int size = 4;
     try {
       Map<String, dynamic> headers = {
         Headers.contentTypeHeader: "application/json",
@@ -51,7 +50,101 @@ class SpecialistProvider {
         result = SpecialistDetails.fromJson(response.data);
       }
     } catch (e) {
-      print("error: " + e.toString());
+      print(e.toString());
+    }
+    return result;
+  }
+
+  Future<dynamic> getSpecialistByName(
+      {@required String token,
+      @required int page,
+      @required String keyword}) async {
+    List<ListSpec> result;
+    int size = 6;
+    try {
+      Map<String, dynamic> headers = {
+        Headers.contentTypeHeader: "application/json",
+        Headers.acceptHeader: "application/json",
+        'Authorization': 'Bearer $token',
+      };
+      print(ApiName.GET_SPECIALISTS_BY_NAME +
+          "?fullname=$keyword&page=$page&size=$size");
+      Response response = await _dio.get(
+          ApiName.GET_SPECIALISTS_BY_NAME +
+              "?fullname=$keyword&page=$page&size=$size",
+          options: Options(headers: headers));
+      if (response.statusCode == 204) {
+        return 204;
+      } else {
+        result = (response.data['listSpec'] as List<dynamic>)
+            .map((i) => ListSpec.fromJson(i))
+            .toList()
+            .cast<ListSpec>();
+        print(result.length);
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+    return result;
+  }
+
+  Future<dynamic> getSpecialistByMajorId(
+      {@required String token,
+      @required int page,
+      @required int majorId}) async {
+    List<ListSpec> result;
+    int size = 5;
+    try {
+      Map<String, dynamic> headers = {
+        Headers.contentTypeHeader: "application/json",
+        Headers.acceptHeader: "application/json",
+        'Authorization': 'Bearer $token',
+      };
+      print(ApiName.GET_SPECIALISTS_BY_MAJOR +
+          "?majorId=$majorId&page=$page&size=$size");
+      Response response = await _dio.get(
+          ApiName.GET_SPECIALISTS_BY_MAJOR +
+              "?majorId=$majorId&page=$page&size=$size",
+          options: Options(headers: headers));
+      if (response.statusCode == 204) {
+        return 204;
+      } else {
+        result = (response.data['listSpec'] as List<dynamic>)
+            .map((i) => ListSpec.fromJson(i))
+            .toList()
+            .cast<ListSpec>();
+        print(result.length);
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+    return result;
+  }
+
+  Future<dynamic> getSpecialistByCreateDate(
+      {@required String token, @required int page}) async {
+    List<ListSpec> result;
+    int size = 5;
+    try {
+      Map<String, dynamic> headers = {
+        Headers.contentTypeHeader: "application/json",
+        Headers.acceptHeader: "application/json",
+        'Authorization': 'Bearer $token',
+      };
+
+      Response response = await _dio.get(
+          ApiName.GET_SPECIALISTS_BY_CREATEDATE + "?page=$page&size=$size",
+          options: Options(headers: headers));
+      if (response.statusCode == 204) {
+        return 204;
+      } else {
+        result = (response.data['listSpec'] as List<dynamic>)
+            .map((i) => ListSpec.fromJson(i))
+            .toList()
+            .cast<ListSpec>();
+      }
+    } catch (e) {
+      print(e.toString());
     }
     return result;
   }

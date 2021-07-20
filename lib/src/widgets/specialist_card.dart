@@ -1,5 +1,6 @@
 import 'package:expat_assistant/src/configs/size_config.dart';
 import 'package:expat_assistant/src/models/specialist.dart';
+import 'package:expat_assistant/src/utils/text_utils.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,8 +9,9 @@ import 'package:line_icons/line_icons.dart';
 
 // ignore: must_be_immutable
 class SpecialistCard extends StatelessWidget {
+  TextUtils _textUtils = TextUtils();
   Function action;
-  ListSpec spec;
+  SpecialistDetails spec;
   SpecialistCard({@required this.action, @required this.spec});
   @override
   Widget build(BuildContext context) {
@@ -33,10 +35,10 @@ class SpecialistCard extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(10.0),
               child: ExtendedImage.network(
-                spec.avatar,
+                spec.specialist.avatar,
                 fit: BoxFit.cover,
-                width: SizeConfig.blockSizeHorizontal * 18,
-                height: SizeConfig.blockSizeVertical * 10,
+                width: SizeConfig.blockSizeHorizontal * 30,
+                height: SizeConfig.blockSizeVertical * 15,
               ),
             ),
             SizedBox(
@@ -46,7 +48,7 @@ class SpecialistCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  spec.fullname,
+                  spec.specialist.fullname,
                   style: GoogleFonts.lato(
                       fontSize: 18, fontWeight: FontWeight.w700),
                 ),
@@ -56,7 +58,7 @@ class SpecialistCard extends StatelessWidget {
                   children: <Widget>[
                     Container(
                         child: Text(
-                      'Lawyer',
+                      spec.majors.first.name,
                       style: GoogleFonts.lato(fontSize: 12),
                     )),
                     SizedBox(
@@ -84,7 +86,7 @@ class SpecialistCard extends StatelessWidget {
                         ),
                         Container(
                             child: Text(
-                          spec.rating.toString(),
+                          spec.specialist.rating.toString(),
                           style: GoogleFonts.lato(fontSize: 12),
                         ))
                       ],
@@ -92,7 +94,7 @@ class SpecialistCard extends StatelessWidget {
                   ],
                 ),
                 SizedBox(
-                  height: SizeConfig.blockSizeVertical * 0.7,
+                  height: SizeConfig.blockSizeVertical * 6,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -100,31 +102,31 @@ class SpecialistCard extends StatelessWidget {
                     Text(
                       'Language: ',
                       style: GoogleFonts.lato(
-                          fontSize: 12, fontWeight: FontWeight.w700),
+                          fontSize: 15, fontWeight: FontWeight.w700),
                     ),
                     Text(
-                      'English, Japanese',
-                      style: GoogleFonts.lato(fontSize: 12),
+                      _textUtils.getLanguages(languages: spec.language),
+                      style: GoogleFonts.lato(fontSize: 15),
                     ),
                   ],
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Certificate: ',
-                      style: GoogleFonts.lato(
-                          fontWeight: FontWeight.w700, fontSize: 12),
-                    ),
-                    Text(
-                      'Bachelor Degree of Lawyer',
-                      style: GoogleFonts.lato(fontSize: 12),
-                      overflow: TextOverflow.clip,
-                      maxLines: 1,
-                      softWrap: false,
-                    ),
-                  ],
-                ),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.start,
+                //   children: [
+                //     Text(
+                //       'Certificate: ',
+                //       style: GoogleFonts.lato(
+                //           fontWeight: FontWeight.w700, fontSize: 12),
+                //     ),
+                //     Text(
+                //       'Bachelor Degree of Lawyer',
+                //       style: GoogleFonts.lato(fontSize: 12),
+                //       overflow: TextOverflow.clip,
+                //       maxLines: 1,
+                //       softWrap: false,
+                //     ),
+                //   ],
+                // ),
               ],
             )
           ],

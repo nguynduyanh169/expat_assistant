@@ -2,6 +2,7 @@ import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/configs/size_config.dart';
 import 'package:expat_assistant/src/models/event.dart';
 import 'package:expat_assistant/src/utils/date_utils.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -33,10 +34,10 @@ class EventCard extends StatelessWidget {
           children: <Widget>[
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
-              child: Image(
+              child: ExtendedImage.network(
+                content.content.eventCoverImage,
                 width: SizeConfig.blockSizeHorizontal * 100,
                 height: SizeConfig.blockSizeVertical * 25,
-                image: NetworkImage(content.content.eventCoverImage),
                 fit: BoxFit.cover,
               ),
             ),

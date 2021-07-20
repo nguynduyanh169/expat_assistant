@@ -40,15 +40,43 @@ class SessionUtils {
       DateTime endDate = DateTime(session.endTime[0], session.endTime[1],
           session.endTime[2], session.endTime[3], session.endTime[4]);
       String endTime = _dateTimeUtils.getTime(endDate);
-      SessionDisplay sessionDisplay = SessionDisplay(
-          dateOfSession: dateOfSession,
-          sessionId: session.consultId,
-          startTime: startTime,
-          endTime: endTime,
-          isChoosen: false,
-          price: session.price);
-      result.add(sessionDisplay);
+      if (session.status == 2 || session.status == 0) {
+        SessionDisplay sessionDisplay = SessionDisplay(
+            dateOfSession: dateOfSession,
+            startDate: startDate,
+            sessionId: session.consultId,
+            startTime: startTime,
+            endTime: endTime,
+            isChoosen: false,
+            price: session.price,
+            status: session.status,
+            isDisable: true);
+        result.add(sessionDisplay);
+      } else {
+        SessionDisplay sessionDisplay = SessionDisplay(
+            dateOfSession: dateOfSession,
+            startDate: startDate,
+            sessionId: session.consultId,
+            startTime: startTime,
+            endTime: endTime,
+            isChoosen: false,
+            price: session.price,
+            status: session.status,
+            isDisable: false);
+        result.add(sessionDisplay);
+      }
     }
     return result;
+  }
+
+  bool checkDisableSession(SessionDisplay sessionDisplay) {
+    bool cannotChoose = false;
+    if (sessionDisplay.isDisable == true) {
+      cannotChoose = true;
+    }
+    if (sessionDisplay.startDate.isBefore(DateTime.now())) {
+      cannotChoose = true;
+    }
+    return cannotChoose;
   }
 }

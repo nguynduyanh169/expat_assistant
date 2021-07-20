@@ -21,13 +21,14 @@ class SpecialistsScreen extends StatefulWidget {
 
 class _SpecialistsScreenState extends State<SpecialistsScreen> {
   int currentPage = 0;
-  List<ListSpec> specialists = [];
+  List<SpecialistDetails> specialists = [];
   final ScrollController scrollController = ScrollController();
 
   void setupScrollController(BuildContext context) {
     scrollController.addListener(() {
-      if (scrollController.position.pixels ==
-          scrollController.position.maxScrollExtent) {
+      if (scrollController.offset >=
+              scrollController.position.maxScrollExtent &&
+          !scrollController.position.outOfRange) {
         BlocProvider.of<SpecialistCubit>(context).getSpecialists(currentPage);
       }
     });
@@ -59,9 +60,9 @@ class _SpecialistsScreenState extends State<SpecialistsScreen> {
           ),
           actions: [
             InkWell(
-              onTap: (){
+              onTap: () {
                 Navigator.popUntil(
-                      context, ModalRoute.withName(RouteName.HOME_PAGE));
+                    context, ModalRoute.withName(RouteName.HOME_PAGE));
               },
               child: Icon(CupertinoIcons.home),
             ),
@@ -89,16 +90,22 @@ class _SpecialistsScreenState extends State<SpecialistsScreen> {
                           fontWeight: FontWeight.w500,
                           color: Color.fromRGBO(0, 99, 99, 30)),
                     ),
-                    Text('See more',
-                        style: GoogleFonts.lato(
-                            color: Color.fromRGBO(30, 193, 194, 30)))
+                    InkWell(
+                      onTap: () {
+                        Navigator.pushNamed(
+                            context, RouteName.UPCOMING_APPOINTMENT);
+                      },
+                      child: Text('See more',
+                          style: GoogleFonts.lato(
+                              color: Color.fromRGBO(30, 193, 194, 30))),
+                    )
                   ],
                 ),
               ),
               Container(
                 padding: EdgeInsets.only(
-                    left: SizeConfig.blockSizeHorizontal * 5,
-                    right: SizeConfig.blockSizeHorizontal * 5),
+                    left: SizeConfig.blockSizeHorizontal * 2,
+                    right: SizeConfig.blockSizeHorizontal * 2),
                 child: AppointmentCard(
                   action: () {
                     Navigator.pushNamed(context, RouteName.CALL_ROOM);
@@ -109,19 +116,22 @@ class _SpecialistsScreenState extends State<SpecialistsScreen> {
                 height: SizeConfig.blockSizeVertical * 2,
               ),
               Container(
-                padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 3),
+                padding: EdgeInsets.only(
+                    left: SizeConfig.blockSizeHorizontal * 3,
+                    right: SizeConfig.blockSizeHorizontal * 3),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Text(
-                      "Let's find your specialist",
+                      "Top Specialists",
                       style: GoogleFonts.lato(
                           fontSize: 18,
                           fontWeight: FontWeight.w500,
                           color: Color.fromRGBO(0, 99, 99, 30)),
                     ),
                     TextButton(
-                      onPressed: () => Navigator.pushNamed(context, RouteName.FILTER_SPECIALIST),
+                      onPressed: () => Navigator.pushNamed(
+                          context, RouteName.FILTER_SPECIALIST),
                       child: Text('See more',
                           style: GoogleFonts.lato(
                               color: Color.fromRGBO(30, 193, 194, 30))),
@@ -129,156 +139,153 @@ class _SpecialistsScreenState extends State<SpecialistsScreen> {
                   ],
                 ),
               ),
-              Container(
-                height: SizeConfig.blockSizeVertical * 5,
-                padding: EdgeInsets.only(
-                    left: SizeConfig.blockSizeHorizontal * 3,
-                    right: SizeConfig.blockSizeHorizontal * 2),
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: <Widget>[
-                    Container(
-                      padding:
-                          EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
-                      decoration: BoxDecoration(
-                          color: AppColors.MAIN_COLOR,
-                          borderRadius: BorderRadius.circular(10.0),
-                          boxShadow: [
-                            BoxShadow(
-                                color: Colors.black26.withOpacity(0.05),
-                                offset: Offset(0.0, 6.0),
-                                blurRadius: 10.0,
-                                spreadRadius: 0.10)
-                          ]),
-                      child: Row(
-                        children: <Widget>[
-                          SizedBox(
-                            width: SizeConfig.blockSizeHorizontal * 1,
-                          ),
-                          Text('All Major',
-                              style: GoogleFonts.lato(color: Colors.white))
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      width: SizeConfig.blockSizeHorizontal * 2,
-                    ),
-                    Container(
-                      //width: SizeConfig.blockSizeHorizontal * 30,
-                      padding:
-                          EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10.0),
-                          boxShadow: [
-                            BoxShadow(
-                                color: Colors.black26.withOpacity(0.05),
-                                offset: Offset(0.0, 6.0),
-                                blurRadius: 10.0,
-                                spreadRadius: 0.10)
-                          ]),
-                      child: Row(
-                        children: <Widget>[
-                          Icon(
-                            LineIcons.balanceScale,
-                          ),
-                          SizedBox(
-                            width: SizeConfig.blockSizeHorizontal * 1,
-                          ),
-                          Text('Lawyer', style: GoogleFonts.lato())
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      width: SizeConfig.blockSizeHorizontal * 2,
-                    ),
-                    Container(
-                      padding:
-                          EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10.0),
-                          boxShadow: [
-                            BoxShadow(
-                                color: Colors.black26.withOpacity(0.05),
-                                offset: Offset(0.0, 6.0),
-                                blurRadius: 10.0,
-                                spreadRadius: 0.10)
-                          ]),
-                      child: Row(
-                        children: <Widget>[
-                          Icon(
-                            LineIcons.laptop,
-                          ),
-                          SizedBox(
-                            width: SizeConfig.blockSizeHorizontal * 1,
-                          ),
-                          Text('IT support', style: GoogleFonts.lato())
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      width: SizeConfig.blockSizeHorizontal * 2,
-                    ),
-                    Container(
-                      padding:
-                          EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10.0),
-                          boxShadow: [
-                            BoxShadow(
-                                color: Colors.black26.withOpacity(0.05),
-                                offset: Offset(0.0, 6.0),
-                                blurRadius: 10.0,
-                                spreadRadius: 0.10)
-                          ]),
-                      child: Row(
-                        children: <Widget>[
-                          Icon(
-                            LineIcons.lightningBolt,
-                          ),
-                          SizedBox(
-                            width: SizeConfig.blockSizeHorizontal * 1,
-                          ),
-                          Text('Electrician', style: GoogleFonts.lato())
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      width: SizeConfig.blockSizeHorizontal * 2,
-                    ),
-                    Container(
-                      padding:
-                          EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10.0),
-                          boxShadow: [
-                            BoxShadow(
-                                color: Colors.black26.withOpacity(0.05),
-                                offset: Offset(0.0, 6.0),
-                                blurRadius: 10.0,
-                                spreadRadius: 0.10)
-                          ]),
-                      child: Row(
-                        children: <Widget>[
-                          Icon(
-                            LineIcons.brain,
-                          ),
-                          SizedBox(
-                            width: SizeConfig.blockSizeHorizontal * 1,
-                          ),
-                          Text('Psychologist', style: GoogleFonts.lato())
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: SizeConfig.blockSizeVertical * 2,
-              ),
+              // Container(
+              //   height: SizeConfig.blockSizeVertical * 5,
+              //   padding: EdgeInsets.only(
+              //       left: SizeConfig.blockSizeHorizontal * 3,
+              //       right: SizeConfig.blockSizeHorizontal * 2),
+              //   child: ListView(
+              //     scrollDirection: Axis.horizontal,
+              //     children: <Widget>[
+              //       Container(
+              //         padding:
+              //             EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
+              //         decoration: BoxDecoration(
+              //             color: AppColors.MAIN_COLOR,
+              //             borderRadius: BorderRadius.circular(10.0),
+              //             boxShadow: [
+              //               BoxShadow(
+              //                   color: Colors.black26.withOpacity(0.05),
+              //                   offset: Offset(0.0, 6.0),
+              //                   blurRadius: 10.0,
+              //                   spreadRadius: 0.10)
+              //             ]),
+              //         child: Row(
+              //           children: <Widget>[
+              //             SizedBox(
+              //               width: SizeConfig.blockSizeHorizontal * 1,
+              //             ),
+              //             Text('All Major',
+              //                 style: GoogleFonts.lato(color: Colors.white))
+              //           ],
+              //         ),
+              //       ),
+              //       SizedBox(
+              //         width: SizeConfig.blockSizeHorizontal * 2,
+              //       ),
+              //       Container(
+              //         //width: SizeConfig.blockSizeHorizontal * 30,
+              //         padding:
+              //             EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
+              //         decoration: BoxDecoration(
+              //             color: Colors.white,
+              //             borderRadius: BorderRadius.circular(10.0),
+              //             boxShadow: [
+              //               BoxShadow(
+              //                   color: Colors.black26.withOpacity(0.05),
+              //                   offset: Offset(0.0, 6.0),
+              //                   blurRadius: 10.0,
+              //                   spreadRadius: 0.10)
+              //             ]),
+              //         child: Row(
+              //           children: <Widget>[
+              //             Icon(
+              //               LineIcons.balanceScale,
+              //             ),
+              //             SizedBox(
+              //               width: SizeConfig.blockSizeHorizontal * 1,
+              //             ),
+              //             Text('Lawyer', style: GoogleFonts.lato())
+              //           ],
+              //         ),
+              //       ),
+              //       SizedBox(
+              //         width: SizeConfig.blockSizeHorizontal * 2,
+              //       ),
+              //       Container(
+              //         padding:
+              //             EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
+              //         decoration: BoxDecoration(
+              //             color: Colors.white,
+              //             borderRadius: BorderRadius.circular(10.0),
+              //             boxShadow: [
+              //               BoxShadow(
+              //                   color: Colors.black26.withOpacity(0.05),
+              //                   offset: Offset(0.0, 6.0),
+              //                   blurRadius: 10.0,
+              //                   spreadRadius: 0.10)
+              //             ]),
+              //         child: Row(
+              //           children: <Widget>[
+              //             Icon(
+              //               LineIcons.laptop,
+              //             ),
+              //             SizedBox(
+              //               width: SizeConfig.blockSizeHorizontal * 1,
+              //             ),
+              //             Text('IT support', style: GoogleFonts.lato())
+              //           ],
+              //         ),
+              //       ),
+              //       SizedBox(
+              //         width: SizeConfig.blockSizeHorizontal * 2,
+              //       ),
+              //       Container(
+              //         padding:
+              //             EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
+              //         decoration: BoxDecoration(
+              //             color: Colors.white,
+              //             borderRadius: BorderRadius.circular(10.0),
+              //             boxShadow: [
+              //               BoxShadow(
+              //                   color: Colors.black26.withOpacity(0.05),
+              //                   offset: Offset(0.0, 6.0),
+              //                   blurRadius: 10.0,
+              //                   spreadRadius: 0.10)
+              //             ]),
+              //         child: Row(
+              //           children: <Widget>[
+              //             Icon(
+              //               LineIcons.lightningBolt,
+              //             ),
+              //             SizedBox(
+              //               width: SizeConfig.blockSizeHorizontal * 1,
+              //             ),
+              //             Text('Electrician', style: GoogleFonts.lato())
+              //           ],
+              //         ),
+              //       ),
+              //       SizedBox(
+              //         width: SizeConfig.blockSizeHorizontal * 2,
+              //       ),
+              //       Container(
+              //         padding:
+              //             EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
+              //         decoration: BoxDecoration(
+              //             color: Colors.white,
+              //             borderRadius: BorderRadius.circular(10.0),
+              //             boxShadow: [
+              //               BoxShadow(
+              //                   color: Colors.black26.withOpacity(0.05),
+              //                   offset: Offset(0.0, 6.0),
+              //                   blurRadius: 10.0,
+              //                   spreadRadius: 0.10)
+              //             ]),
+              //         child: Row(
+              //           children: <Widget>[
+              //             Icon(
+              //               LineIcons.brain,
+              //             ),
+              //             SizedBox(
+              //               width: SizeConfig.blockSizeHorizontal * 1,
+              //             ),
+              //             Text('Psychologist', style: GoogleFonts.lato())
+              //           ],
+              //         ),
+              //       )
+              //     ],
+              //   ),
+              // ),
               BlocBuilder<SpecialistCubit, SpecialistState>(
                 builder: (context, state) {
                   setupScrollController(context);
@@ -291,8 +298,10 @@ class _SpecialistsScreenState extends State<SpecialistsScreen> {
                     currentPage = state.page;
                   }
                   return Container(
-                    padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
-                    height: SizeConfig.blockSizeVertical * 41,
+                    padding: EdgeInsets.only(
+                        left: SizeConfig.blockSizeHorizontal * 2,
+                        right: SizeConfig.blockSizeHorizontal * 2),
+                    height: SizeConfig.blockSizeVertical * 48,
                     child: ListView.separated(
                       controller: scrollController,
                       itemCount: specialists.length + (isLoading ? 1 : 0),
@@ -307,7 +316,7 @@ class _SpecialistsScreenState extends State<SpecialistsScreen> {
                               Navigator.pushNamed(
                                   context, RouteName.SPECIALIST_DETAILS,
                                   arguments: SpecialistDetailsArguments(
-                                      specialists[index].specId));
+                                      specialists[index].specialist.specId));
                             },
                           );
                         } else {

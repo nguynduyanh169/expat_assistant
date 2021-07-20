@@ -20,8 +20,8 @@ extension Explaination on SpecialistStatus {
 }
 
 class SpecialistState extends Equatable {
-  final List<ListSpec> specialists;
-  final List<ListSpec> oldSpecialists;
+  final List<SpecialistDetails> specialists;
+  final List<SpecialistDetails> oldSpecialists;
   final int page;
   final SpecialistStatus status;
   final bool isFirstFetch;
@@ -38,8 +38,8 @@ class SpecialistState extends Equatable {
       [specialists, oldSpecialists, page, status, isFirstFetch];
 
   SpecialistState copyWith(
-      {List<ListSpec> specialists,
-      List<ListSpec> oldSpecialists,
+      {List<SpecialistDetails> specialists,
+      List<SpecialistDetails> oldSpecialists,
       int page,
       SpecialistStatus status,
       bool isFirstFetch}) {

@@ -33,6 +33,8 @@ class RouteName {
   static const CALL_ROOM = "/callRoom";
   static const INVOICE = "/invoice";
   static const FILTER_SPECIALIST = "/filterSpecialist";
+  static const UPCOMING_APPOINTMENT = "/upcomingAppointment";
+  static const EDIT_PROFILE = "/editProfile";
 }
 
 class ApiName {
@@ -63,6 +65,10 @@ class ApiName {
   static const String GET_BLOGS_BY_DATE = BASE_URL + "/api/blogs/date";
   static const String GET_SPECIALISTS_BY_RATING = BASE_URL + "/api/spec/rating";
   static const String GET_SPECIALISTS_INFO = BASE_URL + "/api/spec/";
+  static const String GET_SPECIALISTS_BY_NAME = BASE_URL + "/api/spec/fullname";
+  static const String GET_SPECIALISTS_BY_MAJOR = BASE_URL + "/api/spec/major";
+  static const String GET_SPECIALISTS_BY_CREATEDATE = BASE_URL + "/api/spec/all";
+  static const String GET_MAJORS = BASE_URL + "/api/majors";
 }
 
 class HiveBoxName {

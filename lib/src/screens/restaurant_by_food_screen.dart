@@ -22,21 +22,21 @@ class _RestaurantByFoodState extends State<RestaurantByFoodScreen> {
             ),
             preferredSize: Size.fromHeight(0.25)),
         elevation: 0.5,
-        iconTheme: IconThemeData(color: Colors.black),
-        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.white),
+        backgroundColor: AppColors.MAIN_COLOR,
         //toolbarHeight: SizeConfig.blockSizeVertical * 10,
         automaticallyImplyLeading: true,
         centerTitle: true,
         title: Text(
           'Phở',
-          style: GoogleFonts.lato(fontSize: 22, color: Colors.black),
+          style: GoogleFonts.lato(fontSize: 22, color: Colors.white, fontWeight: FontWeight.w700),
         ),
         actions: [
           IconButton(
               onPressed: () {
                 Navigator.popUntil(context, ModalRoute.withName(RouteName.HOME_PAGE));
               },
-              icon: Icon(CupertinoIcons.home, color: Colors.black,)),
+              icon: Icon(CupertinoIcons.home, color: Colors.white,)),
           SizedBox(
             width: SizeConfig.blockSizeHorizontal * 4,
           )

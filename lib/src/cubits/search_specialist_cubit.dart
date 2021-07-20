@@ -2,40 +2,39 @@ import 'package:bloc/bloc.dart';
 import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/models/specialist.dart';
 import 'package:expat_assistant/src/repositories/specialist_repository.dart';
-import 'package:expat_assistant/src/states/specialists_state.dart';
+import 'package:expat_assistant/src/states/search_specialist_state.dart';
 import 'package:expat_assistant/src/utils/hive_utils.dart';
 
-class SpecialistCubit extends Cubit<SpecialistState> {
+class SearchSpecialistCubit extends Cubit<SearchSpecialistState> {
   SpecialistRepository _specialistRepository;
   HiveUtils _hiveUtils = HiveUtils();
 
-  SpecialistCubit(this._specialistRepository)
-      : super(const SpecialistState(status: SpecialistStatus.init));
+  SearchSpecialistCubit(this._specialistRepository)
+      : super(const SearchSpecialistState(status: SearchSpecialistStatus.init));
 
-  Future<void> getSpecialists(int page) async {
+  Future<void> searchSpecialists(String keyword, int page) async {
     try {
       Map<dynamic, dynamic> loginResponse =
           _hiveUtils.getUserAuth(boxName: HiveBoxName.USER_AUTH);
       String token = loginResponse['token'].toString();
-      int size = 4;
-      if (state.status.isLoadingSpecialist) return null;
+      if (state.status.isSearching) return null;
       final currentState = state;
       List<SpecialistDetails> oldSpecialists = [];
       List<SpecialistDetails> specialists = [];
-      if (currentState.status.isLoadedSpecialist) {
+      if (currentState.status.isSearchSuccess) {
         oldSpecialists = state.specialists;
       }
       emit(state.copyWith(
-        status: SpecialistStatus.loadingSpecialist,
+        status: SearchSpecialistStatus.searching,
         oldSpecialists: oldSpecialists,
         isFirstFetch: page == 0,
       ));
-      var specialist = await _specialistRepository.getSpecialistsByRating(
-          token: token, page: page, size: size);
+      var specialist = await _specialistRepository.getSpecialistByName(
+          token: token, page: page, keyword: keyword);
       if (specialist == 204) {
         emit(state.copyWith(
             page: page,
-            status: SpecialistStatus.loadedSpecialist,
+            status: SearchSpecialistStatus.searchSuccess,
             specialists: oldSpecialists));
       } else {
         page++;
@@ -45,11 +44,12 @@ class SpecialistCubit extends Cubit<SpecialistState> {
         specialists.addAll(specialistDetails);
         emit(state.copyWith(
             page: page,
-            status: SpecialistStatus.loadedSpecialist,
+            status: SearchSpecialistStatus.searchSuccess,
             specialists: specialists));
       }
     } on Exception catch (e) {
-      emit(state.copyWith(status: SpecialistStatus.loadSpecialistError));
+      emit(state.copyWith(
+          status: SearchSpecialistStatus.searchFailed, message: e.toString()));
     }
   }
 

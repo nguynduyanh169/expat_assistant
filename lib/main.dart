@@ -5,6 +5,7 @@ import 'package:expat_assistant/src/models/hive_object.dart';
 import 'package:expat_assistant/src/route.dart';
 import 'package:expat_assistant/src/states/authentication_state.dart';
 import 'package:expat_assistant/src/utils/event_bus_utils.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
@@ -13,6 +14,7 @@ import 'package:intl/date_symbol_data_local.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   final appDirectory = await path_provider.getApplicationDocumentsDirectory();
   Hive.init(appDirectory.path);
   Hive.registerAdapter<LessonLocal>(LessonLocalAdapter());

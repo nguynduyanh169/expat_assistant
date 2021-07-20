@@ -1,6 +1,8 @@
+import 'package:camera/camera.dart';
 import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/configs/size_config.dart';
 import 'package:expat_assistant/src/cubits/restaurants_cubit.dart';
+import 'package:expat_assistant/src/screens/food_camera_screen.dart';
 import 'package:expat_assistant/src/states/restaurants_state.dart';
 import 'package:expat_assistant/src/widgets/restaurant_card.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,7 +15,8 @@ class RestaurantsScreen extends StatefulWidget {
   _RestaurantsScreenState createState() => _RestaurantsScreenState();
 }
 
-class _RestaurantsScreenState extends State<RestaurantsScreen> with AutomaticKeepAliveClientMixin<RestaurantsScreen>{
+class _RestaurantsScreenState extends State<RestaurantsScreen>
+    with AutomaticKeepAliveClientMixin<RestaurantsScreen> {
   String _addressText = "Locating....";
 
   @override
@@ -38,7 +41,8 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> with AutomaticKee
         iconTheme: IconThemeData(color: Colors.white),
         title: Text(
           'Find your restaurant',
-          style: GoogleFonts.lato(fontSize: 22, color: Colors.white, fontWeight: FontWeight.w700),
+          style: GoogleFonts.lato(
+              fontSize: 22, color: Colors.white, fontWeight: FontWeight.w700),
         ),
       ),
       body: BlocProvider(
@@ -49,13 +53,11 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> with AutomaticKee
               return Container(
                 child: Text('loading'),
               );
-            } else if (state is LoadScreenError) {
-              return Container(
-                child: Text(state.errorMessage),
-              );
             } else {
               if (state is LoadScreenSuccess) {
                 _addressText = state.currentAddress;
+              } else if (state is LoadScreenError) {
+                _addressText = "Error";
               }
               return Container(
                 padding: EdgeInsets.only(
@@ -189,8 +191,9 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> with AutomaticKee
                             ),
                           ),
                           InkWell(
-                            onTap: () {
-                              Navigator.pushNamed(context, '/foodCamera');
+                            onTap: () async {
+                              final cameras = await availableCameras();
+                              Navigator.pushNamed(context, '/foodCamera', arguments: FoodCameraArguments(cameras));
                             },
                             child: Container(
                               width: SizeConfig.blockSizeHorizontal * 15,

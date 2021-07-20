@@ -7,6 +7,7 @@ import 'package:expat_assistant/src/states/blog_details_state.dart';
 import 'package:expat_assistant/src/utils/date_utils.dart';
 import 'package:expat_assistant/src/widgets/loading.dart';
 import 'package:expat_assistant/src/widgets/related_news.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -67,11 +68,11 @@ class BlogDetailsScreen extends StatelessWidget {
                 child: ListView(
                   children: <Widget>[
                     ClipRRect(
-                      child: Image(
+                      child: ExtendedImage.network(
+                        blog.coverLink,
                         width: SizeConfig.blockSizeHorizontal * 100,
                         height: SizeConfig.blockSizeVertical * 24,
                         fit: BoxFit.cover,
-                        image: NetworkImage(blog.coverLink),
                       ),
                     ),
                     SizedBox(
@@ -114,17 +115,24 @@ class BlogDetailsScreen extends StatelessWidget {
                       height: SizeConfig.blockSizeVertical * 2,
                     ),
                     Container(
-                      padding: EdgeInsets.only(
-                          left: SizeConfig.blockSizeHorizontal * 1,
-                          right: SizeConfig.blockSizeHorizontal * 1),
                       child: Html(
                         data: blog.blogContent,
                         style: {
                           "p": Style(
-                              fontSize: FontSize(17),
+                              fontSize: FontSize(16),
                               fontFamily: 'Literata',
                               wordSpacing: 1.75),
                         },
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(
+                          left: SizeConfig.blockSizeHorizontal * 2,
+                          right: SizeConfig.blockSizeHorizontal * 2),
+                      child: Text(
+                        'Article By: Ho Quang Bao',
+                        style: GoogleFonts.literata(
+                            fontWeight: FontWeight.normal, fontSize: 15),
                       ),
                     ),
                     RelatedNews(existBlog: blog,)

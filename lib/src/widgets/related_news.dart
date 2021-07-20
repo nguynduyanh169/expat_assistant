@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+// ignore: must_be_immutable
 class RelatedNewsItem extends StatelessWidget {
   ListBlog news;
 
@@ -25,44 +26,33 @@ class RelatedNewsItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(10.0),
       ),
       child: Container(
-        child: Stack(
-          alignment: Alignment.bottomRight,
+        child: Column(
+          // alignment: Alignment.bottomRight,
           children: <Widget>[
             ExtendedImage.network(
               news.coverLink,
               cache: true,
               width: SizeConfig.blockSizeHorizontal * 40,
-              height: SizeConfig.blockSizeVertical * 20,
+              height: SizeConfig.blockSizeVertical * 18,
               fit: BoxFit.cover,
             ),
             Container(
-              decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                      begin: FractionalOffset.topCenter,
-                      end: FractionalOffset.bottomCenter,
-                      colors: [
-                    Colors.grey.withOpacity(0),
-                    Colors.black,
-                  ],
-                      stops: [
-                    0.0,
-                    2.0
-                  ])),
               padding: EdgeInsets.only(
+                top: SizeConfig.blockSizeVertical * 1,
                   left: SizeConfig.blockSizeHorizontal * 1.5,
                   right: SizeConfig.blockSizeHorizontal * 1.5,
                   bottom: SizeConfig.blockSizeHorizontal * 2),
-              alignment: Alignment.bottomRight,
+              alignment: Alignment.topCenter,
               width: SizeConfig.blockSizeHorizontal * 40,
-              height: SizeConfig.blockSizeVertical * 20,
+              height: SizeConfig.blockSizeVertical * 10,
               child: Text(
                 news.blogTitle,
                 overflow: TextOverflow.ellipsis,
                 maxLines: 3,
                 style: GoogleFonts.lato(
-                    color: Colors.white,
+                    color: Colors.black,
                     fontWeight: FontWeight.w800,
-                    fontSize: 17),
+                    fontSize: 16),
               ),
             )
           ],
@@ -138,7 +128,7 @@ class _RelatedNewsState extends State<RelatedNews> {
                 ),
                 Container(
                   width: SizeConfig.blockSizeHorizontal * 100,
-                  height: SizeConfig.blockSizeVertical * 15,
+                  height: SizeConfig.blockSizeVertical * 30,
                   child: ListView.separated(
                       scrollDirection: Axis.horizontal,
                       controller: scrollController,

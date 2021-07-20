@@ -13,6 +13,7 @@ import 'package:expat_assistant/src/utils/date_utils.dart';
 import 'package:expat_assistant/src/utils/event_bus_utils.dart';
 import 'package:expat_assistant/src/widgets/loading.dart';
 import 'package:expat_assistant/src/widgets/loading_dialog.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -147,12 +148,11 @@ class EventDetailsScreen extends StatelessWidget {
                         Column(
                           children: <Widget>[
                             ClipRRect(
-                              child: Image(
+                              child: ExtendedImage.network(
+                                event.content.eventCoverImage,
                                 width: SizeConfig.blockSizeHorizontal * 100,
                                 height: SizeConfig.blockSizeVertical * 25,
                                 fit: BoxFit.cover,
-                                image:
-                                    NetworkImage(event.content.eventCoverImage),
                               ),
                             ),
                             Container(

@@ -49,7 +49,10 @@ class _ProfileScreenState extends State<ProfileScreen>
             iconTheme: IconThemeData(color: Colors.white),
             title: Text(
               'Profile',
-              style: GoogleFonts.lato(fontSize: 22, color: Colors.white, fontWeight: FontWeight.w700),
+              style: GoogleFonts.lato(
+                  fontSize: 22,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w700),
             ),
           ),
           body: Container(
@@ -63,11 +66,14 @@ class _ProfileScreenState extends State<ProfileScreen>
                 SizedBox(
                   height: SizeConfig.blockSizeVertical * 4,
                 ),
-                CircleAvatar(
-                  radius: SizeConfig.blockSizeHorizontal * 13,
-                  child: ClipOval(
-                    child: Image(
-                      image: AssetImage('assets/images/profile.png'),
+                InkWell(
+                  onTap: () {},
+                  child: CircleAvatar(
+                    radius: SizeConfig.blockSizeHorizontal * 13,
+                    child: ClipOval(
+                      child: Image(
+                        image: AssetImage('assets/images/profile.png'),
+                      ),
                     ),
                   ),
                 ),
@@ -97,6 +103,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                             spreadRadius: 0.10)
                       ]),
                   child: ListTile(
+                    onTap: () {
+                      Navigator.pushNamed(context, RouteName.EDIT_PROFILE);
+                    },
                     leading: Icon(CupertinoIcons.person_crop_circle),
                     title: Text(
                       'My Account',
@@ -121,6 +130,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                             spreadRadius: 0.10)
                       ]),
                   child: ListTile(
+                    onTap: () {},
                     leading: Icon(CupertinoIcons.bell),
                     title: Text(
                       'Notification',
