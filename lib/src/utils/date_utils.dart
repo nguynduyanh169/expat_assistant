@@ -84,4 +84,15 @@ class DateTimeUtils {
   String getTime(DateTime dateTime) {
     return "${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}";
   }
+
+  String getDateTimeAppointment(List<int> startDate, List<int> endDate) {
+    DateTime _date = DateTime(startDate[0], startDate[1], startDate[2]);
+    DateTime _startDate = DateTime(
+        startDate[0], startDate[1], startDate[2], startDate[3], startDate[4]);
+    DateTime _endDate =
+        DateTime(endDate[0], endDate[1], endDate[2], endDate[3], endDate[4]);
+    String date = DateFormat.yMMMMd('en_US').format(_date);
+    String result = date + " " + getTime(_startDate) + "-" + getTime(_endDate);
+    return result;
+  }
 }

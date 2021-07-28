@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:expat_assistant/src/configs/constants.dart';
+import 'package:expat_assistant/src/models/appointment.dart';
 import 'package:expat_assistant/src/models/specialist.dart';
 import 'package:expat_assistant/src/repositories/specialist_repository.dart';
 import 'package:expat_assistant/src/states/specialists_state.dart';
@@ -22,6 +23,7 @@ class SpecialistCubit extends Cubit<SpecialistState> {
       final currentState = state;
       List<SpecialistDetails> oldSpecialists = [];
       List<SpecialistDetails> specialists = [];
+      Appointment latestAppointment;
       if (currentState.status.isLoadedSpecialist) {
         oldSpecialists = state.specialists;
       }
@@ -34,9 +36,9 @@ class SpecialistCubit extends Cubit<SpecialistState> {
           token: token, page: page, size: size);
       if (specialist == 204) {
         emit(state.copyWith(
-            page: page,
-            status: SpecialistStatus.loadedSpecialist,
-            specialists: oldSpecialists));
+              page: page,
+              status: SpecialistStatus.loadedSpecialist,
+              specialists: oldSpecialists));
       } else {
         page++;
         var specialistDetails = await fetchSpecialistsById(specialist, token);
@@ -44,9 +46,9 @@ class SpecialistCubit extends Cubit<SpecialistState> {
         specialists.addAll(thisSpecialists);
         specialists.addAll(specialistDetails);
         emit(state.copyWith(
-            page: page,
-            status: SpecialistStatus.loadedSpecialist,
-            specialists: specialists));
+              page: page,
+              status: SpecialistStatus.loadedSpecialist,
+              specialists: specialists));
       }
     } on Exception catch (e) {
       emit(state.copyWith(status: SpecialistStatus.loadSpecialistError));

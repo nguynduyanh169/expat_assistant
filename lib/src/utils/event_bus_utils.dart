@@ -19,3 +19,13 @@ class JoinedInEvent {
 
   JoinedInEvent(this.eventId, this.joinedIn);
 }
+
+class ChangedProfile {
+  bool changed = false;
+  ChangedProfile(this.changed);
+}
+
+class UpdateAppointment {
+  bool update = false;
+  UpdateAppointment(this.update);
+}

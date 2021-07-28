@@ -67,8 +67,15 @@ class ApiName {
   static const String GET_SPECIALISTS_INFO = BASE_URL + "/api/spec/";
   static const String GET_SPECIALISTS_BY_NAME = BASE_URL + "/api/spec/fullname";
   static const String GET_SPECIALISTS_BY_MAJOR = BASE_URL + "/api/spec/major";
-  static const String GET_SPECIALISTS_BY_CREATEDATE = BASE_URL + "/api/spec/all";
+  static const String GET_SPECIALISTS_BY_CREATEDATE =
+      BASE_URL + "/api/spec/all";
   static const String GET_MAJORS = BASE_URL + "/api/majors";
+  static const String SIGN_UP = BASE_URL + "/api/authen/signup";
+  static const String GET_PROFILE_EXPAT = BASE_URL + "/api/authen/expat";
+  static const String EDIT_PROFILE = BASE_URL + "/api/authen/";
+  static const String REGISTRY_SESSION = BASE_URL + "/api/appointment/registry";
+  static const String GET_APPOINTMENT_BY_EXPAT = BASE_URL + "/api/appointment/expat";
+
 }
 
 class HiveBoxName {
@@ -77,6 +84,7 @@ class HiveBoxName {
   static const LESSON_SRC = "LessonSrc";
   static const CONVERSATION = "Conversation";
   static const VOCABULARY = "Vocabulary";
+  static const USER_PROFILE = "UserProfile";
 }
 
 class AppColors {

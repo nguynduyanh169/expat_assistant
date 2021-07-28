@@ -31,7 +31,9 @@ class CustomLoadingDialog {
                       radius: 15.0,
                       dotRadius: 5.0,
                     ),
-                    SizedBox(width: 10,),
+                    SizedBox(
+                      width: 10,
+                    ),
                     Text(
                       message,
                       style: GoogleFonts.lato(
@@ -47,5 +49,26 @@ class CustomLoadingDialog {
         ),
       ),
     );
+  }
+}
+
+class CustomSnackBar {
+  static void showSnackBar(
+      {@required BuildContext context, @required String message, @required Color color}) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(
+        message,
+        style: GoogleFonts.lato(color: Colors.white),
+        textAlign: TextAlign.center,
+      ),
+      duration: const Duration(milliseconds: 1500),
+      // width: SizeConfig.blockSizeHorizontal * 60,
+      // Width of the SnackBar.
+      padding: const EdgeInsets.symmetric(
+        horizontal: 8.0, // Inner padding for SnackBar content.
+      ),
+      backgroundColor: color,
+      behavior: SnackBarBehavior.fixed,
+    ));
   }
 }

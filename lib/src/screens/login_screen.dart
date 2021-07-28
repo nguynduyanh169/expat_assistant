@@ -23,7 +23,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   TextEditingController _txtPassword = new TextEditingController();
 
-  bool showPassword = false;
+  bool showPassword = true;
 
   @override
   Widget build(BuildContext context) {
@@ -136,8 +136,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               onTap: () {
                                 setState(() {
                                   showPassword
-                                      ? showPassword = false
-                                      : showPassword = true;
+                                      ? showPassword = true
+                                      : showPassword = false;
                                 });
                               },
                               child: Icon(showPassword

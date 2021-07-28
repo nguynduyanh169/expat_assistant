@@ -3,12 +3,17 @@ import 'dart:async';
 import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/configs/size_config.dart';
 import 'package:expat_assistant/src/cubits/specialist_cubit.dart';
+import 'package:expat_assistant/src/models/appointment.dart';
 import 'package:expat_assistant/src/models/specialist.dart';
+import 'package:expat_assistant/src/repositories/appointment_repository.dart';
 import 'package:expat_assistant/src/repositories/specialist_repository.dart';
 import 'package:expat_assistant/src/screens/specialist_details_screen.dart';
+import 'package:expat_assistant/src/screens/upcoming_appointment_screen.dart';
 import 'package:expat_assistant/src/states/specialists_state.dart';
+import 'package:expat_assistant/src/utils/event_bus_utils.dart';
 import 'package:expat_assistant/src/widgets/appointment_card.dart';
 import 'package:expat_assistant/src/widgets/specialist_card.dart';
+import 'package:expat_assistant/src/widgets/upcomming_appointment.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,7 +26,9 @@ class SpecialistsScreen extends StatefulWidget {
 
 class _SpecialistsScreenState extends State<SpecialistsScreen> {
   int currentPage = 0;
+  bool isReload = false;
   List<SpecialistDetails> specialists = [];
+  Appointment appointment;
   final ScrollController scrollController = ScrollController();
 
   void setupScrollController(BuildContext context) {
@@ -102,16 +109,7 @@ class _SpecialistsScreenState extends State<SpecialistsScreen> {
                   ],
                 ),
               ),
-              Container(
-                padding: EdgeInsets.only(
-                    left: SizeConfig.blockSizeHorizontal * 2,
-                    right: SizeConfig.blockSizeHorizontal * 2),
-                child: AppointmentCard(
-                  action: () {
-                    Navigator.pushNamed(context, RouteName.CALL_ROOM);
-                  },
-                ),
-              ),
+              TodayAppointment(isReload),
               SizedBox(
                 height: SizeConfig.blockSizeVertical * 2,
               ),
@@ -139,153 +137,6 @@ class _SpecialistsScreenState extends State<SpecialistsScreen> {
                   ],
                 ),
               ),
-              // Container(
-              //   height: SizeConfig.blockSizeVertical * 5,
-              //   padding: EdgeInsets.only(
-              //       left: SizeConfig.blockSizeHorizontal * 3,
-              //       right: SizeConfig.blockSizeHorizontal * 2),
-              //   child: ListView(
-              //     scrollDirection: Axis.horizontal,
-              //     children: <Widget>[
-              //       Container(
-              //         padding:
-              //             EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
-              //         decoration: BoxDecoration(
-              //             color: AppColors.MAIN_COLOR,
-              //             borderRadius: BorderRadius.circular(10.0),
-              //             boxShadow: [
-              //               BoxShadow(
-              //                   color: Colors.black26.withOpacity(0.05),
-              //                   offset: Offset(0.0, 6.0),
-              //                   blurRadius: 10.0,
-              //                   spreadRadius: 0.10)
-              //             ]),
-              //         child: Row(
-              //           children: <Widget>[
-              //             SizedBox(
-              //               width: SizeConfig.blockSizeHorizontal * 1,
-              //             ),
-              //             Text('All Major',
-              //                 style: GoogleFonts.lato(color: Colors.white))
-              //           ],
-              //         ),
-              //       ),
-              //       SizedBox(
-              //         width: SizeConfig.blockSizeHorizontal * 2,
-              //       ),
-              //       Container(
-              //         //width: SizeConfig.blockSizeHorizontal * 30,
-              //         padding:
-              //             EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
-              //         decoration: BoxDecoration(
-              //             color: Colors.white,
-              //             borderRadius: BorderRadius.circular(10.0),
-              //             boxShadow: [
-              //               BoxShadow(
-              //                   color: Colors.black26.withOpacity(0.05),
-              //                   offset: Offset(0.0, 6.0),
-              //                   blurRadius: 10.0,
-              //                   spreadRadius: 0.10)
-              //             ]),
-              //         child: Row(
-              //           children: <Widget>[
-              //             Icon(
-              //               LineIcons.balanceScale,
-              //             ),
-              //             SizedBox(
-              //               width: SizeConfig.blockSizeHorizontal * 1,
-              //             ),
-              //             Text('Lawyer', style: GoogleFonts.lato())
-              //           ],
-              //         ),
-              //       ),
-              //       SizedBox(
-              //         width: SizeConfig.blockSizeHorizontal * 2,
-              //       ),
-              //       Container(
-              //         padding:
-              //             EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
-              //         decoration: BoxDecoration(
-              //             color: Colors.white,
-              //             borderRadius: BorderRadius.circular(10.0),
-              //             boxShadow: [
-              //               BoxShadow(
-              //                   color: Colors.black26.withOpacity(0.05),
-              //                   offset: Offset(0.0, 6.0),
-              //                   blurRadius: 10.0,
-              //                   spreadRadius: 0.10)
-              //             ]),
-              //         child: Row(
-              //           children: <Widget>[
-              //             Icon(
-              //               LineIcons.laptop,
-              //             ),
-              //             SizedBox(
-              //               width: SizeConfig.blockSizeHorizontal * 1,
-              //             ),
-              //             Text('IT support', style: GoogleFonts.lato())
-              //           ],
-              //         ),
-              //       ),
-              //       SizedBox(
-              //         width: SizeConfig.blockSizeHorizontal * 2,
-              //       ),
-              //       Container(
-              //         padding:
-              //             EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
-              //         decoration: BoxDecoration(
-              //             color: Colors.white,
-              //             borderRadius: BorderRadius.circular(10.0),
-              //             boxShadow: [
-              //               BoxShadow(
-              //                   color: Colors.black26.withOpacity(0.05),
-              //                   offset: Offset(0.0, 6.0),
-              //                   blurRadius: 10.0,
-              //                   spreadRadius: 0.10)
-              //             ]),
-              //         child: Row(
-              //           children: <Widget>[
-              //             Icon(
-              //               LineIcons.lightningBolt,
-              //             ),
-              //             SizedBox(
-              //               width: SizeConfig.blockSizeHorizontal * 1,
-              //             ),
-              //             Text('Electrician', style: GoogleFonts.lato())
-              //           ],
-              //         ),
-              //       ),
-              //       SizedBox(
-              //         width: SizeConfig.blockSizeHorizontal * 2,
-              //       ),
-              //       Container(
-              //         padding:
-              //             EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
-              //         decoration: BoxDecoration(
-              //             color: Colors.white,
-              //             borderRadius: BorderRadius.circular(10.0),
-              //             boxShadow: [
-              //               BoxShadow(
-              //                   color: Colors.black26.withOpacity(0.05),
-              //                   offset: Offset(0.0, 6.0),
-              //                   blurRadius: 10.0,
-              //                   spreadRadius: 0.10)
-              //             ]),
-              //         child: Row(
-              //           children: <Widget>[
-              //             Icon(
-              //               LineIcons.brain,
-              //             ),
-              //             SizedBox(
-              //               width: SizeConfig.blockSizeHorizontal * 1,
-              //             ),
-              //             Text('Psychologist', style: GoogleFonts.lato())
-              //           ],
-              //         ),
-              //       )
-              //     ],
-              //   ),
-              // ),
               BlocBuilder<SpecialistCubit, SpecialistState>(
                 builder: (context, state) {
                   setupScrollController(context);
@@ -313,6 +164,15 @@ class _SpecialistsScreenState extends State<SpecialistsScreen> {
                           return SpecialistCard(
                             spec: specialists[index],
                             action: () {
+                              EventBusUtils.getInstance()
+                                  .on<UpdateAppointment>()
+                                  .listen((result) {
+                                if (result.update) {
+                                  setState(() {
+                                    isReload = true;
+                                  });
+                                }
+                              });
                               Navigator.pushNamed(
                                   context, RouteName.SPECIALIST_DETAILS,
                                   arguments: SpecialistDetailsArguments(

@@ -1,5 +1,8 @@
 import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/configs/size_config.dart';
+import 'package:expat_assistant/src/models/appointment.dart';
+import 'package:expat_assistant/src/utils/date_utils.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -7,8 +10,10 @@ import 'package:google_fonts/google_fonts.dart';
 // ignore: must_be_immutable
 class AppointmentCard extends StatelessWidget {
   Function action;
+  Appointment appointment;
+  DateTimeUtils _dateTimeUtils = DateTimeUtils();
 
-  AppointmentCard({this.action});
+  AppointmentCard({this.action, this.appointment});
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -33,11 +38,11 @@ class AppointmentCard extends StatelessWidget {
                 children: <Widget>[
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10.0),
-                    child: Image(
+                    child: ExtendedImage.network(
+                      appointment.session.specialist.avatar,
                       fit: BoxFit.cover,
                       width: SizeConfig.blockSizeHorizontal * 18,
-                      height: SizeConfig.blockSizeVertical * 8,
-                      image: AssetImage('assets/images/demo_expert.jpg'),
+                      height: SizeConfig.blockSizeVertical * 9,
                     ),
                   ),
                   SizedBox(
@@ -47,16 +52,19 @@ class AppointmentCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        'Dr. Xuan Cuong Ho',
+                        appointment.session.specialist.fullname,
                         style: GoogleFonts.lato(
                             color: Colors.white,
                             fontWeight: FontWeight.w700,
                             fontSize: 18),
                       ),
                       Text(
-                        'Lawyer',
+                        "Doctor",
                         style: GoogleFonts.lato(color: Colors.white),
-                      )
+                      ),
+                      SizedBox(
+                    height: SizeConfig.blockSizeVertical * 2,
+                  ),  
                     ],
                   )
                 ],
@@ -87,7 +95,9 @@ class AppointmentCard extends StatelessWidget {
                     width: SizeConfig.blockSizeHorizontal * 2,
                   ),
                   Text(
-                    'Sat, Aug 16, 9:00AM - 10:00 AM',
+                    _dateTimeUtils.getDateTimeAppointment(
+                        appointment.session.startTime,
+                        appointment.session.endTime),
                     style: GoogleFonts.lato(color: Colors.white),
                   )
                 ],

@@ -80,6 +80,10 @@ dependencies:
   firebase_analytics: ^8.2.0
   multiselect_formfield: ^0.1.6
   select_form_field: ^2.1.0
+  textfield_tags: ^1.4.0
+  direct_select_flutter: ^1.1.1
+  momo_vn: ^2.0.1
+  firebase_auth: ^3.0.1
 
 dev_dependencies:
   build_runner: ^2.0.4

@@ -4,13 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
+// ignore: must_be_immutable
 class ConfirmEmail extends StatefulWidget {
+  Function buttonAction;
+  Function confirmEmailButton;
+  String email;
+  int code;
+  ConfirmEmail(
+      {this.buttonAction, this.code, this.email, this.confirmEmailButton});
   @override
   _ConfirmEmailState createState() => _ConfirmEmailState();
 }
 
 class _ConfirmEmailState extends State<ConfirmEmail> {
-  Function buttonAction;
   TextEditingController otpController = TextEditingController();
   bool _hasError = false;
 
@@ -37,7 +43,7 @@ class _ConfirmEmailState extends State<ConfirmEmail> {
           Container(
             width: SizeConfig.blockSizeHorizontal * 70,
             child: Text(
-              'Finally, Please enter code sent to anhnd16091998@gmail.com',
+              'Please enter code sent to ${widget.email}',
               style: GoogleFonts.lato(fontSize: 15),
               textAlign: TextAlign.center,
             ),
@@ -46,6 +52,7 @@ class _ConfirmEmailState extends State<ConfirmEmail> {
             height: SizeConfig.blockSizeVertical * 2,
           ),
           PinCodeTextField(
+              controller: otpController,
               keyboardType: TextInputType.number,
               appContext: context,
               pastedTextStyle: GoogleFonts.lato(),
@@ -54,7 +61,7 @@ class _ConfirmEmailState extends State<ConfirmEmail> {
               animationType: AnimationType.fade,
               length: 6,
               validator: (v) {
-                if (v.length < 3) {
+                if (v.length < 6) {
                   return "I'm from validator";
                 } else {
                   return null;
@@ -88,9 +95,34 @@ class _ConfirmEmailState extends State<ConfirmEmail> {
                   "Verify",
                   style: GoogleFonts.lato(fontSize: 17, color: Colors.white),
                 ),
-                onPressed: (){
-
+                onPressed: () {
+                  if (widget.code == int.parse(otpController.text.toString())) {
+                    widget.buttonAction();
+                  }
                 }),
+          ),
+          SizedBox(
+            height: SizeConfig.blockSizeVertical * 3,
+          ),
+          Container(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  "Does not receive code?",
+                  style: GoogleFonts.lato(
+                      fontWeight: FontWeight.w600, color: Colors.black54),
+                ),
+                TextButton(
+                    onPressed: widget.confirmEmailButton,
+                    child: Text(
+                      'Resend Email',
+                      style: GoogleFonts.lato(
+                          fontWeight: FontWeight.w600, color: Colors.green),
+                    ))
+              ],
+            ),
           ),
           SizedBox(
             height: SizeConfig.blockSizeVertical * 30,

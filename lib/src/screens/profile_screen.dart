@@ -2,7 +2,10 @@ import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/configs/size_config.dart';
 import 'package:expat_assistant/src/cubits/profile_cubit.dart';
 import 'package:expat_assistant/src/states/profile_state.dart';
+import 'package:expat_assistant/src/utils/event_bus_utils.dart';
+import 'package:expat_assistant/src/utils/hive_utils.dart';
 import 'package:expat_assistant/src/widgets/loading_dialog.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,9 +18,14 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen>
     with AutomaticKeepAliveClientMixin<ProfileScreen> {
+  HiveUtils _hiveUtils = HiveUtils();
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    Map<dynamic, dynamic> loginResponse =
+        _hiveUtils.getUserAuth(boxName: HiveBoxName.USER_AUTH);
+    String fullname = loginResponse['fullname'].toString();
+    String avatar = loginResponse['avatar'].toString();
     SizeConfig().init(context);
     return BlocProvider(
       create: (context) => ProfileCubit(),
@@ -71,8 +79,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                   child: CircleAvatar(
                     radius: SizeConfig.blockSizeHorizontal * 13,
                     child: ClipOval(
-                      child: Image(
-                        image: AssetImage('assets/images/profile.png'),
+                      child: ExtendedImage.network(
+                        avatar,
+                        fit: BoxFit.cover,
+                        width: SizeConfig.blockSizeHorizontal * 26,
+                        height: SizeConfig.blockSizeHorizontal * 33,
                       ),
                     ),
                   ),
@@ -82,7 +93,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                 ),
                 Center(
                   child: Text(
-                    'Ho Quang Bao',
+                    fullname,
                     style: GoogleFonts.lato(
                         fontSize: 25, fontWeight: FontWeight.w700),
                   ),
@@ -104,6 +115,16 @@ class _ProfileScreenState extends State<ProfileScreen>
                       ]),
                   child: ListTile(
                     onTap: () {
+                      EventBusUtils.getInstance()
+                          .on<ChangedProfile>()
+                          .listen((event) {
+                        setState(() {
+                          if (event.changed == true) {
+                            fullname = loginResponse['fullname'].toString();
+                            avatar = loginResponse['avatar'].toString();
+                          }
+                        });
+                      });
                       Navigator.pushNamed(context, RouteName.EDIT_PROFILE);
                     },
                     leading: Icon(CupertinoIcons.person_crop_circle),

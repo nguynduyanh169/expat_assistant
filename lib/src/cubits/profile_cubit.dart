@@ -6,6 +6,7 @@ import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/models/hive_object.dart';
 import 'package:expat_assistant/src/states/profile_state.dart';
 import 'package:expat_assistant/src/utils/hive_utils.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ProfileCubit extends Cubit<ProfileState> {
   ProfileCubit() : super(const ProfileState());
@@ -31,6 +32,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       _hiveUtils.deleteAllLesson(boxName: HiveBoxName.LESSON);
       bool checkLogout = _hiveUtils.haveToken(boxName: HiveBoxName.USER_AUTH);
       if (checkLogout == false) {
+        await FirebaseAuth.instance.signOut();
         emit(state.copyWith(status: ProfileStatus.logoutSuccess));
       } else {
         emit(state.copyWith(

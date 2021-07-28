@@ -4,8 +4,33 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:momo_vn/momo_vn.dart';
 
-class WalletScreen extends StatelessWidget {
+class WalletScreen extends StatefulWidget {
+  @override
+  _WalletScreenState createState() => _WalletScreenState();
+}
+
+class _WalletScreenState extends State<WalletScreen> {
+  MomoVn _momoPay;
+  PaymentResponse _momoPaymentResult;
+  String _paymentStatus;
+
+  @override
+  void initState() {
+    _momoPay = MomoVn();
+    _momoPay.on(MomoVn.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+    _momoPay.on(MomoVn.EVENT_PAYMENT_ERROR, _handlePaymentError);
+    _paymentStatus = "";
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _momoPay.clear();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -24,12 +49,14 @@ class WalletScreen extends StatelessWidget {
         iconTheme: IconThemeData(color: Colors.white),
         title: Text(
           'Your Wallet',
-          style: GoogleFonts.lato(fontSize: 22, color: Colors.white, fontWeight: FontWeight.w700),
+          style: GoogleFonts.lato(
+              fontSize: 22, color: Colors.white, fontWeight: FontWeight.w700),
         ),
         actions: [
           IconButton(
               onPressed: () {
-                Navigator.popUntil(context, ModalRoute.withName(RouteName.HOME_PAGE));
+                Navigator.popUntil(
+                    context, ModalRoute.withName(RouteName.HOME_PAGE));
               },
               icon: Icon(CupertinoIcons.home)),
           SizedBox(
@@ -101,32 +128,57 @@ class WalletScreen extends StatelessWidget {
             SizedBox(
               height: SizeConfig.blockSizeVertical * 3,
             ),
-            Container(
-              width: SizeConfig.blockSizeHorizontal * 50,
-              alignment: Alignment.centerLeft,
-              decoration: BoxDecoration(
-                  color: AppColors.MAIN_COLOR,
-                  borderRadius: BorderRadius.circular(10.0),
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.black26.withOpacity(0.1),
-                        offset: Offset(0.0, 6.0),
-                        blurRadius: 10.0,
-                        spreadRadius: 0.10)
-                  ]),
-              padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  Icon(
-                    LineIcons.wallet,
-                    color: Colors.white,
-                  ),
-                  Text(
-                    'Add Money to Wallet',
-                    style: GoogleFonts.lato(color: Colors.white),
-                  )
-                ],
+            InkWell(
+              onTap: () {
+                MomoPaymentInfo options = MomoPaymentInfo(
+                    merchantName: "CÔNG TY CỔ PHẦN RESO VIỆT NAM",
+                    merchantCode: 'MOMO4UYB20210712',
+                    partnerCode: 'MOMO4UYB20210712',
+                    appScheme: 'momo4uyb20210712',
+                    amount: 60000,
+                    orderId: '12321312',
+                    orderLabel: 'Gói khám sức khoẻ',
+                    merchantNameLabel: "HẸN KHÁM BỆNH",
+                    fee: 10,
+                    description: 'Thanh toán hẹn khám chữa bệnh',
+                    username: '0336125588',
+                    partner: 'merchant',
+                    extra: "{\"key1\":\"value1\",\"key2\":\"value2\"}",
+                    isTestMode: true);
+                try {
+                  _momoPay.open(options);
+                } catch (e) {
+                  debugPrint(e.toString());
+                }
+                print(_paymentStatus);
+              },
+              child: Container(
+                width: SizeConfig.blockSizeHorizontal * 50,
+                alignment: Alignment.centerLeft,
+                decoration: BoxDecoration(
+                    color: AppColors.MAIN_COLOR,
+                    borderRadius: BorderRadius.circular(10.0),
+                    boxShadow: [
+                      BoxShadow(
+                          color: Colors.black26.withOpacity(0.1),
+                          offset: Offset(0.0, 6.0),
+                          blurRadius: 10.0,
+                          spreadRadius: 0.10)
+                    ]),
+                padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    Icon(
+                      LineIcons.wallet,
+                      color: Colors.white,
+                    ),
+                    Text(
+                      'Add Money to Wallet',
+                      style: GoogleFonts.lato(color: Colors.white),
+                    )
+                  ],
+                ),
               ),
             ),
             SizedBox(
@@ -310,5 +362,36 @@ class WalletScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _setState() {
+    _paymentStatus = 'Đã chuyển thanh toán';
+    if (_momoPaymentResult.isSuccess == true) {
+      _paymentStatus += "\nTình trạng: Thành công.";
+      _paymentStatus +=
+          "\nSố điện thoại: " + _momoPaymentResult.phoneNumber.toString();
+      _paymentStatus += "\nExtra: " + _momoPaymentResult.extra;
+      _paymentStatus += "\nToken: " + _momoPaymentResult.token.toString();
+    } else {
+      _paymentStatus += "\nTình trạng: Thất bại.";
+      _paymentStatus += "\nExtra: " + _momoPaymentResult.extra.toString();
+      _paymentStatus += "\nMã lỗi: " + _momoPaymentResult.status.toString();
+    }
+  }
+
+  void _handlePaymentSuccess(PaymentResponse response) {
+    setState(() {
+      _momoPaymentResult = response;
+      _setState();
+    });
+    print("THÀNH CÔNG: " + response.phoneNumber.toString());
+  }
+
+  void _handlePaymentError(PaymentResponse response) {
+    setState(() {
+      _momoPaymentResult = response;
+      _setState();
+    });
+    print("THẤT BẠI: " + response.message.toString());
   }
 }

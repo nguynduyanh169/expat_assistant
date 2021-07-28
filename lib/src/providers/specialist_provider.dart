@@ -25,6 +25,7 @@ class SpecialistProvider {
             .map((i) => ListSpec.fromJson(i))
             .toList()
             .cast<ListSpec>();
+
       }
     } catch (e) {
       print(e.toString());
@@ -42,7 +43,7 @@ class SpecialistProvider {
         'Authorization': 'Bearer $token',
       };
       Response response = await _dio.get(
-          ApiName.GET_SPECIALISTS_INFO + "$specId}",
+          ApiName.GET_SPECIALISTS_INFO + "$specId",
           options: Options(headers: headers));
       if (response.statusCode == 204) {
         result = null;
@@ -50,7 +51,7 @@ class SpecialistProvider {
         result = SpecialistDetails.fromJson(response.data);
       }
     } catch (e) {
-      print(e.toString());
+      print("Error:" + e.toString());
     }
     return result;
   }

@@ -1,57 +1,43 @@
 import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/configs/size_config.dart';
+import 'package:expat_assistant/src/models/expat.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:multi_select_flutter/bottom_sheet/multi_select_bottom_sheet_field.dart';
 import 'package:multi_select_flutter/chip_display/multi_select_chip_display.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
 import 'package:multi_select_flutter/util/multi_select_list_type.dart';
+import 'package:textfield_tags/textfield_tags.dart';
 
 // ignore: must_be_immutable
 class LanguageAndNation extends StatefulWidget {
   Function buttonAction;
+  Expat expat;
 
-  LanguageAndNation({this.buttonAction});
-  static List<Animal> _animals = [
-    Animal(id: 1, name: "Lion"),
-    Animal(id: 2, name: "Flamingo"),
-    Animal(id: 3, name: "Hippo"),
-    Animal(id: 4, name: "Horse"),
-    Animal(id: 5, name: "Tiger"),
-    Animal(id: 6, name: "Penguin"),
-    Animal(id: 7, name: "Spider"),
-    Animal(id: 8, name: "Snake"),
-    Animal(id: 9, name: "Bear"),
-    Animal(id: 10, name: "Beaver"),
-    Animal(id: 11, name: "Cat"),
-    Animal(id: 12, name: "Fish"),
-    Animal(id: 13, name: "Rabbit"),
-    Animal(id: 14, name: "Mouse"),
-    Animal(id: 15, name: "Dog"),
-    Animal(id: 16, name: "Zebra"),
-    Animal(id: 17, name: "Cow"),
-    Animal(id: 18, name: "Frog"),
-    Animal(id: 19, name: "Blue Jay"),
-    Animal(id: 20, name: "Moose"),
-    Animal(id: 21, name: "Gecko"),
-    Animal(id: 22, name: "Kangaroo"),
-    Animal(id: 23, name: "Shark"),
-    Animal(id: 24, name: "Crocodile"),
-    Animal(id: 25, name: "Owl"),
-    Animal(id: 26, name: "Dragonfly"),
-    Animal(id: 27, name: "Dolphin"),
+  LanguageAndNation({this.buttonAction, this.expat});
+  static List<Nation> nations = [
+    Nation(nationId: 1, nationName: 'United State'),
+    Nation(nationId: 2, nationName: 'Korea'),
+    Nation(nationId: 3, nationName: 'Japanese'),
+    Nation(nationId: 4, nationName: 'Chinese'),
+    Nation(nationId: 5, nationName: 'Italy'),
   ];
 
+  static List<Language> languages = [
+    Language(languageId: 1, languageName: "English"),
+    Language(languageId: 2, languageName: "Japanese"),
+    Language(languageId: 3, languageName: "Chinese"),
+    Language(languageId: 4, languageName: "Korean"),
+    Language(languageId: 5, languageName: "French"),
+  ];
   @override
   _LanguageAndNationState createState() => _LanguageAndNationState();
 }
 
 class _LanguageAndNationState extends State<LanguageAndNation> {
-  List<Animal> _selectedAnimals = [];
-
-  final _items = LanguageAndNation._animals
-      .map((animal) => MultiSelectItem<Animal>(animal, animal.name))
-      .toList();
+  Nation selectedNation;
+  List<Language> _selectedLanguages = [];
+  final _multiSelectKey = GlobalKey<FormFieldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -85,30 +71,52 @@ class _LanguageAndNationState extends State<LanguageAndNation> {
             height: SizeConfig.blockSizeVertical * 2,
           ),
           Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
+            alignment: Alignment.topLeft,
+            child: Text(
+              'Languages',
+              style:
+                  GoogleFonts.lato(fontWeight: FontWeight.bold, fontSize: 17),
             ),
+          ),
+          Container(
             child: Column(
               children: <Widget>[
-                MultiSelectBottomSheetField(
+                MultiSelectBottomSheetField<Language>(
                   initialChildSize: 0.4,
                   listType: MultiSelectListType.CHIP,
                   searchable: true,
+                  buttonIcon: Icon(Icons.arrow_drop_down),
                   buttonText: Text(
-                    "Select Your Languages",
-                    style: GoogleFonts.lato(),
+                    "Choose your languages",
+                    style:
+                        GoogleFonts.lato(color: Colors.black54, fontSize: 16),
                   ),
-                  title: Text("Languages", style: GoogleFonts.lato()),
-                  items: _items,
+                  title: Text("Language", style: GoogleFonts.lato()),
+                  items: LanguageAndNation.languages
+                      .map((lang) =>
+                          MultiSelectItem<Language>(lang, lang.languageName))
+                      .toList(),
                   onConfirm: (values) {
-                    _selectedAnimals = values;
+                    setState(() {
+                      _selectedLanguages = values;
+                    });
+                    _multiSelectKey.currentState.validate();
+                  },
+                  validator: (values) {
+                    if (_selectedLanguages == null ||
+                        _selectedLanguages.isEmpty) {
+                      return "Please choosse at lease one language!";
+                    } else {
+                      return null;
+                    }
                   },
                   chipDisplay: MultiSelectChipDisplay(
                     textStyle: GoogleFonts.lato(),
                     onTap: (value) {
                       setState(() {
-                        _selectedAnimals.remove(value);
+                        _selectedLanguages.remove(value);
                       });
+                      _multiSelectKey.currentState.validate();
                     },
                   ),
                 ),
@@ -117,36 +125,35 @@ class _LanguageAndNationState extends State<LanguageAndNation> {
           ),
           SizedBox(height: SizeConfig.blockSizeVertical * 4),
           Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-            ),
-            child: Column(
-              children: <Widget>[
-                MultiSelectBottomSheetField(
-                  initialChildSize: 0.4,
-                  listType: MultiSelectListType.CHIP,
-                  searchable: true,
-                  buttonText: Text(
-                    "Select Your Nation",
-                    style: GoogleFonts.lato(),
-                  ),
-                  title: Text("Nation", style: GoogleFonts.lato()),
-                  items: _items,
-                  onConfirm: (values) {
-                    _selectedAnimals = values;
-                  },
-                  chipDisplay: MultiSelectChipDisplay(
-                    textStyle: GoogleFonts.lato(),
-                    onTap: (value) {
-                      setState(() {
-                        _selectedAnimals.remove(value);
-                      });
-                    },
-                  ),
-                ),
-              ],
+            alignment: Alignment.topLeft,
+            child: Text(
+              'Nation',
+              style:
+                  GoogleFonts.lato(fontWeight: FontWeight.bold, fontSize: 17),
             ),
           ),
+          DropdownButtonFormField(
+              decoration: InputDecoration(
+                hintText: 'Choose your nation',
+                hintStyle: GoogleFonts.lato(),
+                hoverColor: Color.fromRGBO(30, 193, 194, 30),
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.grey,
+                  ),
+                ),
+              ),
+              onChanged: (value) {
+                selectedNation = value;
+              },
+              items: LanguageAndNation.nations
+                  .map((nation) => DropdownMenuItem<Nation>(
+                      value: nation,
+                      child: Text(
+                        nation.nationName,
+                        style: GoogleFonts.lato(),
+                      )))
+                  .toList()),
           SizedBox(
             height: SizeConfig.blockSizeVertical * 5,
           ),
@@ -164,7 +171,37 @@ class _LanguageAndNationState extends State<LanguageAndNation> {
                   "Next",
                   style: GoogleFonts.lato(fontSize: 17, color: Colors.white),
                 ),
-                onPressed: widget.buttonAction),
+                onPressed: () {
+                  if (selectedNation != null && _selectedLanguages.isNotEmpty) {
+                    widget.expat.languages = _selectedLanguages;
+                    widget.expat.nationEntity = selectedNation.nationName;
+                    widget.buttonAction();
+                  } else {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text(
+                              'Choose Language and Nation',
+                              style: GoogleFonts.lato(),
+                            ),
+                            content: Text(
+                                'Seem you have not choose any language and nation',
+                                style: GoogleFonts.lato()),
+                            actions: [
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text('Got It',
+                                      style: GoogleFonts.lato(
+                                          color: AppColors.MAIN_COLOR,
+                                          fontWeight: FontWeight.w700))),
+                            ],
+                          );
+                        });
+                  }
+                }),
           ),
           SizedBox(
             height: SizeConfig.blockSizeVertical * 20,
@@ -197,12 +234,12 @@ class _LanguageAndNationState extends State<LanguageAndNation> {
   }
 }
 
-class Animal {
-  final int id;
-  final String name;
+class Nation {
+  final int nationId;
+  final String nationName;
 
-  Animal({
-    this.id,
-    this.name,
+  Nation({
+    this.nationId,
+    this.nationName,
   });
 }

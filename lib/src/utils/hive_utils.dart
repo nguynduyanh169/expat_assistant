@@ -12,9 +12,30 @@ class HiveUtils {
   addUserAuth(
       {@required String email,
       @required String token,
-      @required String boxName}) {
+      @required String boxName,
+      @required String fullname,
+      @required String avatar,
+      @required String password, @required int id}) {
     final openBox = Hive.box(boxName);
-    openBox.put('userAuth', {'email': email, 'token': token});
+    openBox.put('userAuth', {
+      'id': id,
+      'email': email,
+      'token': token,
+      "fullname": fullname,
+      "avatar": avatar,
+      'password': password
+    });
+  }
+
+  editUserAuth(
+      {@required String boxName,
+      @required String fullname,
+      @required String avatar}) {
+    final openBox = Hive.box(boxName);
+    Map<dynamic, dynamic> user = getUserAuth(boxName: boxName);
+    user['fullname'] = fullname;
+    user['avatar'] = avatar;
+    openBox.put('userAuth', user);
   }
 
   Map<dynamic, dynamic> getUserAuth({@required String boxName}) {

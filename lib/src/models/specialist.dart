@@ -47,8 +47,8 @@ class ListSpec {
     this.avatar,
     this.biography,
     this.status,
-    this.createDate,
-    this.updateDate,
+    // this.createDate,
+    // this.updateDate,
     this.rating,
   });
 
@@ -59,8 +59,8 @@ class ListSpec {
   String avatar;
   String biography;
   int status;
-  List<int> createDate;
-  List<int> updateDate;
+  // List<int> createDate;
+  // List<int> updateDate;
   double rating;
 
   factory ListSpec.fromJson(Map<String, dynamic> json) => ListSpec(
@@ -71,8 +71,8 @@ class ListSpec {
         avatar: json["avatar"],
         biography: json["biography"],
         status: json["status"],
-        createDate: List<int>.from(json["createDate"].map((x) => x)),
-        updateDate: List<int>.from(json["updateDate"].map((x) => x)),
+        // createDate: List<int>.from(json["createDate"].map((x) => x)),
+        // updateDate: List<int>.from(json["updateDate"].map((x) => x)),
         rating: json["rating"].toDouble(),
       );
 
@@ -84,8 +84,8 @@ class ListSpec {
         "avatar": avatar,
         "biography": biography,
         "status": status,
-        "createDate": List<dynamic>.from(createDate.map((x) => x)),
-        "updateDate": List<dynamic>.from(updateDate.map((x) => x)),
+        // "createDate": List<dynamic>.from(createDate.map((x) => x)),
+        // "updateDate": List<dynamic>.from(updateDate.map((x) => x)),
         "rating": rating,
       };
 }
