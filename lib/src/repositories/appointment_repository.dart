@@ -17,4 +17,10 @@ class AppointmentRepository {
     return _appointmentProvider.getAppointmentsByExpat(
         token: token, expatId: expatId);
   }
+
+  Future<dynamic> getAppointmentsById(
+      {@required String token, @required int appointmentId}) {
+    return _appointmentProvider.getAppointmentById(
+        token: token, appointmentId: appointmentId);
+  }
 }

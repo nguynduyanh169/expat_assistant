@@ -3,6 +3,7 @@ import 'package:expat_assistant/src/models/expat.dart';
 import 'package:expat_assistant/src/repositories/user_repository.dart';
 import 'package:expat_assistant/src/states/sign_up_state.dart';
 import 'package:expat_assistant/src/utils/email_utils.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SignUpCubit extends Cubit<SignUpState> {
   UserRepository _userRepository;
@@ -39,19 +40,26 @@ class SignUpCubit extends Cubit<SignUpState> {
   Future<void> signUp(Expat expat) async {
     emit(state.copyWith(status: SignUpStatus.signingUp));
     try {
-      var result = await _userRepository.signUp(expat: expat);
-      if (result == "Account duplicate!") {
-        emit(state.copyWith(
-            status: SignUpStatus.signUpFailed,
-            message: 'Account ${expat.email} has exist!'));
-      } else if (result == null) {
-        emit(state.copyWith(
-            status: SignUpStatus.signUpFailed,
-            message: 'Create account failed!'));
+      UserCredential userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+              email: expat.email, password: expat.password);
+      if (userCredential != null) {
+        var result = await _userRepository.signUp(expat: expat);
+        if (result == "Account duplicate!") {
+          emit(state.copyWith(
+              status: SignUpStatus.signUpFailed,
+              message: 'Account ${expat.email} has exist!'));
+        } else if (result == null) {
+          emit(state.copyWith(
+              status: SignUpStatus.signUpFailed,
+              message: 'Create account failed!'));
+        } else {
+          emit(state.copyWith(
+              status: SignUpStatus.signUpSuccess,
+              message: "Created account successfully!"));
+        }
       } else {
-        emit(state.copyWith(
-            status: SignUpStatus.signUpSuccess,
-            message: "Created account successfully!"));
+        emit(state.copyWith(status: SignUpStatus.signUpFailed));
       }
     } on Exception catch (e) {
       emit(state.copyWith(

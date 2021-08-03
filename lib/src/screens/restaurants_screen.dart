@@ -111,48 +111,6 @@ class _RestaurantsScreenState extends State<RestaurantsScreen>
                         ),
                       ],
                     ),
-                    // Center(
-                    //   child: InkWell(
-                    //     onTap: () {
-                    //       Navigator.pushNamed(context, '/foodCamera');
-                    //     },
-                    //     child: Container(
-                    //       padding: EdgeInsets.all(
-                    //           SizeConfig.blockSizeHorizontal * 3),
-                    //       width: SizeConfig.blockSizeHorizontal * 75,
-                    //       height: SizeConfig.blockSizeVertical * 12,
-                    //       decoration: BoxDecoration(
-                    //           color: Color.fromRGBO(255, 231, 229, 30),
-                    //           borderRadius: BorderRadius.circular(10.0),
-                    //           boxShadow: [
-                    //             BoxShadow(
-                    //                 color: Colors.black26.withOpacity(0.05),
-                    //                 offset: Offset(0.0, 6.0),
-                    //                 blurRadius: 10.0,
-                    //                 spreadRadius: 0.10)
-                    //           ]),
-                    //       child: Row(
-                    //         mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    //         children: <Widget>[
-                    //           Container(
-                    //             width: SizeConfig.blockSizeHorizontal * 29,
-                    //             child: Text(
-                    //               'Find restaurants by taking a food',
-                    //               textAlign: TextAlign.center,
-                    //               style: GoogleFonts.lato(color: Colors.black54),
-                    //             ),
-                    //           ),
-                    //           Container(
-                    //             width: SizeConfig.blockSizeHorizontal * 15,
-                    //             height: SizeConfig.blockSizeVertical * 10,
-                    //             child: Image.asset(
-                    //                 "assets/images/camera_food_logo.png"),
-                    //           ),
-                    //         ],
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
                     Container(
                       width: SizeConfig.blockSizeHorizontal * 100,
                       padding: EdgeInsets.only(

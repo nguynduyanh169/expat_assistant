@@ -23,7 +23,6 @@ class SpecialistCubit extends Cubit<SpecialistState> {
       final currentState = state;
       List<SpecialistDetails> oldSpecialists = [];
       List<SpecialistDetails> specialists = [];
-      Appointment latestAppointment;
       if (currentState.status.isLoadedSpecialist) {
         oldSpecialists = state.specialists;
       }

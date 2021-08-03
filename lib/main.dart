@@ -5,12 +5,13 @@ import 'package:expat_assistant/src/models/hive_object.dart';
 import 'package:expat_assistant/src/route.dart';
 import 'package:expat_assistant/src/states/authentication_state.dart';
 import 'package:expat_assistant/src/utils/event_bus_utils.dart';
+import 'package:expat_assistant/src/widgets/loading.dart';
+import 'package:expat_assistant/src/widgets/loading_dialog.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
-import 'package:intl/date_symbol_data_local.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,7 +27,7 @@ void main() async {
   await Hive.openBox(HiveBoxName.LESSON);
   await Hive.openBox(HiveBoxName.CONVERSATION);
   await Hive.openBox(HiveBoxName.VOCABULARY);
-  initializeDateFormatting().then((_) => runApp(MyApp()));
+  runApp(MyApp());
 }
 
 class MyApp extends StatefulWidget {
@@ -35,7 +36,8 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  bool isLoggedIn = false;
+  bool isLoggedIn = true;
+  bool isLoading = false;
 
   @override
   void dispose() {
@@ -50,10 +52,10 @@ class _MyAppState extends State<MyApp> {
       create: (context) => AuthenticationCubit()..checkLoggedIn(),
       child: BlocBuilder<AuthenticationCubit, AuthenticationState>(
         builder: (context, state) {
-          if (state.status.isAuthenticated) {
-            isLoggedIn = true;
-          } else if (state.status.isUnauthenticated) {
+          if (state.status.isUnauthenticated) {
             isLoggedIn = false;
+          } else if (state.status.isAuthenticated) { 
+            isLoggedIn = true;
           }
           return MaterialApp(
             title: 'HCMC expat assistant',
@@ -61,9 +63,9 @@ class _MyAppState extends State<MyApp> {
               primarySwatch: Colors.blue,
             ),
             debugShowCheckedModeBanner: false,
-            routes: routes,
             initialRoute:
                 isLoggedIn == true ? RouteName.HOME_PAGE : RouteName.LOGIN,
+            routes: routes,
           );
         },
       ),

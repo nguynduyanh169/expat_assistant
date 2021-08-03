@@ -7,6 +7,7 @@ import 'package:expat_assistant/src/cubits/specialist_details_cubit.dart';
 import 'package:expat_assistant/src/models/event.dart';
 import 'package:expat_assistant/src/models/session.dart';
 import 'package:expat_assistant/src/models/specialist.dart';
+import 'package:expat_assistant/src/repositories/appointment_repository.dart';
 import 'package:expat_assistant/src/repositories/specialist_repository.dart';
 import 'package:expat_assistant/src/screens/invoice_screen.dart';
 import 'package:expat_assistant/src/states/specialis_details_state.dart';
@@ -38,6 +39,7 @@ class _SpecialistDetailsState extends State<SpecialistDetailsScreen> {
   List<SessionDisplay> selectedSessions = [];
   SessionUtils _sessionUtils = SessionUtils();
   TextUtils _textUtils = TextUtils();
+  SessionDisplay session;
 
   @override
   void initState() {
@@ -91,7 +93,8 @@ class _SpecialistDetailsState extends State<SpecialistDetailsScreen> {
     final args =
         ModalRoute.of(context).settings.arguments as SpecialistDetailsArguments;
     return BlocProvider(
-      create: (context) => SpecialistDetailsCubit(SpecialistRepository())
+      create: (context) => SpecialistDetailsCubit(
+          SpecialistRepository(), AppointmentRepository())
         ..getSpecialistDetails(args.specId),
       child: Scaffold(
         appBar: AppBar(
@@ -263,7 +266,8 @@ class _SpecialistDetailsState extends State<SpecialistDetailsScreen> {
                                         ),
                                         Text(
                                           _textUtils.getLanguages(
-                                              languages: specialistDetails.language),
+                                              languages:
+                                                  specialistDetails.language),
                                           style: GoogleFonts.lato(),
                                         ),
                                       ],
@@ -355,8 +359,9 @@ class _SpecialistDetailsState extends State<SpecialistDetailsScreen> {
                                       return ListView.separated(
                                         itemCount: value.length,
                                         itemBuilder: (context, index) {
-                                          return GFCheckboxListTile(
-                                              value: value[index].isChoosen,
+                                          return GFRadioListTile(
+                                              groupValue: session,
+                                              value: value[index],
                                               size: 20,
                                               avatar: Icon(
                                                 LineIcons.businessTime,
@@ -389,7 +394,7 @@ class _SpecialistDetailsState extends State<SpecialistDetailsScreen> {
                                                           : Colors.black)),
                                               activeBgColor: Colors.green,
                                               inactiveBorderColor: Colors.grey,
-                                              type: GFCheckboxType.circle,
+                                              //type: GFCheckboxType.circle,
                                               activeIcon: Icon(
                                                 Icons.check,
                                                 size: 15,
@@ -401,21 +406,7 @@ class _SpecialistDetailsState extends State<SpecialistDetailsScreen> {
                                                             value[index]) ==
                                                     false) {
                                                   setState(() {
-                                                    value[index].isChoosen =
-                                                        changeValue;
-                                                    if (value[index]
-                                                            .isChoosen ==
-                                                        true) {
-                                                      selectedSessions
-                                                          .add(value[index]);
-                                                    } else {
-                                                      selectedSessions.removeWhere(
-                                                          (element) =>
-                                                              value[index]
-                                                                  .sessionId ==
-                                                              element
-                                                                  .sessionId);
-                                                    }
+                                                    session = changeValue;
                                                   });
                                                 } else {
                                                   _displaySnackBar(context,

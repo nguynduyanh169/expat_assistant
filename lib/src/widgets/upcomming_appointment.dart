@@ -3,8 +3,8 @@ import 'package:expat_assistant/src/configs/size_config.dart';
 import 'package:expat_assistant/src/cubits/today_appointment_cubit.dart';
 import 'package:expat_assistant/src/models/appointment.dart';
 import 'package:expat_assistant/src/repositories/appointment_repository.dart';
+import 'package:expat_assistant/src/screens/call_room_screen.dart';
 import 'package:expat_assistant/src/states/today_appointment_state.dart';
-import 'package:expat_assistant/src/utils/event_bus_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -58,7 +58,9 @@ class _TodayAppointmentState extends State<TodayAppointment> {
               child: AppointmentCard(
                 appointment: appointment,
                 action: () {
-                  Navigator.pushNamed(context, RouteName.CALL_ROOM);
+                  Navigator.pushNamed(context, RouteName.CALL_ROOM,
+                      arguments:
+                          CallRoomArgs(appointmentId: appointment.conAppId));
                 },
               ),
             );

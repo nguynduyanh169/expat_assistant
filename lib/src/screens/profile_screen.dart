@@ -181,7 +181,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                     },
                     leading: Icon(LineIcons.wallet),
                     title: Text(
-                      'Wallet',
+                      'Payments History',
                       style: GoogleFonts.lato(),
                     ),
                     trailing: Icon(Icons.arrow_forward_ios_outlined),

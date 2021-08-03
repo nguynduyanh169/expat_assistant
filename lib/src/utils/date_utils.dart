@@ -95,4 +95,12 @@ class DateTimeUtils {
     String result = date + " " + getTime(_startDate) + "-" + getTime(_endDate);
     return result;
   }
+
+  int caculateDuration(List<int> startDate, List<int> endDate) {
+    DateTime _startDate = DateTime(
+        startDate[0], startDate[1], startDate[2], startDate[3], startDate[4]);
+    DateTime _endDate =
+        DateTime(endDate[0], endDate[1], endDate[2], endDate[3], endDate[4]);
+    return _endDate.difference(_startDate).inSeconds;
+  }
 }

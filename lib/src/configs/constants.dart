@@ -35,6 +35,8 @@ class RouteName {
   static const FILTER_SPECIALIST = "/filterSpecialist";
   static const UPCOMING_APPOINTMENT = "/upcomingAppointment";
   static const EDIT_PROFILE = "/editProfile";
+  static const LOADING = "/loading";
+  static const FEEDBACK = "/feedback";
 }
 
 class ApiName {
@@ -74,8 +76,9 @@ class ApiName {
   static const String GET_PROFILE_EXPAT = BASE_URL + "/api/authen/expat";
   static const String EDIT_PROFILE = BASE_URL + "/api/authen/";
   static const String REGISTRY_SESSION = BASE_URL + "/api/appointment/registry";
-  static const String GET_APPOINTMENT_BY_EXPAT = BASE_URL + "/api/appointment/expat";
-
+  static const String GET_APPOINTMENT_BY_EXPAT =
+      BASE_URL + "/api/appointment/expat";
+  static const String GET_APPOINTMENT_BY_ID = BASE_URL + "/api/appointment/";
 }
 
 class HiveBoxName {
@@ -95,5 +98,10 @@ class Agora {
   static const APP_ID = "9aff35de497443c9be8469665d87176b";
   static const CHANNEL_NAME = "baobao";
   static const TOKEN =
-      '0069aff35de497443c9be8469665d87176bIADtQRsyMmdZRCl5evJjpTgUQYwDPyAaoRqaAxs1Q51upzuPUdkAAAAAEAAPHFzYQzXsYAEAAQBDNexg';
+      '0069aff35de497443c9be8469665d87176bIAATJfdYqUoExd1CNlam77/O3FDBSuHrIeXIb1xDET5Z0DuPUdkAAAAAEABYI5phRfsJYQEAAQBF+wlh';
+}
+
+class MomoConstants {
+  static const PUB_KEY =
+      "-----BEGIN PUBLIC KEY-----\nMIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA0YrPUGX80YYdeActXHAV60SvatbOHzKbR/bQ8pjTd9iOspCPQYqcxXKcGaV3q0DozzzaQ4PJdUMdUwbcl6SnO12ayQwrdlbK0D15UNLame729uUCos0dEVqLvq/TGdEFk2O8wOxAu8w1+mqGwv4tRciSKwgBWGd6KpA+HqjdY9/Cb/0WGWPl2/ZAAzWIC7i2z6jtHYzn90VLrm8csPRM1fq7vZ7MOSXqq86qbHHs/wo9c+94Kfy2gvxCGsFbCwsrM1G4qYtOW1kKUjiK2oo4SPLQ0KRvEqlZPlUrqr6ct173f7nLfF0rp+HGaWngRiBhcdOH/MGE5YlcLmK1EuOsqUzVr1UlBlKKr9yZdqHb4NrfK327ch2nyoU2Jr71VXWzzcI6zyZZxM2DcIC7f+uji2hJFdy6wCEKdWkD4KF8DWD7+qn1QcaTep/Q+XCAg8F9QZhx/oNN1xSeBmrRRwLudcwoUv9Q12QHHj8SNhbv6ARnxMTQ6eHCAFXDPCg0dslyx+yNo9K6QBgecv25L5vBFS9v8JS1gkn3gtU6DrogGUMlea+h+vwvDw4AKJdGc3p5bSEi5JUj9SN2qrseqpI/r6glqv7UBTEhqC+W4iDeuQaLNNNEuAIJcjDIVqmHtIHtUWDp2pJb4sGoEHxlEOwhabbCs1my9Mn/E8/bbciomLMCAwEAAQ==\n-----END PUBLIC KEY-----";
 }

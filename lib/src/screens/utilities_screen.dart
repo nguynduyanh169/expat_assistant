@@ -76,7 +76,7 @@ class UtilitiesScreen extends StatelessWidget {
                         ),
                         Container(
                           child: Text(
-                            'Your balance',
+                            'Your spendings on this months',
                             style: GoogleFonts.lato(
                                 fontSize: 20, color: Colors.white),
                           ),

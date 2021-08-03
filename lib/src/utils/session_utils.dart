@@ -1,5 +1,6 @@
 import 'dart:collection';
 import "package:collection/collection.dart";
+import 'package:expat_assistant/src/models/appointment.dart';
 import 'package:expat_assistant/src/models/session.dart';
 import 'package:expat_assistant/src/models/specialist.dart';
 import 'package:expat_assistant/src/utils/date_utils.dart';
@@ -29,7 +30,8 @@ class SessionUtils {
     return price;
   }
 
-  List<SessionDisplay> addSession({List<Session> sessions}) {
+  List<SessionDisplay> addSession(
+      {List<Session> sessions, List<Appointment> appointments}) {
     List<SessionDisplay> result = [];
     for (Session session in sessions) {
       DateTime dateOfSession = DateTime(
@@ -40,7 +42,11 @@ class SessionUtils {
       DateTime endDate = DateTime(session.endTime[0], session.endTime[1],
           session.endTime[2], session.endTime[3], session.endTime[4]);
       String endTime = _dateTimeUtils.getTime(endDate);
-      if (session.status == 2 || session.status == 0) {
+      final int index = appointments.indexWhere((element) => checkDuplicateSession(startDate, endDate, DateTime(element.session.startTime[0], element.session.startTime[1],
+          element.session.startTime[2], element.session.startTime[3], element.session.startTime[4]), DateTime(element.session.endTime[0], element.session.endTime[1],
+          element.session.endTime[2], element.session.endTime[3], element.session.endTime[4])));
+      
+      if (session.status == 2 || session.status == 0 || index >= 0) {
         SessionDisplay sessionDisplay = SessionDisplay(
             dateOfSession: dateOfSession,
             startDate: startDate,
@@ -78,5 +84,32 @@ class SessionUtils {
       cannotChoose = true;
     }
     return cannotChoose;
+  }
+
+  bool checkDuplicateSession(
+      DateTime startDateOfSession,
+      DateTime endDateOfSession,
+      DateTime startDateOfAppointment,
+      DateTime endDateOfAppointment) {
+        //apointment 16:00 17:00
+    bool check = false;
+    if (startDateOfSession.isAtSameMomentAs(startDateOfAppointment)) {
+      check = true;
+    } else if (startDateOfSession.isAfter(startDateOfAppointment) &&
+        endDateOfSession.isBefore(endDateOfAppointment)) {
+      check = true;
+    } else if (startDateOfSession.isBefore(startDateOfAppointment) &&
+        endDateOfSession.isAfter(startDateOfAppointment) &&
+        endDateOfSession.isBefore(endDateOfAppointment)) {
+          //15:30 - 16:30
+      check = true;
+    } else if (startDateOfSession.isAfter(startDateOfAppointment) &&
+        startDateOfSession.isBefore(endDateOfAppointment)) {
+      check = true;
+    } else if (startDateOfSession.isBefore(startDateOfAppointment) &&
+        endDateOfSession.isAfter(endDateOfAppointment)) {
+      check = true;
+    } 
+    return check;
   }
 }

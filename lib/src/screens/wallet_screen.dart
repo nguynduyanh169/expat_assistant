@@ -1,5 +1,10 @@
+import 'dart:convert';
+
 import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/configs/size_config.dart';
+import 'package:expat_assistant/src/models/payment.dart';
+import 'package:expat_assistant/src/providers/payment_provider.dart';
+import 'package:expat_assistant/src/utils/rsa_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -15,6 +20,7 @@ class _WalletScreenState extends State<WalletScreen> {
   MomoVn _momoPay;
   PaymentResponse _momoPaymentResult;
   String _paymentStatus;
+  PaymentProvider _paymentProvider = PaymentProvider();
 
   @override
   void initState() {
@@ -27,7 +33,7 @@ class _WalletScreenState extends State<WalletScreen> {
 
   @override
   void dispose() {
-    _momoPay.clear();
+    // _momoPay.clear();
     super.dispose();
   }
 
@@ -48,7 +54,7 @@ class _WalletScreenState extends State<WalletScreen> {
         centerTitle: true,
         iconTheme: IconThemeData(color: Colors.white),
         title: Text(
-          'Your Wallet',
+          'Payments History',
           style: GoogleFonts.lato(
               fontSize: 22, color: Colors.white, fontWeight: FontWeight.w700),
         ),
@@ -107,7 +113,7 @@ class _WalletScreenState extends State<WalletScreen> {
                   ),
                   Container(
                     child: Text(
-                      'Your balance',
+                      'Your spendings on this months',
                       style:
                           GoogleFonts.lato(fontSize: 20, color: Colors.white),
                     ),
@@ -129,19 +135,18 @@ class _WalletScreenState extends State<WalletScreen> {
               height: SizeConfig.blockSizeVertical * 3,
             ),
             InkWell(
-              onTap: () {
+              onTap: () async {
                 MomoPaymentInfo options = MomoPaymentInfo(
                     merchantName: "CÔNG TY CỔ PHẦN RESO VIỆT NAM",
                     merchantCode: 'MOMO4UYB20210712',
                     partnerCode: 'MOMO4UYB20210712',
                     appScheme: 'momo4uyb20210712',
-                    amount: 60000,
-                    orderId: '12321312',
-                    orderLabel: 'Gói khám sức khoẻ',
-                    merchantNameLabel: "HẸN KHÁM BỆNH",
-                    fee: 10,
-                    description: 'Thanh toán hẹn khám chữa bệnh',
-                    username: '0336125588',
+                    orderId: 'ORDER19981636',
+                    amount: 40000,
+                    merchantNameLabel: "HẸN TƯ VẤN ORDER19981623",
+                    fee: 0,
+                    description:
+                        'Thanh toán lịch hẹn với chuyên gia Le Quang Bao',
                     partner: 'merchant',
                     extra: "{\"key1\":\"value1\",\"key2\":\"value2\"}",
                     isTestMode: true);
@@ -150,7 +155,6 @@ class _WalletScreenState extends State<WalletScreen> {
                 } catch (e) {
                   debugPrint(e.toString());
                 }
-                print(_paymentStatus);
               },
               child: Container(
                 width: SizeConfig.blockSizeHorizontal * 50,
@@ -367,9 +371,7 @@ class _WalletScreenState extends State<WalletScreen> {
   void _setState() {
     _paymentStatus = 'Đã chuyển thanh toán';
     if (_momoPaymentResult.isSuccess == true) {
-      _paymentStatus += "\nTình trạng: Thành công.";
-      _paymentStatus +=
-          "\nSố điện thoại: " + _momoPaymentResult.phoneNumber.toString();
+      _paymentStatus += "\nTình trạng: " + _momoPaymentResult.status.toString();
       _paymentStatus += "\nExtra: " + _momoPaymentResult.extra;
       _paymentStatus += "\nToken: " + _momoPaymentResult.token.toString();
     } else {
@@ -377,6 +379,7 @@ class _WalletScreenState extends State<WalletScreen> {
       _paymentStatus += "\nExtra: " + _momoPaymentResult.extra.toString();
       _paymentStatus += "\nMã lỗi: " + _momoPaymentResult.status.toString();
     }
+    print(_paymentStatus);
   }
 
   void _handlePaymentSuccess(PaymentResponse response) {
@@ -384,7 +387,24 @@ class _WalletScreenState extends State<WalletScreen> {
       _momoPaymentResult = response;
       _setState();
     });
-    print("THÀNH CÔNG: " + response.phoneNumber.toString());
+    PaymentRequest paymentRequest = PaymentRequest(
+        partnerCode: 'MOMO4UYB20210712',
+        partnerRefId: 'REFID19981595',
+        partnerTransId: 'TRANSID19981595',
+        amount: 40000);
+    String jsonStr = jsonEncode(paymentRequest.toJson());
+    RSAUtils rsaUtils = RSAUtils(MomoConstants.PUB_KEY);
+    Payment payment = Payment(
+        customerNumber: response.phoneNumber,
+        appData: _momoPaymentResult.token.trim(),
+        partnerCode: paymentRequest.partnerCode,
+        partnerRefId: paymentRequest.partnerRefId,
+        hash: rsaUtils.encryptStr(utf8.encode(jsonStr)),
+        description: 'Thanh toán lịch hẹn với chuyên gia',
+        version: 2);
+    print('AppData: ' + payment.appData);
+    print('RSA: '+ payment.hash);
+    _paymentProvider.paymentRequest(payment: payment);
   }
 
   void _handlePaymentError(PaymentResponse response) {

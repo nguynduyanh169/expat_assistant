@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+// ignore: must_be_immutable
 class UpcomingAppointmentScreen extends StatelessWidget {
   Appointment appointment;
   List<Appointment> appointments;
@@ -37,18 +38,6 @@ class UpcomingAppointmentScreen extends StatelessWidget {
             style: GoogleFonts.lato(
                 fontSize: 22, color: Colors.white, fontWeight: FontWeight.w700),
           ),
-          actions: [
-            InkWell(
-              onTap: () {
-                Navigator.popUntil(
-                    context, ModalRoute.withName(RouteName.HOME_PAGE));
-              },
-              child: Icon(CupertinoIcons.home),
-            ),
-            SizedBox(
-              width: SizeConfig.blockSizeHorizontal * 4,
-            )
-          ],
           centerTitle: true,
         ),
         body: BlocBuilder<UpcomingAppointmentCubit, UpcomingAppointmentState>(
