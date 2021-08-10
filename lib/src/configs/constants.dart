@@ -37,10 +37,13 @@ class RouteName {
   static const EDIT_PROFILE = "/editProfile";
   static const LOADING = "/loading";
   static const FEEDBACK = "/feedback";
+  static const PAYMENT_DONE = "/paymentDone";
 }
 
 class ApiName {
   static const String BASE_URL = "https://hcmc.herokuapp.com";
+  static const String MOMO_URL = "https://test-payment.momo.vn";
+  static const String MOMO_PAYMENT_API = MOMO_URL + "/pay/app";
   static const String LOGIN_API = BASE_URL + "/api/authen/login";
   static const String FIND_ALL_TOPICS = BASE_URL + "/api/topic/topics";
   static const String FIND_CONVERSATION_BY_TOPIC_ID =
@@ -79,6 +82,10 @@ class ApiName {
   static const String GET_APPOINTMENT_BY_EXPAT =
       BASE_URL + "/api/appointment/expat";
   static const String GET_APPOINTMENT_BY_ID = BASE_URL + "/api/appointment/";
+  static const String FEEDBACK_APPOINTMENT =
+      BASE_URL + "/api/appointment/feedback";
+  static const String CREATE_PAYMENT = BASE_URL + "/api/payment/create";
+  static const String GET_PAYMENT_BY_EXPAT = BASE_URL + "/api/payment/list";
 }
 
 class HiveBoxName {
@@ -94,14 +101,22 @@ class AppColors {
   static const Color MAIN_COLOR = Color.fromRGBO(64, 201, 162, 1);
 }
 
+class GooglePlaces {
+  static const String API_KEY = "AIzaSyDMYiciebQkgkMCrxZXmYzu1CBTDr-N_SA";
+}
+
 class Agora {
   static const APP_ID = "9aff35de497443c9be8469665d87176b";
   static const CHANNEL_NAME = "baobao";
   static const TOKEN =
-      '0069aff35de497443c9be8469665d87176bIAATJfdYqUoExd1CNlam77/O3FDBSuHrIeXIb1xDET5Z0DuPUdkAAAAAEABYI5phRfsJYQEAAQBF+wlh';
+      '0069aff35de497443c9be8469665d87176bIADd4U4VaJJs/2Pe+oQ546W59rZWeNBOM6Nx8mhMMEPt4TuPUdkAAAAAEADjKAaA4x8TYQEAAQDjHxNh';
 }
 
 class MomoConstants {
+  static const MERCHANT_CODE = "MOMO4UYB20210712";
+  static const PARTNER_CODE = "MOMO4UYB20210712";
+  static const APP_SCHEME = "momo4uyb20210712";
+
   static const PUB_KEY =
       "-----BEGIN PUBLIC KEY-----\nMIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA0YrPUGX80YYdeActXHAV60SvatbOHzKbR/bQ8pjTd9iOspCPQYqcxXKcGaV3q0DozzzaQ4PJdUMdUwbcl6SnO12ayQwrdlbK0D15UNLame729uUCos0dEVqLvq/TGdEFk2O8wOxAu8w1+mqGwv4tRciSKwgBWGd6KpA+HqjdY9/Cb/0WGWPl2/ZAAzWIC7i2z6jtHYzn90VLrm8csPRM1fq7vZ7MOSXqq86qbHHs/wo9c+94Kfy2gvxCGsFbCwsrM1G4qYtOW1kKUjiK2oo4SPLQ0KRvEqlZPlUrqr6ct173f7nLfF0rp+HGaWngRiBhcdOH/MGE5YlcLmK1EuOsqUzVr1UlBlKKr9yZdqHb4NrfK327ch2nyoU2Jr71VXWzzcI6zyZZxM2DcIC7f+uji2hJFdy6wCEKdWkD4KF8DWD7+qn1QcaTep/Q+XCAg8F9QZhx/oNN1xSeBmrRRwLudcwoUv9Q12QHHj8SNhbv6ARnxMTQ6eHCAFXDPCg0dslyx+yNo9K6QBgecv25L5vBFS9v8JS1gkn3gtU6DrogGUMlea+h+vwvDw4AKJdGc3p5bSEi5JUj9SN2qrseqpI/r6glqv7UBTEhqC+W4iDeuQaLNNNEuAIJcjDIVqmHtIHtUWDp2pJb4sGoEHxlEOwhabbCs1my9Mn/E8/bbciomLMCAwEAAQ==\n-----END PUBLIC KEY-----";
 }

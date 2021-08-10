@@ -26,7 +26,6 @@ class MajorProvider {
             .map((i) => Content.fromJson(i))
             .toList()
             .cast<Content>();
-        print(majors.length);
       }
     } catch (e) {
       print(e.toString());

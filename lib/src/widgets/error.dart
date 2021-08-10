@@ -1,4 +1,3 @@
-import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/configs/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

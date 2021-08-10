@@ -24,6 +24,7 @@ class SearchEventCubit extends Cubit<SearchEventState> {
       Map<dynamic, dynamic> loginResponse =
           _hiveUtils.getUserAuth(boxName: HiveBoxName.USER_AUTH);
       String token = loginResponse['token'].toString();
+      int expatId = loginResponse['id'];
       List<Content> contentList = await _eventRepository.searchEventByTitle(
           keyWord: searchKeyWord, token: token);
       List<EventShow> events = [];
@@ -32,12 +33,15 @@ class SearchEventCubit extends Cubit<SearchEventState> {
             .getLocationsByEventId(token: token, eventId: content.eventId);
         List<Topic> topics = await _topicRepository.getTopicByEventId(
             token: token, eventId: content.eventId);
-        EventShow event ;
+        EventShow event;
         List<Content> contentsExpatId =
-            await _eventRepository.getEventByExpatId(token: token, expatId: 6);
-        Content contentExpatId = contentsExpatId.firstWhere(
-            (element) => content.eventId == element.eventId,
-            orElse: () => null);
+            await _eventRepository.getEventByExpatId(token: token, expatId: expatId);
+        Content contentExpatId;
+        if (contentsExpatId != null) {
+          contentExpatId = contentsExpatId.firstWhere(
+              (element) => content.eventId == element.eventId,
+              orElse: () => null);
+        }
         if (contentExpatId == null) {
           event = EventShow(
               location: locations[0],

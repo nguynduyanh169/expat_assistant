@@ -20,7 +20,7 @@ class TodayAppointment extends StatefulWidget {
 }
 
 class _TodayAppointmentState extends State<TodayAppointment> {
-  Appointment appointment;
+  ExpatAppointment appointment;
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -36,7 +36,7 @@ class _TodayAppointmentState extends State<TodayAppointment> {
           if (state.status.isLoadingAppointment) {
             return Container(
               width: SizeConfig.blockSizeHorizontal * 90,
-              height: SizeConfig.blockSizeVertical * 10,
+              height: SizeConfig.blockSizeVertical * 15,
               padding: EdgeInsets.only(
                   left: SizeConfig.blockSizeHorizontal * 2,
                   right: SizeConfig.blockSizeHorizontal * 2),

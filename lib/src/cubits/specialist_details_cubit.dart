@@ -29,7 +29,7 @@ class SpecialistDetailsCubit extends Cubit<SpecialistDetailState> {
       int expatId = loginResponse['id'];
       SpecialistDetails specialistDetails = await _specialistRepository
           .getSpecialistInfo(token: token, specId: specId);
-      List<Appointment> appointments = await _appointmentRepository
+      List<ExpatAppointment> appointments = await _appointmentRepository
           .getAppointmentsByExpat(token: token, expatId: expatId);
       if (specialistDetails == null) {
         emit(state.copyWith(

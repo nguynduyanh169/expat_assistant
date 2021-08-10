@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/models/appointment.dart';
@@ -10,7 +8,7 @@ class AppointmentProvider {
 
   Future<dynamic> getAppointmentById(
       {@required String token, @required int appointmentId}) async {
-    Appointment appointment;
+    ExpatAppointment appointment;
     try {
       Map<String, dynamic> headers = {
         Headers.contentTypeHeader: "application/json",
@@ -20,7 +18,7 @@ class AppointmentProvider {
       Response response = await _dio.get(
           ApiName.GET_APPOINTMENT_BY_ID + appointmentId.toString(),
           options: Options(headers: headers));
-      appointment = Appointment.fromJson(response.data);
+      appointment = ExpatAppointment.fromJson(response.data);
     } catch (e) {
       print(e.toString());
     }
@@ -30,20 +28,24 @@ class AppointmentProvider {
   Future<dynamic> registrySession(
       {@required String token,
       @required int expatId,
-      @required int sessionId}) async {
-    Appointment appointment;
+      @required int sessionId,
+      @required String channelName}) async {
+    ExpatAppointment appointment;
     try {
       Map<String, dynamic> headers = {
         Headers.contentTypeHeader: "application/json",
         Headers.acceptHeader: "application/json",
         'Authorization': 'Bearer $token',
       };
-
+      print(ApiName.REGISTRY_SESSION +
+          "?expatId=$expatId&sessionId=$sessionId&channelName=$channelName");
       Response response = await _dio.post(
-          ApiName.REGISTRY_SESSION + "?expatId=$expatId&sessionId=$sessionId",
+          ApiName.REGISTRY_SESSION +
+              "?expatId=$expatId&sessionId=$sessionId&channelName=$channelName",
           options: Options(headers: headers));
+      print(response);
       if (response.statusCode == 200) {
-        appointment = Appointment.fromJson(response.data);
+        appointment = ExpatAppointment.fromJson(response.data);
       }
     } catch (e) {
       print(e.toString());
@@ -53,7 +55,7 @@ class AppointmentProvider {
 
   Future<dynamic> getAppointmentsByExpat(
       {@required String token, @required int expatId}) async {
-    List<Appointment> appointments;
+    List<ExpatAppointment> appointments;
     try {
       Map<String, dynamic> headers = {
         Headers.contentTypeHeader: "application/json",
@@ -63,15 +65,38 @@ class AppointmentProvider {
       Response response = await _dio.get(
           ApiName.GET_APPOINTMENT_BY_EXPAT + "?expatId=$expatId",
           options: Options(headers: headers));
-      print(response.data);
       appointments = (response.data as List<dynamic>)
-          .map((i) => Appointment.fromJson(i))
+          .map((i) => ExpatAppointment.fromJson(i))
           .toList()
-          .cast<Appointment>();
-      print('hello');
+          .cast<ExpatAppointment>();
     } catch (e) {
       print(e.toString());
     }
     return appointments;
+  }
+
+  Future<dynamic> feedbackAppointment(
+      {@required String token,
+      @required double rating,
+      @required String comment,
+      @required int appointmentId}) async {
+    ExpatAppointment appointment;
+    try {
+      Map<String, dynamic> headers = {
+        Headers.contentTypeHeader: "application/json",
+        Headers.acceptHeader: "application/json",
+        'Authorization': 'Bearer $token',
+      };
+      Response response = await _dio.put(
+          ApiName.FEEDBACK_APPOINTMENT +
+              "?comment=$comment&conAppointmentId=$appointmentId&rating=$rating&sessionId=$appointmentId",
+          options: Options(headers: headers));
+      if (response.statusCode == 200) {
+        appointment = ExpatAppointment.fromJson(response.data);
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+    return appointment;
   }
 }

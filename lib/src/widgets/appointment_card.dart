@@ -10,7 +10,7 @@ import 'package:google_fonts/google_fonts.dart';
 // ignore: must_be_immutable
 class AppointmentCard extends StatelessWidget {
   Function action;
-  Appointment appointment;
+  ExpatAppointment appointment;
   DateTimeUtils _dateTimeUtils = DateTimeUtils();
 
   AppointmentCard({this.action, this.appointment});

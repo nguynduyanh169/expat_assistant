@@ -4,9 +4,12 @@ import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/configs/size_config.dart';
 import 'package:expat_assistant/src/cubits/call_room_cubit.dart';
+import 'package:expat_assistant/src/models/appointment.dart';
 import 'package:expat_assistant/src/repositories/appointment_repository.dart';
+import 'package:expat_assistant/src/screens/feedback_call_screen.dart';
 import 'package:expat_assistant/src/states/call_room_state.dart';
 import 'package:expat_assistant/src/widgets/loading.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,10 +30,10 @@ class _CallRoomScreenState extends State<CallRoomScreen> {
   bool openSpeaker = false;
   bool isOnline = false;
   RtcEngine _engine;
-  int endTime = DateTime.now().millisecondsSinceEpoch + 1000 * 10;
   final interval = const Duration(seconds: 1);
   int timerMaxSeconds = 60;
   int currentSeconds = 0;
+  ExpatAppointment appointment;
   String get timerText =>
       '${((timerMaxSeconds - currentSeconds) ~/ 60).toString().padLeft(2, '0')}: ${((timerMaxSeconds - currentSeconds) % 60).toString().padLeft(2, '0')}';
 
@@ -152,6 +155,7 @@ class _CallRoomScreenState extends State<CallRoomScreen> {
             if (state.status.isLoadedRoom) {
               initialize(Agora.CHANNEL_NAME, ClientRole.Broadcaster);
               timerMaxSeconds = state.seconds;
+              appointment = state.appointment;
             }
           },
           builder: (context, state) {
@@ -168,19 +172,18 @@ class _CallRoomScreenState extends State<CallRoomScreen> {
                       decoration: new BoxDecoration(
                         shape: BoxShape.circle,
                         border: new Border.all(
-                          color:isOnline ? Colors.green : Colors.red,
+                          color: isOnline ? Colors.green : Colors.red,
                           width: 4.0,
                         ),
                       ),
                       child: CircleAvatar(
                         radius: SizeConfig.blockSizeHorizontal * 15,
                         child: ClipOval(
-                          child: Image(
-                            fit: BoxFit.cover,
-                            width: SizeConfig.blockSizeHorizontal * 30,
-                            height: SizeConfig.blockSizeHorizontal * 30,
-                            image: AssetImage('assets/images/demo_expert.jpg'),
-                          ),
+                          child: ExtendedImage.network(
+                              appointment.session.specialist.avatar,
+                              fit: BoxFit.cover,
+                              width: SizeConfig.blockSizeHorizontal * 30,
+                              height: SizeConfig.blockSizeHorizontal * 30),
                         ),
                       ),
                     ),
@@ -190,7 +193,7 @@ class _CallRoomScreenState extends State<CallRoomScreen> {
                     Container(
                       width: SizeConfig.blockSizeHorizontal * 60,
                       child: Text(
-                        'Dr. Ho Xuan Cuong',
+                        appointment.session.specialist.fullname,
                         textAlign: TextAlign.center,
                         style:
                             GoogleFonts.lato(fontSize: 22, color: Colors.black),
@@ -234,7 +237,7 @@ class _CallRoomScreenState extends State<CallRoomScreen> {
                             padding: EdgeInsets.all(
                                 SizeConfig.blockSizeHorizontal * 5),
                             onPressed: () {
-                              _onCallEnd(context);
+                              _onCallEnd(context, appointment);
                             },
                             color: Colors.red,
                             icon: Icon(CupertinoIcons.phone_down_fill),
@@ -267,8 +270,56 @@ class _CallRoomScreenState extends State<CallRoomScreen> {
     );
   }
 
-  void _onCallEnd(BuildContext context) {
-    Navigator.pop(context);
+  void _onCallEnd(BuildContext context, ExpatAppointment appointment) {
+    if (isOnline == false) {
+      Navigator.pop(context);
+    } else if (currentSeconds >= 5) {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text(
+                'End the consultant',
+                style: GoogleFonts.lato(),
+              ),
+              content: Text('Your time still have much. Do you want to end the consultant session?',
+                  style: GoogleFonts.lato(
+                    color: Colors.black54,
+                  )),
+              actions: <Widget>[
+                TextButton(
+                    onPressed: () {
+                      Navigator.pop(context, false);
+                    },
+                    child: Text('CANCEL',
+                        style: GoogleFonts.lato(
+                            color: AppColors.MAIN_COLOR,
+                            fontWeight: FontWeight.w700))),
+                TextButton(
+                    onPressed: () {
+                      Navigator.pop(context, true);
+                    },
+                    child: Text('CONFIRM',
+                        style: GoogleFonts.lato(
+                            color: AppColors.MAIN_COLOR,
+                            fontWeight: FontWeight.w700)))
+              ],
+            );
+          }).then((value) {
+        if (value == true) {
+          Navigator.pushReplacementNamed(context, RouteName.FEEDBACK,
+              arguments: FeedbackArgs(appointment.conAppId,
+                  appointment.session.specialist.fullname));
+        } else {
+          return;
+        }
+      });
+    }else{
+      Navigator.pushReplacementNamed(context, RouteName.FEEDBACK,
+        arguments: FeedbackArgs(
+            appointment.conAppId, appointment.session.specialist.fullname));
+    }
+    
   }
 
   void _onToggleMute() {

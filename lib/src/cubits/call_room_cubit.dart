@@ -19,7 +19,7 @@ class CallRoomCubit extends Cubit<CallRoomState> {
       Map<dynamic, dynamic> loginResponse =
           _hiveUtils.getUserAuth(boxName: HiveBoxName.USER_AUTH);
       String token = loginResponse['token'].toString();
-      Appointment appointment = await _appointmentRepository
+      ExpatAppointment appointment = await _appointmentRepository
           .getAppointmentsById(token: token, appointmentId: appointmentId);
       if (appointment == null) {
         emit(state.copyWith(

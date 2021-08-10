@@ -23,7 +23,7 @@ extension Explaination on SpecialistStatus {
 class SpecialistState extends Equatable {
   final List<SpecialistDetails> specialists;
   final List<SpecialistDetails> oldSpecialists;
-  final Appointment todayAppointment;
+  final ExpatAppointment todayAppointment;
   final int page;
   final SpecialistStatus status;
   final bool isFirstFetch;
@@ -52,7 +52,7 @@ class SpecialistState extends Equatable {
       int page,
       SpecialistStatus status,
       bool isFirstFetch,
-      Appointment todayAppointment}) {
+      ExpatAppointment todayAppointment}) {
     return SpecialistState(
         specialists: specialists ?? this.specialists,
         oldSpecialists: oldSpecialists ?? this.oldSpecialists,

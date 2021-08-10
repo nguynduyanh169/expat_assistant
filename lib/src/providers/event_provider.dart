@@ -82,10 +82,12 @@ class EventProvider {
       Response response = await _dio.get(
           ApiName.GET_EVENTS_BY_EXPATID + "?expatId=$expatId",
           options: Options(headers: headers));
-      result = (response.data as List<dynamic>)
-          .map((i) => Content.fromJson(i))
-          .toList()
-          .cast<Content>();
+      if (response.statusCode == 200) {
+        result = (response.data as List<dynamic>)
+            .map((i) => Content.fromJson(i))
+            .toList()
+            .cast<Content>();
+      }
     } catch (e) {
       print(e.toString());
     }
@@ -123,8 +125,9 @@ class EventProvider {
         Headers.contentTypeHeader: "application/json",
         'Authorization': 'Bearer $token',
       };
-      Response response = await _dio
-          .put(ApiName.UNJOIN_EVENT + "?eventId=$eventId&expatId=$expatId", options: Options(headers: headers));
+      Response response = await _dio.put(
+          ApiName.UNJOIN_EVENT + "?eventId=$eventId&expatId=$expatId",
+          options: Options(headers: headers));
       result = response.data;
     } catch (e) {
       print(e.toString());

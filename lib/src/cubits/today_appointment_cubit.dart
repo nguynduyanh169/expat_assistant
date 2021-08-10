@@ -18,13 +18,13 @@ class TodayAppointmentCubit extends Cubit<TodayAppointmentState> {
           _hiveUtils.getUserAuth(boxName: HiveBoxName.USER_AUTH);
       String token = loginResponse['token'].toString();
       int expatId = loginResponse['id'];
-      List<Appointment> appointments = await _appointmentRepository
+      List<ExpatAppointment> appointments = await _appointmentRepository
           .getAppointmentsByExpat(token: token, expatId: expatId);
       if (appointments.isEmpty) {
         emit(state.copyWith(
             status: TodayAppointmentStatus.loadAppointmentError));
       } else {
-        Appointment appointment = _getAppointment(appointments);
+        ExpatAppointment appointment = _getAppointment(appointments);
         emit(state.copyWith(
             status: TodayAppointmentStatus.loadedAppointment,
             appointment: appointment));
@@ -34,7 +34,33 @@ class TodayAppointmentCubit extends Cubit<TodayAppointmentState> {
     }
   }
 
-  Appointment _getAppointment(List<Appointment> appointments) {
-    return appointments.first;
+  ExpatAppointment _getAppointment(List<ExpatAppointment> appointments) {
+    DateTime now = DateTime.now();
+    List<ExpatAppointment> nextAppointments = [];
+    for (ExpatAppointment appointment in appointments) {
+      if (DateTime(
+              appointment.session.startTime[0],
+              appointment.session.startTime[1],
+              appointment.session.startTime[2],
+              appointment.session.startTime[3],
+              appointment.session.startTime[4])
+          .isAfter(now)) {
+        nextAppointments.add(appointment);
+      }
+    }
+    nextAppointments.sort((a, b) => DateTime(
+            a.session.startTime[0],
+            a.session.startTime[1],
+            a.session.startTime[2],
+            a.session.startTime[3],
+            a.session.startTime[4])
+        .compareTo(DateTime(
+            a.session.startTime[0],
+            a.session.startTime[1],
+            a.session.startTime[2],
+            a.session.startTime[3],
+            a.session.startTime[4])));
+    final nextAppointment = nextAppointments.first;
+    return nextAppointment;
   }
 }

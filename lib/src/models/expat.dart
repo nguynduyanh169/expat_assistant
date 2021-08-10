@@ -33,8 +33,10 @@ class Expat {
         avataLink: json["avataLink"],
         email: json["email"],
         fullname: json["fullname"],
-        languages: List<Language>.from(
-            json["languages"].map((x) => Language.fromJson(x))),
+        languages: json["languages"] != null
+            ? List<Language>.from(
+                json["languages"].map((x) => Language.fromJson(x)))
+            : null,
         nationEntity: json["nationEntity"],
         password: json["password"],
         phone: json["phone"],

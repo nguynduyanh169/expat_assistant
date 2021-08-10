@@ -5,7 +5,7 @@ class CallRoomState extends Equatable {
   final String message;
   final CallRoomStatus status;
   final int seconds;
-  final Appointment appointment;
+  final ExpatAppointment appointment;
 
   const CallRoomState(
       {this.appointment, this.message, this.status, this.seconds});
@@ -17,7 +17,7 @@ class CallRoomState extends Equatable {
   CallRoomState copyWith(
       {String message,
       CallRoomStatus status,
-      Appointment appointment,
+      ExpatAppointment appointment,
       int seconds}) {
     return CallRoomState(
         message: message ?? this.message,

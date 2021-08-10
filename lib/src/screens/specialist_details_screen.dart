@@ -36,10 +36,9 @@ class _SpecialistDetailsState extends State<SpecialistDetailsScreen> {
   bool isChecked = false;
   SpecialistDetails specialistDetails;
   LinkedHashMap<DateTime, List<SessionDisplay>> kSession;
-  List<SessionDisplay> selectedSessions = [];
   SessionUtils _sessionUtils = SessionUtils();
   TextUtils _textUtils = TextUtils();
-  SessionDisplay session;
+  SessionDisplay selectedSession;
 
   @override
   void initState() {
@@ -159,11 +158,11 @@ class _SpecialistDetailsState extends State<SpecialistDetailsScreen> {
                     textStyle: MaterialStateProperty.all<TextStyle>(
                         GoogleFonts.lato(fontSize: 17))),
                 child: Text("Make an Appointment"),
-                onPressed: () => selectedSessions.length == 0
+                onPressed: () => selectedSession == null
                     ? _displaySnackBar(context, 'Please pick your session!')
                     : Navigator.pushNamed(context, RouteName.INVOICE,
                         arguments: InvoiceScreenArguments(
-                            selectedSessions, specialistDetails)),
+                            selectedSession, specialistDetails)),
               ),
             ),
           ),
@@ -360,7 +359,7 @@ class _SpecialistDetailsState extends State<SpecialistDetailsScreen> {
                                         itemCount: value.length,
                                         itemBuilder: (context, index) {
                                           return GFRadioListTile(
-                                              groupValue: session,
+                                              groupValue: selectedSession,
                                               value: value[index],
                                               size: 20,
                                               avatar: Icon(
@@ -406,7 +405,7 @@ class _SpecialistDetailsState extends State<SpecialistDetailsScreen> {
                                                             value[index]) ==
                                                     false) {
                                                   setState(() {
-                                                    session = changeValue;
+                                                    selectedSession = changeValue;
                                                   });
                                                 } else {
                                                   _displaySnackBar(context,

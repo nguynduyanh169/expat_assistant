@@ -3,7 +3,7 @@ import 'package:expat_assistant/src/models/appointment.dart';
 
 class TodayAppointmentState extends Equatable {
   final TodayAppointmentStatus status;
-  final Appointment appointment;
+  final ExpatAppointment appointment;
 
   const TodayAppointmentState({this.appointment, this.status});
 
@@ -12,7 +12,7 @@ class TodayAppointmentState extends Equatable {
   List<Object> get props => [appointment, status];
 
   TodayAppointmentState copyWith(
-      {TodayAppointmentStatus status, Appointment appointment}) {
+      {TodayAppointmentStatus status, ExpatAppointment appointment}) {
     return TodayAppointmentState(
         status: status ?? this.status,
         appointment: appointment ?? this.appointment);

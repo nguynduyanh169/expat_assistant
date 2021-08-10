@@ -31,7 +31,7 @@ class SessionUtils {
   }
 
   List<SessionDisplay> addSession(
-      {List<Session> sessions, List<Appointment> appointments}) {
+      {List<Session> sessions, List<ExpatAppointment> appointments}) {
     List<SessionDisplay> result = [];
     for (Session session in sessions) {
       DateTime dateOfSession = DateTime(

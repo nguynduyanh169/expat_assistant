@@ -5,20 +5,16 @@ import 'package:expat_assistant/src/configs/size_config.dart';
 import 'package:expat_assistant/src/cubits/specialist_cubit.dart';
 import 'package:expat_assistant/src/models/appointment.dart';
 import 'package:expat_assistant/src/models/specialist.dart';
-import 'package:expat_assistant/src/repositories/appointment_repository.dart';
 import 'package:expat_assistant/src/repositories/specialist_repository.dart';
 import 'package:expat_assistant/src/screens/specialist_details_screen.dart';
-import 'package:expat_assistant/src/screens/upcoming_appointment_screen.dart';
 import 'package:expat_assistant/src/states/specialists_state.dart';
 import 'package:expat_assistant/src/utils/event_bus_utils.dart';
-import 'package:expat_assistant/src/widgets/appointment_card.dart';
 import 'package:expat_assistant/src/widgets/specialist_card.dart';
 import 'package:expat_assistant/src/widgets/upcomming_appointment.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:line_icons/line_icons.dart';
 
 class SpecialistsScreen extends StatefulWidget {
   _SpecialistsScreenState createState() => _SpecialistsScreenState();
@@ -28,7 +24,7 @@ class _SpecialistsScreenState extends State<SpecialistsScreen> {
   int currentPage = 0;
   bool isReload = false;
   List<SpecialistDetails> specialists = [];
-  Appointment appointment;
+  ExpatAppointment appointment;
   final ScrollController scrollController = ScrollController();
 
   void setupScrollController(BuildContext context) {

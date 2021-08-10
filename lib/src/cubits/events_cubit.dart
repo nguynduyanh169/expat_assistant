@@ -25,6 +25,7 @@ class EventsCubit extends Cubit<EventsState> {
       Map<dynamic, dynamic> loginResponse =
           _hiveUtils.getUserAuth(boxName: HiveBoxName.USER_AUTH);
       String token = loginResponse['token'].toString();
+      int expatId = loginResponse['id'];
       if (state.status.isLoading) return null;
       final currentState = state;
       Event eventJson;
@@ -56,11 +57,14 @@ class EventsCubit extends Cubit<EventsState> {
             token: token, eventId: content.eventId);
         topics = await _topicRepository.getTopicByEventId(
             token: token, eventId: content.eventId);
-        contentsExpatId =
-            await _eventRepository.getEventByExpatId(token: token, expatId: 6);
-        Content contentExpatId = contentsExpatId.firstWhere(
-            (element) => content.eventId == element.eventId,
-            orElse: () => null);
+        contentsExpatId = await _eventRepository.getEventByExpatId(
+            token: token, expatId: expatId);
+        Content contentExpatId;
+        if (contentsExpatId != null) {
+          contentExpatId = contentsExpatId.firstWhere(
+              (element) => content.eventId == element.eventId,
+              orElse: () => null);
+        }
         if (contentExpatId == null) {
           event = EventShow(
               location: locations[0],
@@ -121,8 +125,8 @@ class EventsCubit extends Cubit<EventsState> {
             isJoined: true);
         events.add(event);
       }
-      emit(state.copyWith(status: EventsStatus.loadJoinedInEventSuccess, joinedEvents: events));
-      
+      emit(state.copyWith(
+          status: EventsStatus.loadJoinedInEventSuccess, joinedEvents: events));
     } on Exception catch (e) {
       emit(state.copyWith(status: EventsStatus.loadJoinedInEventFailed));
     }

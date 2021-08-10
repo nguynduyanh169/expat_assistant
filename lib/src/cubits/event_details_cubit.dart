@@ -25,6 +25,7 @@ class EventDetailsCubit extends Cubit<EventDetailsState> {
       Map<dynamic, dynamic> loginResponse =
           _hiveUtils.getUserAuth(boxName: HiveBoxName.USER_AUTH);
       String token = loginResponse['token'].toString();
+      int expatId = loginResponse['id'];
       EventShow event;
       Content content = await _eventRepository.getEventContentById(
           eventId: eventId, token: token);
@@ -34,10 +35,13 @@ class EventDetailsCubit extends Cubit<EventDetailsState> {
         List<Topic> topics = await _topicRepository.getTopicByEventId(
             token: token, eventId: eventId);
         List<Content> contentsExpatId =
-            await _eventRepository.getEventByExpatId(token: token, expatId: 6);
-        Content contentExpatId = contentsExpatId.firstWhere(
-            (element) => content.eventId == element.eventId,
-            orElse: () => null);
+            await _eventRepository.getEventByExpatId(token: token, expatId: expatId);
+        Content contentExpatId;
+        if (contentsExpatId != null) {
+          contentExpatId = contentsExpatId.firstWhere(
+              (element) => content.eventId == element.eventId,
+              orElse: () => null);
+        }
         if (contentExpatId == null) {
           event = EventShow(
               location: locations[0],
@@ -61,12 +65,13 @@ class EventDetailsCubit extends Cubit<EventDetailsState> {
     }
   }
 
-  Future<void> joinEvent({@required int eventId, @required int expatId}) async {
+  Future<void> joinEvent({@required int eventId}) async {
     emit(state.copyWith(status: EventDetailsStatus.joiningEvent));
     try {
       Map<dynamic, dynamic> loginResponse =
           _hiveUtils.getUserAuth(boxName: HiveBoxName.USER_AUTH);
       String token = loginResponse['token'].toString();
+      int expatId = loginResponse['id'];
       EventExpat eventExpat = await _eventRepository.joinAnEvent(
           token: token, expatId: expatId, eventId: eventId);
       if (eventExpat == null) {
@@ -80,12 +85,13 @@ class EventDetailsCubit extends Cubit<EventDetailsState> {
   }
 
   Future<void> unJoinEvent(
-      {@required int eventId, @required int expatId}) async {
+      {@required int eventId}) async {
     emit(state.copyWith(status: EventDetailsStatus.unjoiningEvent));
     try {
       Map<dynamic, dynamic> loginResponse =
           _hiveUtils.getUserAuth(boxName: HiveBoxName.USER_AUTH);
       String token = loginResponse['token'].toString();
+      int expatId = loginResponse['id'];
       int result = await _eventRepository.unjoinAnEvent(
           token: token, expatId: expatId, eventId: eventId);
       if (result == 0) {

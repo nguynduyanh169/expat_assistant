@@ -19,6 +19,7 @@ import 'package:expat_assistant/src/screens/loading_indicator_screen.dart';
 import 'package:expat_assistant/src/screens/login_screen.dart';
 import 'package:expat_assistant/src/screens/map_screen.dart';
 import 'package:expat_assistant/src/screens/notification_screen.dart';
+import 'package:expat_assistant/src/screens/payment_done_screen.dart';
 import 'package:expat_assistant/src/screens/practice_conversation_screen.dart';
 import 'package:expat_assistant/src/screens/practice_vocabulary_screen.dart';
 import 'package:expat_assistant/src/screens/profile_screen.dart';
@@ -80,5 +81,6 @@ final routes = {
       new UpcomingAppointmentScreen(),
   RouteName.EDIT_PROFILE: (BuildContext context) => new EditProfileScreen(),
   RouteName.LOADING: (BuildContext context) => new LoadingIndicatorScreen(),
-  RouteName.FEEDBACK: (BuildContext context) => new FeedBackScreen()
+  RouteName.FEEDBACK: (BuildContext context) => new FeedBackScreen(),
+  RouteName.PAYMENT_DONE: (BuildContext context) => new PaymentDoneScreen()
 };

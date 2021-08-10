@@ -12,6 +12,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:sliding_sheet/sliding_sheet.dart';
 
 Future<Topic> showConfimationDialogForCategory(
@@ -168,6 +169,39 @@ Future<Category> showCategory(
       });
 }
 
+Future<bool> showCameraOptions({@required BuildContext context}) async {
+  SizeConfig().init(context);
+  bool result = await showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Wrap(
+          children: <Widget>[
+            ListTile(
+              leading: Icon(Ionicons.camera_outline),
+              title: Text(
+                'Take a food photo to find your restaurants.',
+                style: GoogleFonts.lato(),
+              ),
+              onTap: () {
+                Navigator.pop(context, false);
+              },
+            ),
+            ListTile(
+              leading: Icon(Ionicons.image_outline),
+              title: Text(
+                'Choose a food photo to find your restaurants.',
+                style: GoogleFonts.lato(),
+              ),
+              onTap: () {
+                Navigator.pop(context, true);
+              },
+            )
+          ],
+        );
+      });
+  return result;
+}
+
 Future<Content> showMajors({@required BuildContext context}) async {
   int currentPage = 0;
   List<Content> majors = [];
@@ -195,20 +229,22 @@ Future<Content> showMajors({@required BuildContext context}) async {
           positioning: SnapPositioning.relativeToAvailableSpace,
         ),
         headerBuilder: (context, state) {
-            return Material(
-              child: Container(
-                padding: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 4),
-                height: SizeConfig.blockSizeVertical * 8,
-                width: double.infinity,
-                color: AppColors.MAIN_COLOR,
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Select a major',
-                  style: GoogleFonts.lato(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w700)
-                ),
-              ),
-            );
-          },
+          return Material(
+            child: Container(
+              padding:
+                  EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 4),
+              height: SizeConfig.blockSizeVertical * 8,
+              width: double.infinity,
+              color: AppColors.MAIN_COLOR,
+              alignment: Alignment.centerLeft,
+              child: Text('Select a major',
+                  style: GoogleFonts.lato(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700)),
+            ),
+          );
+        },
         builder: (context, state) {
           return BlocProvider(
             create: (context) =>

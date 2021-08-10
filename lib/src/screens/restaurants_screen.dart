@@ -1,14 +1,23 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:camera/camera.dart';
 import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/configs/size_config.dart';
 import 'package:expat_assistant/src/cubits/restaurants_cubit.dart';
+import 'package:expat_assistant/src/models/place.dart';
+import 'package:expat_assistant/src/repositories/restaurant_repository.dart';
 import 'package:expat_assistant/src/screens/food_camera_screen.dart';
 import 'package:expat_assistant/src/states/restaurants_state.dart';
+import 'package:expat_assistant/src/widgets/alert_dialog_vocabulary.dart';
+import 'package:expat_assistant/src/widgets/loading.dart';
+import 'package:expat_assistant/src/widgets/loading_dialog.dart';
 import 'package:expat_assistant/src/widgets/restaurant_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:line_icons/line_icons.dart';
 
 class RestaurantsScreen extends StatefulWidget {
@@ -18,6 +27,33 @@ class RestaurantsScreen extends StatefulWidget {
 class _RestaurantsScreenState extends State<RestaurantsScreen>
     with AutomaticKeepAliveClientMixin<RestaurantsScreen> {
   String _addressText = "Locating....";
+  final picker = ImagePicker();
+  LocationList restaurantList;
+  bool isLoadingMore = false;
+  final ScrollController scrollController = ScrollController();
+
+  void setupScrollController(BuildContext context) {
+    scrollController.addListener(() {
+      if (scrollController.position.pixels ==
+          scrollController.position.maxScrollExtent) {
+        BlocProvider.of<RestaurantsCubit>(context)
+            .getNextRestaurants(restaurantList);
+      }
+    });
+  }
+
+  Future getImage(BuildContext context) async {
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      File file = File(pickedFile.path);
+      BlocProvider.of<RestaurantsCubit>(context).uploadImage(file);
+    } else {
+      CustomSnackBar.showSnackBar(
+          context: context,
+          message: 'No image selected!',
+          color: Colors.blueAccent);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +71,6 @@ class _RestaurantsScreenState extends State<RestaurantsScreen>
             preferredSize: Size.fromHeight(0.25)),
         elevation: 0.5,
         backgroundColor: AppColors.MAIN_COLOR,
-        //toolbarHeight: SizeConfig.blockSizeVertical * 10,
         automaticallyImplyLeading: false,
         centerTitle: true,
         iconTheme: IconThemeData(color: Colors.white),
@@ -46,17 +81,50 @@ class _RestaurantsScreenState extends State<RestaurantsScreen>
         ),
       ),
       body: BlocProvider(
-        create: (context) => RestaurantsCubit()..loadDataToScreen(),
-        child: BlocBuilder<RestaurantsCubit, RestaurantsState>(
+        create: (context) =>
+            RestaurantsCubit(RestaurantRepository())..loadDataToScreen(),
+        child: BlocConsumer<RestaurantsCubit, RestaurantsState>(
+          listener: (context, state) {
+            if (state.status.isUploadingImage) {
+              CustomLoadingDialog.loadingDialog(
+                  context: context, message: 'Please wait...');
+            } else if (state.status.isUploadedImage) {
+              BlocProvider.of<RestaurantsCubit>(context)
+                  .detectFood(state.imageUrl);
+            } else if (state.status.isUploadImageError) {
+              Navigator.pop(context);
+              CustomSnackBar.showSnackBar(
+                  context: context,
+                  message: 'An error occurs while uploading image',
+                  color: Colors.red);
+            } else if (state.status.isRecognizeSuccess) {
+              Navigator.pop(context);
+              print(state.foodName);
+            } else if (state.status.isRecognizeFoodError) {
+              Navigator.pop(context);
+              CustomSnackBar.showSnackBar(
+                  context: context,
+                  message: 'An error occurs while recoginzing food image',
+                  color: Colors.red);
+            } else if (state.status.isLoadingMoreRestaurants) {
+              isLoadingMore = true;
+            } else if (state.status.isLoadedMoreRestaurants) {
+              isLoadingMore = false;
+              restaurantList = state.nextLocations;
+            } else if (state.status.isLoadMoreRestaurantError) {
+              isLoadingMore = false;
+              restaurantList = state.nextLocations;
+            }
+          },
           builder: (context, state) {
-            if (state is LoadingScreen) {
-              return Container(
-                child: Text('loading'),
-              );
+            setupScrollController(context);
+            if (state.status.isLoading) {
+              return LoadingViewForRestaurant(message: 'Loading...');
             } else {
-              if (state is LoadScreenSuccess) {
+              if (state.status.isLoaded) {
                 _addressText = state.currentAddress;
-              } else if (state is LoadScreenError) {
+                restaurantList = state.locations;
+              } else if (state.status.isLoadError) {
                 _addressText = "Error";
               }
               return Container(
@@ -83,20 +151,26 @@ class _RestaurantsScreenState extends State<RestaurantsScreen>
                     ),
                     Row(
                       children: <Widget>[
-                        Container(
-                          padding: EdgeInsets.all(
-                              SizeConfig.blockSizeHorizontal * 2),
-                          child: Icon(
-                            LineIcons.crosshairs,
-                            color: Colors.white,
-                          ),
-                          decoration: BoxDecoration(
-                              color: AppColors.MAIN_COLOR,
-                              border: Border.all(
+                        InkWell(
+                          onTap: () {
+                            BlocProvider.of<RestaurantsCubit>(context)
+                                .loadDataToScreen();
+                          },
+                          child: Container(
+                            padding: EdgeInsets.all(
+                                SizeConfig.blockSizeHorizontal * 2),
+                            child: Icon(
+                              LineIcons.crosshairs,
+                              color: Colors.white,
+                            ),
+                            decoration: BoxDecoration(
                                 color: AppColors.MAIN_COLOR,
-                              ),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20))),
+                                border: Border.all(
+                                  color: AppColors.MAIN_COLOR,
+                                ),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20))),
+                          ),
                         ),
                         SizedBox(
                           width: SizeConfig.blockSizeHorizontal * 1,
@@ -144,14 +218,22 @@ class _RestaurantsScreenState extends State<RestaurantsScreen>
                                       color: Color.fromRGBO(30, 193, 194, 30),
                                     ),
                                     iconSize: 30.0,
+                                    onPressed: () {},
                                   ),
                                   hintStyle: GoogleFonts.lato()),
                             ),
                           ),
                           InkWell(
                             onTap: () async {
-                              final cameras = await availableCameras();
-                              Navigator.pushNamed(context, '/foodCamera', arguments: FoodCameraArguments(cameras));
+                              bool check =
+                                  await showCameraOptions(context: context);
+                              if (check) {
+                                getImage(context);
+                              } else {
+                                final cameras = await availableCameras();
+                                Navigator.pushNamed(context, '/foodCamera',
+                                    arguments: FoodCameraArguments(cameras));
+                              }
                             },
                             child: Container(
                               width: SizeConfig.blockSizeHorizontal * 15,
@@ -245,51 +327,34 @@ class _RestaurantsScreenState extends State<RestaurantsScreen>
                       padding: EdgeInsets.only(
                           top: SizeConfig.blockSizeHorizontal * 1),
                       height: SizeConfig.blockSizeVertical * 45.2,
-                      child: ListView(
-                        children: [
-                          RestaurantCard(
-                            restaurantAction: () {
-                              Navigator.pushNamed(
-                                  context, '/restaurantsDetail');
-                            },
-                          ),
-                          SizedBox(
-                            height: SizeConfig.blockSizeVertical * 2,
-                          ),
-                          RestaurantCard(
-                            restaurantAction: () {
-                              Navigator.pushNamed(
-                                  context, '/restaurantsDetail');
-                            },
-                          ),
-                          SizedBox(
-                            height: SizeConfig.blockSizeVertical * 2,
-                          ),
-                          RestaurantCard(
-                            restaurantAction: () {
-                              Navigator.pushNamed(
-                                  context, '/restaurantsDetail');
-                            },
-                          ),
-                          SizedBox(
-                            height: SizeConfig.blockSizeVertical * 2,
-                          ),
-                          RestaurantCard(
-                            restaurantAction: () {
-                              Navigator.pushNamed(
-                                  context, '/restaurantsDetail');
-                            },
-                          ),
-                          SizedBox(
-                            height: SizeConfig.blockSizeVertical * 2,
-                          ),
-                          RestaurantCard(
-                            restaurantAction: () {
-                              Navigator.pushNamed(
-                                  context, '/restaurantsDetail');
-                            },
-                          ),
-                        ],
+                      child: ListView.separated(
+                        controller: scrollController,
+                        itemBuilder: (context, index) {
+                          if (index < restaurantList.results.length) {
+                            return RestaurantCard(
+                              placeInfomation: restaurantList.results[index],
+                              restaurantAction: () {
+                                Navigator.pushNamed(
+                                    context, '/restaurantsDetail');
+                              },
+                            );
+                          } else {
+                            Timer(Duration(milliseconds: 30), () {
+                              scrollController.jumpTo(
+                                  scrollController.position.maxScrollExtent);
+                            });
+                            return Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child:
+                                  Center(child: CupertinoActivityIndicator()),
+                            );
+                          }
+                        },
+                        itemCount: restaurantList.results.length +
+                            (isLoadingMore ? 1 : 0),
+                        separatorBuilder: (context, index) => SizedBox(
+                          height: SizeConfig.blockSizeVertical * 2,
+                        ),
                       ),
                     )
                   ],

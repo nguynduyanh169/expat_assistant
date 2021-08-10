@@ -455,13 +455,11 @@ class EventDetailsScreen extends StatelessWidget {
                                   if (event.isJoined == false) {
                                     BlocProvider.of<EventDetailsCubit>(context)
                                         .joinEvent(
-                                            eventId: event.content.eventId,
-                                            expatId: 6);
+                                            eventId: event.content.eventId);
                                   } else {
                                     BlocProvider.of<EventDetailsCubit>(context)
                                         .unJoinEvent(
-                                            eventId: event.content.eventId,
-                                            expatId: 6);
+                                            eventId: event.content.eventId);
                                   }
                                 }),
                           )
