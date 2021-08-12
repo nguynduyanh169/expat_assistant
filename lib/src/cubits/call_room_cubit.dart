@@ -1,9 +1,11 @@
 import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/models/appointment.dart';
+import 'package:expat_assistant/src/models/room_call.dart';
 import 'package:expat_assistant/src/repositories/appointment_repository.dart';
 import 'package:expat_assistant/src/states/call_room_state.dart';
 import 'package:expat_assistant/src/utils/date_utils.dart';
 import 'package:expat_assistant/src/utils/hive_utils.dart';
+import 'package:expat_assistant/src/utils/text_utils.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CallRoomCubit extends Cubit<CallRoomState> {
@@ -28,8 +30,20 @@ class CallRoomCubit extends Cubit<CallRoomState> {
       } else {
         int duration = _dateTimeUtils.caculateDuration(
             appointment.session.startTime, appointment.session.endTime);
+        RoomCall roomCall =
+            RoomCall(uid: int.parse(TextUtils.getUid()), role: 1);
+        String agoraToken = await _appointmentRepository.generateToken(
+            uid: roomCall.uid,
+            channelName: 'baobao',
+            token: token,
+            expiredTime: 3600,
+            role: 1);
+        roomCall.token = agoraToken;
         emit(state.copyWith(
-            status: CallRoomStatus.loadedRoom, appointment: appointment, seconds: duration));
+            status: CallRoomStatus.loadedRoom,
+            appointment: appointment,
+            seconds: duration,
+            roomCall: roomCall));
       }
     } on Exception catch (e) {
       emit(state.copyWith(

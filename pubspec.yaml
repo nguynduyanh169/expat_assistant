@@ -92,6 +92,9 @@ dependencies:
   fl_chart: ^0.36.3
   google_place: ^0.4.3
   onesignal_flutter: ^3.2.0
+  latlong2: ^0.8.0
+  gallery_view: ^1.0.0+1
+  image_viewer: ^1.5.0
 
 dev_dependencies:
   build_runner: ^2.0.4
@@ -149,6 +152,7 @@ flutter:
     - assets/images/demo_expert.jpg
     - assets/images/camera_food_logo.png
     - assets/images/feedback.png
+    - assets/images/no_photo.png
     - assets/images/map.png
     - assets/images/demo_food.jpg
     - assets/images/April.png

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/models/appointment.dart';
@@ -18,6 +20,7 @@ class AppointmentProvider {
       Response response = await _dio.get(
           ApiName.GET_APPOINTMENT_BY_ID + appointmentId.toString(),
           options: Options(headers: headers));
+      print(response.data);
       appointment = ExpatAppointment.fromJson(response.data);
     } catch (e) {
       print(e.toString());
@@ -37,13 +40,10 @@ class AppointmentProvider {
         Headers.acceptHeader: "application/json",
         'Authorization': 'Bearer $token',
       };
-      print(ApiName.REGISTRY_SESSION +
-          "?expatId=$expatId&sessionId=$sessionId&channelName=$channelName");
       Response response = await _dio.post(
           ApiName.REGISTRY_SESSION +
               "?expatId=$expatId&sessionId=$sessionId&channelName=$channelName",
           options: Options(headers: headers));
-      print(response);
       if (response.statusCode == 200) {
         appointment = ExpatAppointment.fromJson(response.data);
       }
@@ -98,5 +98,34 @@ class AppointmentProvider {
       print(e.toString());
     }
     return appointment;
+  }
+
+  Future<String> generateToken(
+      {@required int uid,
+      @required String channelName,
+      @required String token,
+      @required int expiredTime,
+      @required int role}) async {
+    String result;
+    try {
+      Map<String, dynamic> headers = {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $token',
+      };
+      Map<String, dynamic> data = {
+        "channelName": channelName,
+        "expirationTimeInSeconds": expiredTime,
+        "role": role,
+        "uid": uid
+      };
+      Response response = await _dio.post(ApiName.GET_AGORA_TOKEN,
+          options: Options(headers: headers), queryParameters: data);
+      if (response.statusCode == 200) {
+        result = response.data["token"];
+      }
+    } on Exception catch (e) {
+      print(e.toString());
+    }
+    return result;
   }
 }

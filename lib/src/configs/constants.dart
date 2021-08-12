@@ -86,6 +86,7 @@ class ApiName {
       BASE_URL + "/api/appointment/feedback";
   static const String CREATE_PAYMENT = BASE_URL + "/api/payment/create";
   static const String GET_PAYMENT_BY_EXPAT = BASE_URL + "/api/payment/list";
+  static const String GET_AGORA_TOKEN = BASE_URL + "/api/agora/rtc";
 }
 
 class HiveBoxName {
@@ -102,14 +103,15 @@ class AppColors {
 }
 
 class GooglePlaces {
-  static const String API_KEY = "AIzaSyDMYiciebQkgkMCrxZXmYzu1CBTDr-N_SA";
+  static const String API_KEY = "AIzaSyAu6qctFpBzrvWpBj7nlzcrzJU1cW4F09c";
+  
 }
 
 class Agora {
   static const APP_ID = "9aff35de497443c9be8469665d87176b";
   static const CHANNEL_NAME = "baobao";
   static const TOKEN =
-      '0069aff35de497443c9be8469665d87176bIADd4U4VaJJs/2Pe+oQ546W59rZWeNBOM6Nx8mhMMEPt4TuPUdkAAAAAEADjKAaA4x8TYQEAAQDjHxNh';
+      '0069aff35de497443c9be8469665d87176bIACxPMvMAulAHhHbmGudd4M0BDAwy0M+DOB4m4p1PmuzrjuPUdku2ygDIgCcAQiX3swTYQQAAQBuiRJhAgBuiRJhAwBuiRJhBABuiRJh';
 }
 
 class MomoConstants {

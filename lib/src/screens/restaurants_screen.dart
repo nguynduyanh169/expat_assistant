@@ -5,14 +5,18 @@ import 'package:camera/camera.dart';
 import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/configs/size_config.dart';
 import 'package:expat_assistant/src/cubits/restaurants_cubit.dart';
+import 'package:expat_assistant/src/cubits/search_restaurants_cubit.dart';
 import 'package:expat_assistant/src/models/place.dart';
 import 'package:expat_assistant/src/repositories/restaurant_repository.dart';
 import 'package:expat_assistant/src/screens/food_camera_screen.dart';
+import 'package:expat_assistant/src/screens/restaurant_by_food_screen.dart';
+import 'package:expat_assistant/src/screens/restaurant_details_screen.dart';
 import 'package:expat_assistant/src/states/restaurants_state.dart';
 import 'package:expat_assistant/src/widgets/alert_dialog_vocabulary.dart';
 import 'package:expat_assistant/src/widgets/loading.dart';
 import 'package:expat_assistant/src/widgets/loading_dialog.dart';
 import 'package:expat_assistant/src/widgets/restaurant_card.dart';
+import 'package:expat_assistant/src/widgets/search_restaurants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,6 +31,8 @@ class RestaurantsScreen extends StatefulWidget {
 class _RestaurantsScreenState extends State<RestaurantsScreen>
     with AutomaticKeepAliveClientMixin<RestaurantsScreen> {
   String _addressText = "Locating....";
+  double currentLat = 0;
+  double currentLng = 0;
   final picker = ImagePicker();
   LocationList restaurantList;
   bool isLoadingMore = false;
@@ -99,7 +105,13 @@ class _RestaurantsScreenState extends State<RestaurantsScreen>
                   color: Colors.red);
             } else if (state.status.isRecognizeSuccess) {
               Navigator.pop(context);
-              print(state.foodName);
+              Navigator.pushNamed(context, RouteName.RESTAURANTS_BY_FOOD,
+                  arguments: RestaurantByFoodArgs(
+                      state.foodName,
+                      "$currentLat,$currentLng",
+                      currentLat,
+                      currentLng,
+                      state.imageUrl));
             } else if (state.status.isRecognizeFoodError) {
               Navigator.pop(context);
               CustomSnackBar.showSnackBar(
@@ -124,6 +136,8 @@ class _RestaurantsScreenState extends State<RestaurantsScreen>
               if (state.status.isLoaded) {
                 _addressText = state.currentAddress;
                 restaurantList = state.locations;
+                currentLat = state.currentLat;
+                currentLng = state.currentLng;
               } else if (state.status.isLoadError) {
                 _addressText = "Error";
               }
@@ -185,64 +199,89 @@ class _RestaurantsScreenState extends State<RestaurantsScreen>
                         ),
                       ],
                     ),
-                    Container(
-                      width: SizeConfig.blockSizeHorizontal * 100,
-                      padding: EdgeInsets.only(
-                          top: SizeConfig.blockSizeHorizontal * 2,
-                          bottom: SizeConfig.blockSizeHorizontal * 2),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Container(
-                            width: SizeConfig.blockSizeHorizontal * 75,
-                            padding: EdgeInsets.only(
-                                left: SizeConfig.blockSizeHorizontal * 2,
-                                right: SizeConfig.blockSizeHorizontal * 2),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              border: Border.all(
-                                  color: Color.fromRGBO(
-                                      30, 193, 194, 30), // set border color
-                                  width: 1.0), // set border width
-                              borderRadius: BorderRadius.all(Radius.circular(
-                                  10.0)), // set rounded corner radius
-                            ),
-                            child: TextFormField(
-                              enabled: false,
-                              decoration: InputDecoration(
-                                  hintText: '   What do you want to eat?',
-                                  border: InputBorder.none,
-                                  suffixIcon: IconButton(
-                                    icon: Icon(
-                                      CupertinoIcons.search,
-                                      color: Color.fromRGBO(30, 193, 194, 30),
-                                    ),
-                                    iconSize: 30.0,
-                                    onPressed: () {},
+                    BlocProvider(
+                      create: (context) =>
+                          SearchRestaurantsCubit(RestaurantRepository()),
+                      child: Builder(
+                        builder: (context) => Container(
+                          width: SizeConfig.blockSizeHorizontal * 100,
+                          padding: EdgeInsets.only(
+                              top: SizeConfig.blockSizeHorizontal * 2,
+                              bottom: SizeConfig.blockSizeHorizontal * 2),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              InkWell(
+                                onTap: () {
+                                  showSearch<Result>(
+                                      context: context,
+                                      delegate: SearchRestaurant(
+                                          currentLat: currentLat,
+                                          currentLng: currentLng,
+                                          locationText: currentLat.toString() +
+                                              "," +
+                                              currentLng.toString(),
+                                          searchRestaurantsCubit: BlocProvider
+                                              .of<SearchRestaurantsCubit>(
+                                                  context)));
+                                },
+                                child: Container(
+                                  width: SizeConfig.blockSizeHorizontal * 75,
+                                  padding: EdgeInsets.only(
+                                      left: SizeConfig.blockSizeHorizontal * 2,
+                                      right:
+                                          SizeConfig.blockSizeHorizontal * 2),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    border: Border.all(
+                                        color: Color.fromRGBO(30, 193, 194,
+                                            30), // set border color
+                                        width: 1.0), // set border width
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(
+                                            10.0)), // set rounded corner radius
                                   ),
-                                  hintStyle: GoogleFonts.lato()),
-                            ),
+                                  child: TextFormField(
+                                    enabled: false,
+                                    decoration: InputDecoration(
+                                        hintText: '   What do you want to eat?',
+                                        border: InputBorder.none,
+                                        suffixIcon: IconButton(
+                                          icon: Icon(
+                                            CupertinoIcons.search,
+                                            color: Color.fromRGBO(
+                                                30, 193, 194, 30),
+                                          ),
+                                          iconSize: 30.0,
+                                          onPressed: () {},
+                                        ),
+                                        hintStyle: GoogleFonts.lato()),
+                                  ),
+                                ),
+                              ),
+                              InkWell(
+                                onTap: () async {
+                                  bool check =
+                                      await showCameraOptions(context: context);
+                                  if (check) {
+                                    getImage(context);
+                                  } else {
+                                    final cameras = await availableCameras();
+                                    Navigator.pushNamed(context, '/foodCamera',
+                                        arguments:
+                                            FoodCameraArguments(cameras));
+                                  }
+                                },
+                                child: Container(
+                                  width: SizeConfig.blockSizeHorizontal * 15,
+                                  height: SizeConfig.blockSizeVertical * 10,
+                                  child: Image.asset(
+                                      "assets/images/camera_food_logo.png"),
+                                ),
+                              )
+                            ],
                           ),
-                          InkWell(
-                            onTap: () async {
-                              bool check =
-                                  await showCameraOptions(context: context);
-                              if (check) {
-                                getImage(context);
-                              } else {
-                                final cameras = await availableCameras();
-                                Navigator.pushNamed(context, '/foodCamera',
-                                    arguments: FoodCameraArguments(cameras));
-                              }
-                            },
-                            child: Container(
-                              width: SizeConfig.blockSizeHorizontal * 15,
-                              height: SizeConfig.blockSizeVertical * 10,
-                              child: Image.asset(
-                                  "assets/images/camera_food_logo.png"),
-                            ),
-                          )
-                        ],
+                        ),
                       ),
                     ),
                     Container(
@@ -259,12 +298,10 @@ class _RestaurantsScreenState extends State<RestaurantsScreen>
                     ),
                     Container(
                       height: SizeConfig.blockSizeVertical * 5,
-                      //padding: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 2, right: SizeConfig.blockSizeHorizontal * 2),
                       child: ListView(
                         scrollDirection: Axis.horizontal,
                         children: <Widget>[
                           Container(
-                            //width: SizeConfig.blockSizeHorizontal * 30,
                             padding: EdgeInsets.all(
                                 SizeConfig.blockSizeHorizontal * 2),
                             decoration: BoxDecoration(
@@ -332,10 +369,21 @@ class _RestaurantsScreenState extends State<RestaurantsScreen>
                         itemBuilder: (context, index) {
                           if (index < restaurantList.results.length) {
                             return RestaurantCard(
+                              currentLat: currentLat,
+                              currentLng: currentLng,
                               placeInfomation: restaurantList.results[index],
                               restaurantAction: () {
                                 Navigator.pushNamed(
-                                    context, '/restaurantsDetail');
+                                    context, '/restaurantsDetail',
+                                    arguments: RestaurantDetailsArgs(
+                                        restaurantList.results[index].photos !=
+                                                null
+                                            ? restaurantList.results[index]
+                                                .photos.first.photoReference
+                                            : null,
+                                        restaurantList.results[index].placeId,
+                                        currentLat,
+                                        currentLng));
                               },
                             );
                           } else {

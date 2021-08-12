@@ -1,29 +1,37 @@
 import 'package:equatable/equatable.dart';
 import 'package:expat_assistant/src/models/appointment.dart';
+import 'package:expat_assistant/src/models/room_call.dart';
 
 class CallRoomState extends Equatable {
   final String message;
   final CallRoomStatus status;
   final int seconds;
   final ExpatAppointment appointment;
+  final RoomCall roomCall;
 
   const CallRoomState(
-      {this.appointment, this.message, this.status, this.seconds});
+      {this.appointment,
+      this.message,
+      this.status,
+      this.seconds,
+      this.roomCall});
 
   @override
   // TODO: implement props
-  List<Object> get props => [message, status, appointment, seconds];
+  List<Object> get props => [message, status, appointment, seconds, roomCall];
 
   CallRoomState copyWith(
       {String message,
       CallRoomStatus status,
       ExpatAppointment appointment,
-      int seconds}) {
+      int seconds,
+      RoomCall roomCall}) {
     return CallRoomState(
         message: message ?? this.message,
         status: status ?? this.status,
         appointment: appointment ?? this.appointment,
-        seconds: seconds ?? this.seconds);
+        seconds: seconds ?? this.seconds,
+        roomCall: roomCall ?? this.roomCall);
   }
 }
 

@@ -7,9 +7,13 @@ class AppointmentRepository {
   Future<dynamic> registrySession(
       {@required String token,
       @required int expatId,
-      @required int sessionId, @required String channelName}) {
+      @required int sessionId,
+      @required String channelName}) {
     return _appointmentProvider.registrySession(
-        token: token, expatId: expatId, sessionId: sessionId, channelName: channelName);
+        token: token,
+        expatId: expatId,
+        sessionId: sessionId,
+        channelName: channelName);
   }
 
   Future<dynamic> getAppointmentsByExpat(
@@ -34,5 +38,19 @@ class AppointmentRepository {
         rating: rating,
         comment: comment,
         appointmentId: appointmentId);
+  }
+
+  Future<String> generateToken(
+      {@required int uid,
+      @required String channelName,
+      @required String token,
+      @required int expiredTime,
+      @required int role}) {
+    return _appointmentProvider.generateToken(
+        uid: uid,
+        channelName: channelName,
+        token: token,
+        expiredTime: expiredTime,
+        role: role);
   }
 }

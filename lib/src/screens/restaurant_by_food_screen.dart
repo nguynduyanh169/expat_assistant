@@ -1,9 +1,18 @@
-import 'package:expandable_text/expandable_text.dart';
+import 'dart:async';
+
 import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/configs/size_config.dart';
+import 'package:expat_assistant/src/cubits/restaurant_by_food_cubit.dart';
+import 'package:expat_assistant/src/models/place.dart';
+import 'package:expat_assistant/src/repositories/restaurant_repository.dart';
+import 'package:expat_assistant/src/screens/restaurant_details_screen.dart';
+import 'package:expat_assistant/src/states/restaurant_by_food_state.dart';
+import 'package:expat_assistant/src/widgets/loading.dart';
 import 'package:expat_assistant/src/widgets/restaurant_card.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class RestaurantByFoodScreen extends StatefulWidget {
@@ -11,217 +20,175 @@ class RestaurantByFoodScreen extends StatefulWidget {
 }
 
 class _RestaurantByFoodState extends State<RestaurantByFoodScreen> {
+  LocationList restaurantList;
+  bool isLoadingMore = false;
+  final ScrollController scrollController = ScrollController();
+
+  void setupScrollController(BuildContext context) {
+    scrollController.addListener(() {
+      if (scrollController.position.pixels ==
+          scrollController.position.maxScrollExtent) {
+        BlocProvider.of<RestaurantByFoodCubit>(context)
+            .getNextRestaurants(restaurantList);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        bottom: PreferredSize(
-            child: Container(
-              color: Colors.black38,
-              height: 0.25,
-            ),
-            preferredSize: Size.fromHeight(0.25)),
-        elevation: 0.5,
-        iconTheme: IconThemeData(color: Colors.white),
-        backgroundColor: AppColors.MAIN_COLOR,
-        //toolbarHeight: SizeConfig.blockSizeVertical * 10,
-        automaticallyImplyLeading: true,
-        centerTitle: true,
-        title: Text(
-          'Phở',
-          style: GoogleFonts.lato(fontSize: 22, color: Colors.white, fontWeight: FontWeight.w700),
-        ),
-        actions: [
-          IconButton(
-              onPressed: () {
-                Navigator.popUntil(context, ModalRoute.withName(RouteName.HOME_PAGE));
-              },
-              icon: Icon(CupertinoIcons.home, color: Colors.white,)),
-          SizedBox(
-            width: SizeConfig.blockSizeHorizontal * 4,
-          )
-        ],
-      ),
-      body: Container(
-        padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
-        height: SizeConfig.blockSizeVertical * 90,
-        child: ListView(
-          children: <Widget>[
-            Container(
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10.0),
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.black26.withOpacity(0.1),
-                        offset: Offset(0.0, 6.0),
-                        blurRadius: 10.0,
-                        spreadRadius: 0.10)
-                  ]),
-              padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    'Phở',
-                    style: GoogleFonts.lato(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold
+    final args =
+        ModalRoute.of(context).settings.arguments as RestaurantByFoodArgs;
+    return BlocProvider(
+      create: (context) => RestaurantByFoodCubit(RestaurantRepository())
+        ..getRestaurantsByFood(args.foodName, args.locationText),
+      child: Scaffold(
+        body: CustomScrollView(
+          controller: scrollController,
+          slivers: <Widget>[
+            SliverAppBar(
+              pinned: true,
+              snap: true,
+              floating: true,
+              expandedHeight: SizeConfig.blockSizeVertical * 25,
+              backgroundColor: AppColors.MAIN_COLOR,
+              actions: [
+                IconButton(
+                    onPressed: () {
+                      Navigator.popUntil(
+                          context, ModalRoute.withName(RouteName.HOME_PAGE));
+                    },
+                    icon: Icon(
+                      CupertinoIcons.home,
+                      color: Colors.white,
+                    )),
+                SizedBox(
+                  width: SizeConfig.blockSizeHorizontal * 4,
+                )
+              ],
+              flexibleSpace: FlexibleSpaceBar(
+                title: Text(
+                  args.foodName,
+                  style: GoogleFonts.lato(
+                      fontSize: 22,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w700),
+                ),
+                background: Stack(
+                  children: <Widget>[
+                    ExtendedImage.network(
+                      args.captureImage,
+                      fit: BoxFit.cover,
+                      width: SizeConfig.blockSizeHorizontal * 100,
                     ),
-                  ),
-                  SizedBox(height: SizeConfig.blockSizeVertical * 1,),
-                  Row(
-                    children: <Widget>[
-                      Container(
-                        width: SizeConfig.blockSizeHorizontal * 29,
-                        height: SizeConfig.blockSizeVertical * 12,
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10.0),
-                            boxShadow: [
-                              BoxShadow(
-                                  color: Colors.black26.withOpacity(0.1),
-                                  offset: Offset(0.0, 6.0),
-                                  blurRadius: 10.0,
-                                  spreadRadius: 0.10)
-                            ]),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          child: Image(
-                            // width: SizeConfig.blockSizeHorizontal * 90,
-                            // height: SizeConfig.blockSizeVertical * 20,
-                            image: AssetImage('assets/images/demo_food.jpg'),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: SizeConfig.blockSizeHorizontal * 2,),
-                      Container(
-                        width: SizeConfig.blockSizeHorizontal * 29,
-                        height: SizeConfig.blockSizeVertical * 12,
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10.0),
-                            boxShadow: [
-                              BoxShadow(
-                                  color: Colors.black26.withOpacity(0.1),
-                                  offset: Offset(0.0, 6.0),
-                                  blurRadius: 10.0,
-                                  spreadRadius: 0.10)
-                            ]),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          child: Image(
-                            // width: SizeConfig.blockSizeHorizontal * 90,
-                            // height: SizeConfig.blockSizeVertical * 20,
-                            image: AssetImage('assets/images/demo_food.jpg'),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: SizeConfig.blockSizeHorizontal * 2,),
-                      Container(
-                        width: SizeConfig.blockSizeHorizontal * 29,
-                        height: SizeConfig.blockSizeVertical * 12,
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10.0),
-                            boxShadow: [
-                              BoxShadow(
-                                  color: Colors.black26.withOpacity(0.1),
-                                  offset: Offset(0.0, 6.0),
-                                  blurRadius: 10.0,
-                                  spreadRadius: 0.10)
-                            ]),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          child: Image(
-                            // width: SizeConfig.blockSizeHorizontal * 90,
-                            // height: SizeConfig.blockSizeVertical * 20,
-                            image: AssetImage('assets/images/demo_food.jpg'),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: SizeConfig.blockSizeVertical * 1,),
-                  ExpandableText(
-                    'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',
-                    expandText: 'read more',
-                    collapseText: 'read less',
-                    linkStyle: GoogleFonts.lato(),
-                    maxLines: 4,
-                    linkColor: Colors.blue,
-                    style: GoogleFonts.lato(),
-                  ),
-
-                ],
-              ),
-            ),
-            SizedBox(height: SizeConfig.blockSizeVertical * 2,),
-            Container(
-              child: Text(
-                'Restaurants which have Phở dishes',
-                style: GoogleFonts.lato(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold
+                    Container(
+                      width: SizeConfig.blockSizeHorizontal * 100,
+                      decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                              begin: FractionalOffset.topCenter,
+                              end: FractionalOffset.bottomCenter,
+                              colors: [
+                            Colors.black12.withOpacity(0.3),
+                            Colors.black54,
+                          ],
+                              stops: [
+                            0.0,
+                            2.0
+                          ])),
+                    )
+                  ],
                 ),
               ),
             ),
-            SizedBox(height: SizeConfig.blockSizeVertical * 2,),
-            Container(
-              height: SizeConfig.blockSizeVertical * 60,
-              child: ListView(
-                children: [
-                  RestaurantCard(
-                    restaurantAction: () {
-                      Navigator.pushNamed(
-                          context, '/restaurantsDetail');
+            BlocConsumer<RestaurantByFoodCubit, RestaurantByFoodState>(
+              listener: (context, state) {
+                if (state.status.isLoadingMoreRestaurants) {
+                  isLoadingMore = true;
+                } else if (state.status.isLoadedMoreRestaurants) {
+                  isLoadingMore = false;
+                  restaurantList = state.nextLocations;
+                } else if (state.status.isLoadMoreRestaurantError) {
+                  isLoadingMore = false;
+                  restaurantList = state.nextLocations;
+                }
+              },
+              builder: (context, state) {
+                setupScrollController(context);
+                if (state.status.isLoading) {
+                  return SliverList(
+                    delegate: SliverChildListDelegate([
+                      SizedBox(
+                        height: SizeConfig.blockSizeVertical * 30,
+                      ),
+                      LoadingView(
+                        message: 'Loading...',
+                      )
+                    ]),
+                  );
+                } else {
+                  if (state.status.isLoaded) {
+                    restaurantList = state.locations;
+                  } else if (state.status.isLoadError) {
+                    print('error');
+                  }
+                  return SliverList(
+                    delegate: SliverChildBuilderDelegate((context, index) {
+                      if (index < restaurantList.results.length) {
+                        return Column(
+                          children: [
+                            SizedBox(
+                              height: SizeConfig.blockSizeVertical * 2,
+                            ),
+                            RestaurantCard(
+                              currentLat: args.currentLat,
+                              currentLng: args.currentLng,
+                              placeInfomation: restaurantList.results[index],
+                              restaurantAction: () {
+                                Navigator.pushNamed(
+                                    context, '/restaurantsDetail',
+                                    arguments: RestaurantDetailsArgs(
+                                        restaurantList.results[index].photos !=
+                                                null
+                                            ? restaurantList.results[index]
+                                                .photos.first.photoReference
+                                            : null,
+                                        restaurantList.results[index].placeId,
+                                        args.currentLat,
+                                        args.currentLng));
+                              },
+                            ),
+                          ],
+                        );
+                      } else {
+                        Timer(Duration(milliseconds: 30), () {
+                          scrollController.jumpTo(
+                              scrollController.position.maxScrollExtent);
+                        });
+                        return Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Center(child: CupertinoActivityIndicator()),
+                        );
+                      }
                     },
-                  ),
-                  SizedBox(
-                    height: SizeConfig.blockSizeVertical * 2,
-                  ),
-                  RestaurantCard(
-                    restaurantAction: () {
-                      Navigator.pushNamed(
-                          context, '/restaurantsDetail');
-                    },
-                  ),
-                  SizedBox(
-                    height: SizeConfig.blockSizeVertical * 2,
-                  ),
-                  RestaurantCard(
-                    restaurantAction: () {
-                      Navigator.pushNamed(
-                          context, '/restaurantsDetail');
-                    },
-                  ),
-                  SizedBox(
-                    height: SizeConfig.blockSizeVertical * 2,
-                  ),
-                  RestaurantCard(
-                    restaurantAction: () {
-                      Navigator.pushNamed(
-                          context, '/restaurantsDetail');
-                    },
-                  ),
-                  SizedBox(
-                    height: SizeConfig.blockSizeVertical * 2,
-                  ),
-                  RestaurantCard(
-                    restaurantAction: () {
-                      Navigator.pushNamed(
-                          context, '/restaurantsDetail');
-                    },
-                  ),
-                ],
-              ),
+                        childCount: restaurantList.results.length +
+                            (isLoadingMore ? 1 : 0)),
+                  );
+                }
+              },
             )
           ],
         ),
       ),
     );
   }
+}
+
+class RestaurantByFoodArgs {
+  final String foodName;
+  final String captureImage;
+  final String locationText;
+  final double currentLat;
+  final double currentLng;
+
+  RestaurantByFoodArgs(this.foodName, this.locationText, this.currentLat,
+      this.currentLng, this.captureImage);
 }

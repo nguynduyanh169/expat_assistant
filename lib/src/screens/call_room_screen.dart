@@ -5,6 +5,7 @@ import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/configs/size_config.dart';
 import 'package:expat_assistant/src/cubits/call_room_cubit.dart';
 import 'package:expat_assistant/src/models/appointment.dart';
+import 'package:expat_assistant/src/models/room_call.dart';
 import 'package:expat_assistant/src/repositories/appointment_repository.dart';
 import 'package:expat_assistant/src/screens/feedback_call_screen.dart';
 import 'package:expat_assistant/src/states/call_room_state.dart';
@@ -34,12 +35,12 @@ class _CallRoomScreenState extends State<CallRoomScreen> {
   int timerMaxSeconds = 60;
   int currentSeconds = 0;
   ExpatAppointment appointment;
+  RoomCall roomCall;
   String get timerText =>
       '${((timerMaxSeconds - currentSeconds) ~/ 60).toString().padLeft(2, '0')}: ${((timerMaxSeconds - currentSeconds) % 60).toString().padLeft(2, '0')}';
 
   @override
   void initState() {
-    //initialize(Agora.CHANNEL_NAME, ClientRole.Broadcaster);
     super.initState();
   }
 
@@ -54,7 +55,9 @@ class _CallRoomScreenState extends State<CallRoomScreen> {
     super.dispose();
   }
 
-  Future<void> initialize(String channelName, ClientRole role) async {
+  Future<void> initialize(
+      String channelName, ClientRole role, int uid, String agoraToken) async {
+    print(uid);
     if (Agora.APP_ID.isEmpty) {
       setState(() {
         _infoStrings.add(
@@ -68,7 +71,7 @@ class _CallRoomScreenState extends State<CallRoomScreen> {
     await _initAgoraRtcEngine(role);
     _addAgoraEventHandlers();
     await _engine.enableWebSdkInteroperability(true);
-    await _engine.joinChannel(Agora.TOKEN, channelName, null, 0);
+    await _engine.joinChannel(agoraToken, channelName, null, uid);
   }
 
   void _addAgoraEventHandlers() {
@@ -76,11 +79,12 @@ class _CallRoomScreenState extends State<CallRoomScreen> {
       setState(() {
         final info = 'onError: $code';
         _infoStrings.add(info);
-        // print(info);
+        print(info);
       });
     }, joinChannelSuccess: (channel, uid, elapsed) {
       setState(() {
         final info = 'onJoinChannel: $channel, uid: $uid';
+        isOnline = true;
         _infoStrings.add(info);
         print(info);
       });
@@ -153,9 +157,11 @@ class _CallRoomScreenState extends State<CallRoomScreen> {
         body: BlocConsumer<CallRoomCubit, CallRoomState>(
           listener: (context, state) {
             if (state.status.isLoadedRoom) {
-              initialize(Agora.CHANNEL_NAME, ClientRole.Broadcaster);
               timerMaxSeconds = state.seconds;
               appointment = state.appointment;
+              roomCall = state.roomCall;
+              initialize(Agora.CHANNEL_NAME, ClientRole.Broadcaster,
+                  roomCall.uid, roomCall.token);
             }
           },
           builder: (context, state) {
@@ -282,7 +288,8 @@ class _CallRoomScreenState extends State<CallRoomScreen> {
                 'End the consultant',
                 style: GoogleFonts.lato(),
               ),
-              content: Text('Your time still have much. Do you want to end the consultant session?',
+              content: Text(
+                  'Your time still have much. Do you want to end the consultant session?',
                   style: GoogleFonts.lato(
                     color: Colors.black54,
                   )),
@@ -314,12 +321,11 @@ class _CallRoomScreenState extends State<CallRoomScreen> {
           return;
         }
       });
-    }else{
+    } else {
       Navigator.pushReplacementNamed(context, RouteName.FEEDBACK,
-        arguments: FeedbackArgs(
-            appointment.conAppId, appointment.session.specialist.fullname));
+          arguments: FeedbackArgs(
+              appointment.conAppId, appointment.session.specialist.fullname));
     }
-    
   }
 
   void _onToggleMute() {

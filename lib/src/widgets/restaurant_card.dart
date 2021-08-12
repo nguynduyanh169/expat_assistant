@@ -1,6 +1,7 @@
 import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/configs/size_config.dart';
 import 'package:expat_assistant/src/models/place.dart';
+import 'package:expat_assistant/src/utils/places_utils.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,8 +12,14 @@ import 'package:line_icons/line_icons.dart';
 class RestaurantCard extends StatelessWidget {
   Function restaurantAction;
   Result placeInfomation;
+  double currentLat;
+  double currentLng;
 
-  RestaurantCard({this.restaurantAction, this.placeInfomation});
+  RestaurantCard(
+      {this.restaurantAction,
+      this.placeInfomation,
+      this.currentLat,
+      this.currentLng});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +29,7 @@ class RestaurantCard extends StatelessWidget {
       imageUrl =
           "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${placeInfomation.photos.first.photoReference}&key=${GooglePlaces.API_KEY}";
     }
-    
+
     return InkWell(
       onTap: restaurantAction,
       child: Container(
@@ -47,8 +54,8 @@ class RestaurantCard extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
                 child: imageUrl == null
-                    ? Image(
-                        image: AssetImage('assets/images/demo_food.jpg'),
+                    ? ExtendedImage.network(
+                        'https://firebasestorage.googleapis.com/v0/b/master-vietnamese.appspot.com/o/restaurants%2Frestaurant_photo.png?alt=media&token=5c81b38c-1524-4ac5-a654-c2940f8f6040',
                         fit: BoxFit.cover,
                       )
                     : ExtendedImage.network(
@@ -87,7 +94,7 @@ class RestaurantCard extends StatelessWidget {
                       children: <Widget>[
                         Container(
                             child: Text(
-                          '0.3 km',
+                          PlacesUtils.caculateDistance(currentLat, currentLng, placeInfomation.geometry.location.lat, placeInfomation.geometry.location.lng).toString() + " km",
                           style: GoogleFonts.lato(fontSize: 12),
                         )),
                         SizedBox(
@@ -134,7 +141,11 @@ class RestaurantCard extends StatelessWidget {
                     child: Container(
                         width: SizeConfig.blockSizeHorizontal * 40,
                         child: Text(
-                          placeInfomation.types != null ? typeValues.reverse[placeInfomation.types[0]].toString() + ", " + typeValues.reverse[placeInfomation.types[1]].toString() : 'Not Available',
+                          placeInfomation.types != null
+                              ?  placeInfomation.types[0] +
+                                  ", " +
+                                   placeInfomation.types[1]
+                              : 'Not Available',
                           style: GoogleFonts.lato(
                               fontSize: 12, color: Colors.black54),
                         )),

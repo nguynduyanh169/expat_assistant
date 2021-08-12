@@ -82,12 +82,10 @@ class LessonCard extends StatelessWidget {
             decoration: BoxDecoration(
                 border: Border(
               top: BorderSide(
-                //                   <--- left side
                 color: Colors.black26,
                 width: 0.5,
               ),
               bottom: BorderSide(
-                //                   <--- left side
                 color: Colors.black26,
                 width: 0.5,
               ),

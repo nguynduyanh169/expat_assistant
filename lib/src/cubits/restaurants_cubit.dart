@@ -6,6 +6,7 @@ import 'package:expat_assistant/src/models/place.dart';
 import 'package:expat_assistant/src/repositories/restaurant_repository.dart';
 import 'package:expat_assistant/src/states/restaurants_state.dart';
 import 'package:expat_assistant/src/utils/places_utils.dart';
+import 'package:expat_assistant/src/utils/text_utils.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path/path.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -39,7 +40,7 @@ class RestaurantsCubit extends Cubit<RestaurantsState> {
             "," +
             myLocation.longitude.toString();
         LocationList locationList = await _restaurantRepository
-            .getNearbyRestaurant(location: "10.840446,106.811189");
+            .getNearbyRestaurant(location: locationText);
         if (locationList == null) {
           emit(state.copyWith(
               status: RestaurantsStatus.loadError,
@@ -49,7 +50,9 @@ class RestaurantsCubit extends Cubit<RestaurantsState> {
           emit(state.copyWith(
               status: RestaurantsStatus.loaded,
               currentAddress: addressText,
-              locations: locationList));
+              locations: locationList,
+              currentLat: myLocation.latitude,
+              currentLng: myLocation.longitude));
         }
       }
     } on Exception catch (e) {
@@ -117,9 +120,9 @@ class RestaurantsCubit extends Cubit<RestaurantsState> {
             status: RestaurantsStatus.recognizeFoodError,
             errorMessage: 'An error occur while recognizing food'));
       } else {
+        String result = TextUtils.getFoodName(foodName);
         emit(state.copyWith(
-            status: RestaurantsStatus.recognizeFoodSuccess,
-            foodName: foodName));
+            status: RestaurantsStatus.recognizeFoodSuccess, foodName: result));
       }
     } on Exception catch (e) {
       emit(state.copyWith(

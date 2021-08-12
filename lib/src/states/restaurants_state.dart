@@ -3,6 +3,8 @@ import 'package:expat_assistant/src/models/place.dart';
 
 class RestaurantsState extends Equatable {
   final String currentAddress;
+  final double currentLat;
+  final double currentLng;
   final String errorMessage;
   final RestaurantsStatus status;
   final String foodName;
@@ -17,7 +19,9 @@ class RestaurantsState extends Equatable {
       this.foodName,
       this.imageUrl,
       this.locations,
-      this.nextLocations});
+      this.nextLocations,
+      this.currentLat,
+      this.currentLng});
 
   @override
   // TODO: implement props
@@ -28,7 +32,9 @@ class RestaurantsState extends Equatable {
         foodName,
         imageUrl,
         locations,
-        nextLocations
+        nextLocations,
+        currentLat,
+        currentLng
       ];
 
   RestaurantsState copyWith(
@@ -38,7 +44,9 @@ class RestaurantsState extends Equatable {
       String foodName,
       String imageUrl,
       LocationList locations,
-      LocationList nextLocations}) {
+      LocationList nextLocations,
+      double currentLat,
+      double currentLng}) {
     return RestaurantsState(
         currentAddress: currentAddress ?? this.currentAddress,
         errorMessage: errorMessage ?? this.currentAddress,
@@ -46,7 +54,9 @@ class RestaurantsState extends Equatable {
         foodName: foodName ?? this.foodName,
         imageUrl: imageUrl ?? this.imageUrl,
         locations: locations ?? this.locations,
-        nextLocations: nextLocations ?? this.nextLocations);
+        nextLocations: nextLocations ?? this.nextLocations,
+        currentLat: currentLat ?? this.currentLat,
+        currentLng: currentLng ?? this.currentLng);
   }
 }
 
@@ -93,5 +103,6 @@ extension Explaination on RestaurantsStatus {
   bool get isLoadedMoreRestaurants =>
       this == RestaurantsStatus.loadedMoreRestaurants;
 
-  bool get isLoadMoreRestaurantError => this == RestaurantsStatus.loadMoreRestaurantError;
+  bool get isLoadMoreRestaurantError =>
+      this == RestaurantsStatus.loadMoreRestaurantError;
 }

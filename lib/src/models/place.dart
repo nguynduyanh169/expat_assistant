@@ -73,7 +73,7 @@ class Result {
   double rating;
   String reference;
   Scope scope;
-  List<Type> types;
+  List<String> types;
   int userRatingsTotal;
   String vicinity;
   int priceLevel;
@@ -99,7 +99,7 @@ class Result {
         rating: json["rating"] == null ? null : json["rating"].toDouble(),
         reference: json["reference"],
         scope: scopeValues.map[json["scope"]],
-        types: List<Type>.from(json["types"].map((x) => typeValues.map[x])),
+        types: List<String>.from(json["types"].map((x) => x)),
         userRatingsTotal: json["user_ratings_total"],
         vicinity: json["vicinity"],
         priceLevel: json["price_level"] == null ? null : json["price_level"],
@@ -122,7 +122,7 @@ class Result {
         "rating": rating,
         "reference": reference,
         "scope": scopeValues.reverse[scope],
-        "types": List<dynamic>.from(types.map((x) => typeValues.reverse[x])),
+        "types": List<dynamic>.from(types.map((x) => x)),
         "user_ratings_total": userRatingsTotal,
         "vicinity": vicinity,
         "price_level": priceLevel == null ? null : priceLevel,

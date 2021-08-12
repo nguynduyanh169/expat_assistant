@@ -1,8 +1,9 @@
-import 'package:android_external_storage/android_external_storage.dart';
 import 'package:camera_camera/camera_camera.dart';
 import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/configs/size_config.dart';
 import 'package:expat_assistant/src/cubits/camera_cubit.dart';
+import 'package:expat_assistant/src/repositories/restaurant_repository.dart';
+import 'package:expat_assistant/src/screens/restaurant_by_food_screen.dart';
 import 'package:expat_assistant/src/states/camera_state.dart';
 import 'package:expat_assistant/src/widgets/loading.dart';
 import 'package:expat_assistant/src/widgets/loading_dialog.dart';
@@ -12,7 +13,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -112,14 +112,13 @@ class _FoodCameraState extends State<FoodCameraScreen>
       return Scaffold(body: LoadingView(message: 'Loading...'));
     } else {
       return BlocProvider(
-        create: (context) => CameraCubit(),
+        create: (context) => CameraCubit(RestaurantRepository()),
         child: Scaffold(
           extendBodyBehindAppBar: true,
           appBar: AppBar(
             elevation: 0,
             iconTheme: IconThemeData(color: Colors.white),
             backgroundColor: Colors.transparent,
-            //toolbarHeight: SizeConfig.blockSizeVertical * 10,
             automaticallyImplyLeading: true,
             centerTitle: true,
             title: Text(
@@ -135,14 +134,26 @@ class _FoodCameraState extends State<FoodCameraScreen>
             listener: (context, state) {
               if (state.status.isUploadedImage) {
                 Navigator.pop(context);
-                Navigator.pushNamed(context, RouteName.RESTAURANTS_BY_FOOD);
+                BlocProvider.of<CameraCubit>(context)
+                    .detectFood(state.imageUrl);
               } else if (state.status.isUploadingImage) {
                 CustomLoadingDialog.loadingDialog(
                     context: context, message: 'Please wait....');
               } else if (state.status.isUploadImageError) {
                 Navigator.pop(context);
                 print(state.message);
-              }
+              }else if (state.status.isRecognizeSuccess) {
+              Navigator.pop(context);
+              Navigator.pushNamed(context, RouteName.RESTAURANTS_BY_FOOD,
+                  arguments: RestaurantByFoodArgs(
+                      state.foodName, "10.80477002973667, 106.75600530688988", 10.80477002973667, 106.75600530688988, state.imageUrl));
+            } else if (state.status.isRecognizeFoodError) {
+              Navigator.pop(context);
+              CustomSnackBar.showSnackBar(
+                  context: context,
+                  message: 'An error occurs while recoginzing food image',
+                  color: Colors.red);
+            }
             },
             builder: (context, state) {
               return Stack(
@@ -227,68 +238,6 @@ class _FoodCameraState extends State<FoodCameraScreen>
       print('No image selected.');
     }
   }
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  // }
-
-  // @override
-  // Widget build(BuildContext context) {
-  //   SizeConfig().init(context);
-  //   return Scaffold(
-  //     extendBodyBehindAppBar: true,
-  //     appBar: AppBar(
-  //       elevation: 0,
-  //       backgroundColor: Colors.transparent,
-  //       leading: IconButton(
-  //         icon: Icon(
-  //           CupertinoIcons.xmark,
-  //           color: Colors.white,
-  //         ),
-  //         onPressed: () {
-  //           Navigator.pop(context);
-  //         },
-  //       ),
-  //       actions: [
-  //         IconButton(
-  //           icon: Icon(
-  //             CupertinoIcons.photo_on_rectangle,
-  //             color: Colors.white,
-  //           ),
-  //           onPressed: () {
-  //             getImage();
-  //           },
-  //         )
-  //       ],
-  //     ),
-  //     body: Container(
-  //       child: Stack(
-  //         children: <Widget>[
-  //           CameraCamera(
-  //             onFile: (file) {
-  //               Navigator.pushNamed(context, RouteName.RESTAURANTS_BY_FOOD);
-  //               print(file);
-  //             },
-  //           ),
-  //           Positioned(
-  //               left: SizeConfig.blockSizeHorizontal * 23,
-  //               top: SizeConfig.blockSizeVertical * 78,
-  //               child: Container(
-  //                 child: Text(
-  //                   "Take a food photo to recognize",
-  //                   style: GoogleFonts.lato(
-  //                       color: Colors.white,
-  //                       fontSize: 15,
-  //                       fontWeight: FontWeight.bold),
-  //                 ),
-  //               ))
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
-
 }
 
 class FoodCameraArguments {
