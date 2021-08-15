@@ -1,3 +1,4 @@
+import 'package:expat_assistant/src/models/appointment.dart';
 import 'package:intl/intl.dart';
 
 class DateTimeUtils {
@@ -102,5 +103,56 @@ class DateTimeUtils {
     DateTime _endDate =
         DateTime(endDate[0], endDate[1], endDate[2], endDate[3], endDate[4]);
     return _endDate.difference(_startDate).inSeconds;
+  }
+
+  int caculateDurationFromNow(List<int> endDate) {
+    DateTime _startDate = DateTime.now();
+    DateTime _endDate =
+        DateTime(endDate[0], endDate[1], endDate[2], endDate[3], endDate[4]);
+    return _endDate.difference(_startDate).inSeconds;
+  }
+
+  int equalsStartTime(ExpatAppointment appointment) {
+    //0 isontime
+    //1 issoon
+    //2 iscompelted
+    //-1 is disable
+    int status = 0;
+    DateTime _startDate = DateTime(
+        appointment.session.startTime[0],
+        appointment.session.startTime[1],
+        appointment.session.startTime[2],
+        appointment.session.startTime[3],
+        appointment.session.startTime[4]);
+    DateTime _endDate = DateTime(
+        appointment.session.endTime[0],
+        appointment.session.endTime[1],
+        appointment.session.endTime[2],
+        appointment.session.endTime[3],
+        appointment.session.endTime[4]);
+    if (DateTime.now().isBefore(_startDate) && appointment.status == 1) {
+      status = 1;
+    }
+    if (DateTime.now().isAfter(_endDate) && appointment.status == 1) {
+      status = -1;
+    }
+    if (DateTime.now().isAfter(_endDate) && appointment.status == 2) {
+      status = 2;
+    }
+    if (DateTime.now().isBefore(_endDate) && appointment.status == 2) {
+      status = 2;
+    }
+    return status;
+  }
+
+  static String getAppointmentDate({List<int> startDateTime}) {
+    DateTime _date = DateTime(startDateTime[0], startDateTime[1],
+        startDateTime[2], startDateTime[3], startDateTime[4]);
+    return DateFormat("dd/MM/yyyy HH:mm").format(_date);
+  }
+
+  static int caculateDaysNoti({DateTime date}) {
+    DateTime to = DateTime.now();
+    return to.difference(date).inMinutes;
   }
 }

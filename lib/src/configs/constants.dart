@@ -87,6 +87,8 @@ class ApiName {
   static const String CREATE_PAYMENT = BASE_URL + "/api/payment/create";
   static const String GET_PAYMENT_BY_EXPAT = BASE_URL + "/api/payment/list";
   static const String GET_AGORA_TOKEN = BASE_URL + "/api/agora/rtc";
+  static const String SEND_NOTIFICATION =
+      "https://onesignal.com/api/v1/notifications";
 }
 
 class HiveBoxName {
@@ -96,6 +98,7 @@ class HiveBoxName {
   static const CONVERSATION = "Conversation";
   static const VOCABULARY = "Vocabulary";
   static const USER_PROFILE = "UserProfile";
+  static const NOTIFICATION_TABLE = "NotiSave";
 }
 
 class AppColors {
@@ -104,7 +107,6 @@ class AppColors {
 
 class GooglePlaces {
   static const String API_KEY = "AIzaSyAu6qctFpBzrvWpBj7nlzcrzJU1cW4F09c";
-  
 }
 
 class Agora {

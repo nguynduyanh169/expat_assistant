@@ -95,6 +95,7 @@ dependencies:
   latlong2: ^0.8.0
   gallery_view: ^1.0.0+1
   image_viewer: ^1.5.0
+  badges: ^2.0.1
 
 dev_dependencies:
   build_runner: ^2.0.4
@@ -148,6 +149,8 @@ flutter:
     - assets/images/demo_news.png
     - assets/images/vietnamese_logo.png
     - assets/images/expert_logo.png
+    - assets/images/time_call.png
+    - assets/images/schedule_done.png
     - assets/images/success_pay.png
     - assets/images/demo_expert.jpg
     - assets/images/camera_food_logo.png

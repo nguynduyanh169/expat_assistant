@@ -18,6 +18,7 @@ class CallRoomCubit extends Cubit<CallRoomState> {
   Future<void> getAppointmentById(int appointmentId) async {
     emit(state.copyWith(status: CallRoomStatus.loadingRoom));
     try {
+      print(appointmentId);
       Map<dynamic, dynamic> loginResponse =
           _hiveUtils.getUserAuth(boxName: HiveBoxName.USER_AUTH);
       String token = loginResponse['token'].toString();
@@ -28,22 +29,33 @@ class CallRoomCubit extends Cubit<CallRoomState> {
             status: CallRoomStatus.loadRoomError,
             message: 'An error occurs while loading appoinment.'));
       } else {
-        int duration = _dateTimeUtils.caculateDuration(
-            appointment.session.startTime, appointment.session.endTime);
-        RoomCall roomCall =
-            RoomCall(uid: int.parse(TextUtils.getUid()), role: 1);
-        String agoraToken = await _appointmentRepository.generateToken(
-            uid: roomCall.uid,
-            channelName: 'baobao',
-            token: token,
-            expiredTime: 3600,
-            role: 1);
-        roomCall.token = agoraToken;
-        emit(state.copyWith(
-            status: CallRoomStatus.loadedRoom,
-            appointment: appointment,
-            seconds: duration,
-            roomCall: roomCall));
+        int status = _dateTimeUtils.equalsStartTime(appointment);
+        if (status == 1) {
+          emit(state.copyWith(
+            status: CallRoomStatus.notInTime,
+          ));
+        } else if (status == 2) {
+          emit(state.copyWith(
+              status: CallRoomStatus.appointmentCompleted,
+              appointment: appointment));
+        } else {
+          int duration = _dateTimeUtils.caculateDuration(
+              appointment.session.startTime, appointment.session.endTime);
+          RoomCall roomCall =
+              RoomCall(uid: int.parse(TextUtils.getUid()), role: 1);
+          String agoraToken = await _appointmentRepository.generateToken(
+              uid: roomCall.uid,
+              channelName: 'baobao',
+              token: token,
+              expiredTime: 10000,
+              role: 1);
+          roomCall.token = agoraToken;
+          emit(state.copyWith(
+              status: CallRoomStatus.loadedRoom,
+              appointment: appointment,
+              seconds: duration,
+              roomCall: roomCall));
+        }
       }
     } on Exception catch (e) {
       emit(state.copyWith(

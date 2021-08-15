@@ -6,7 +6,7 @@ import 'package:expat_assistant/src/screens/call_room_screen.dart';
 import 'package:expat_assistant/src/screens/calling_screen.dart';
 import 'package:expat_assistant/src/screens/channel_screen.dart';
 import 'package:expat_assistant/src/screens/conversation_details_screen.dart';
-import 'package:expat_assistant/src/screens/edit_profile.dart';
+import 'package:expat_assistant/src/screens/edit_profile_screen.dart';
 import 'package:expat_assistant/src/screens/event_details_screen.dart';
 import 'package:expat_assistant/src/screens/events_screen.dart';
 import 'package:expat_assistant/src/screens/feedback_call_screen.dart';

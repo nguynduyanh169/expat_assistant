@@ -4,11 +4,12 @@ import 'package:expat_assistant/src/models/appointment.dart';
 import 'package:expat_assistant/src/models/payment.dart';
 import 'package:expat_assistant/src/models/payment_result.dart';
 import 'package:expat_assistant/src/models/session.dart';
-import 'package:expat_assistant/src/models/specialist.dart';
 import 'package:expat_assistant/src/repositories/appointment_repository.dart';
 import 'package:expat_assistant/src/repositories/payment_repository.dart';
 import 'package:expat_assistant/src/states/invoice_state.dart';
+import 'package:expat_assistant/src/utils/date_utils.dart';
 import 'package:expat_assistant/src/utils/hive_utils.dart';
+import 'package:expat_assistant/src/utils/notification_utils.dart';
 
 class InvoiceCubit extends Cubit<InvoiceState> {
   AppointmentRepository _appointmentRepository;
@@ -52,12 +53,18 @@ class InvoiceCubit extends Cubit<InvoiceState> {
             transactionCode: paymentRespone.transid);
         PaymentResult result = await _paymentRepository.createPayment(
             paymentSave: paymentSave, token: token);
-        print(result.toJson());
         if (result == null) {
           emit(state.copyWith(
               status: InvoiceStatus.registryFailed,
               message: "An error occur while registry session"));
         } else {
+          NotificationUtils.pushNotification(
+              'Register Appointment ${DateTimeUtils.getAppointmentDate(startDateTime: appointment.session.startTime)}',
+              'You have registered an appointment with ${appointment.session.specialist.fullname} at ${DateTimeUtils.getAppointmentDate(startDateTime: appointment.session.startTime)} successfully');
+          NotificationUtils.pushScheduleNotificaton(
+                                  'Upcoming Appointment ${DateTimeUtils.getAppointmentDate(startDateTime: appointment.session.startTime)}',
+                                  'There is an appointment with ${appointment.session.specialist.fullname} at ${DateTimeUtils.getAppointmentDate(startDateTime: appointment.session.startTime)}',
+                                  DateTime(appointment.session.startTime[0], appointment.session.startTime[1], appointment.session.startTime[2], appointment.session.startTime[3], appointment.session.startTime[4]).toUtc());
           emit(state.copyWith(status: InvoiceStatus.registrySuccess));
         }
       }

@@ -1,34 +1,62 @@
+import 'package:expat_assistant/src/utils/hive_utils.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 class NotificationUtils {
-  static void notificationHandler() {
+  static final ValueNotifier<int> notificationCounterValueNotifer =
+      ValueNotifier(0);
+  static Future<void> notificationHandler() async {
+    OneSignal.shared.setAppId("0962ef23-5b94-41af-8b39-17c26c2546a3");
+    OneSignal.shared.promptUserForPushNotificationPermission().then((accepted) {
+      print("Accepted permission: $accepted");
+    });
     OneSignal.shared.setNotificationWillShowInForegroundHandler(
         (OSNotificationReceivedEvent event) {
-      // Will be called whenever a notification is received in foreground
-      // Display Notification, pass null param for not displaying the notification
       event.complete(event.notification);
+      HiveUtils _hive = HiveUtils();
+      _hive.addNotifications(
+          title: event.notification.title,
+          subtitle: event.notification.rawPayload["alert"],
+          sentDate: DateTime.fromMillisecondsSinceEpoch(
+              event.notification.rawPayload["google.sent_time"]));
+      notificationCounterValueNotifer.value++;
+      notificationCounterValueNotifer.notifyListeners();
     });
 
     OneSignal.shared
-        .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
-      // Will be called whenever a notification is opened/button pressed.
-    });
-
-    OneSignal.shared.setPermissionObserver((OSPermissionStateChanges changes) {
-      // Will be called whenever the permission changes
-      // (ie. user taps Allow on the permission prompt in iOS)
-    });
+        .setNotificationOpenedHandler((OSNotificationOpenedResult result) {});
 
     OneSignal.shared
-        .setSubscriptionObserver((OSSubscriptionStateChanges changes) {
-      // Will be called whenever the subscription changes
-      // (ie. user gets registered with OneSignal and gets a user ID)
-    });
+        .setPermissionObserver((OSPermissionStateChanges changes) {});
+  }
 
-    OneSignal.shared.setEmailSubscriptionObserver(
-        (OSEmailSubscriptionStateChanges emailChanges) {
-      // Will be called whenever then user's email subscription changes
-      // (ie. OneSignal.setEmail(email) is called and the user gets registered
+  static void pushNotification(String title, String content) async {
+    String playerId = "";
+    OneSignal.shared.getDeviceState().then((deviceState) {
+      // print("OneSignal: device state: ${deviceState.jsonRepresentation()}");
+      playerId = deviceState.userId;
+      OneSignal.shared.postNotification(OSCreateNotification(
+          playerIds: [playerId], content: content, heading: title));
+    });
+  }
+
+  static void pushScheduleNotificaton(
+      String title, String content, DateTime schedule) async {
+    String playerId = "";
+    OneSignal.shared.getDeviceState().then((deviceState) {
+      playerId = deviceState.userId;
+      OneSignal.shared.postNotification(OSCreateNotification(
+          playerIds: [playerId],
+          content: content,
+          heading: title,
+          sendAfter: schedule));
+    });
+  }
+
+  static void clearNotification() async {
+    OneSignal.shared.clearOneSignalNotifications().then((value) {
+      notificationCounterValueNotifer.value = 0;
+      notificationCounterValueNotifer.notifyListeners();
     });
   }
 }

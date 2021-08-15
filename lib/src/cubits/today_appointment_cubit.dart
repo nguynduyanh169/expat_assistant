@@ -60,7 +60,7 @@ class TodayAppointmentCubit extends Cubit<TodayAppointmentState> {
             a.session.startTime[2],
             a.session.startTime[3],
             a.session.startTime[4])));
-    final nextAppointment = nextAppointments.first;
+    final nextAppointment = nextAppointments.last;
     return nextAppointment;
   }
 }

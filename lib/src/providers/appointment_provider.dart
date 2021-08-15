@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/models/appointment.dart';
+import 'package:expat_assistant/src/models/notification.dart';
 import 'package:flutter/material.dart';
 
 class AppointmentProvider {
@@ -87,14 +88,17 @@ class AppointmentProvider {
         Headers.acceptHeader: "application/json",
         'Authorization': 'Bearer $token',
       };
+      print(ApiName.FEEDBACK_APPOINTMENT +
+          "?comment=$comment&conAppointmentId=$appointmentId&rating=$rating&sessionId=$appointmentId");
       Response response = await _dio.put(
           ApiName.FEEDBACK_APPOINTMENT +
               "?comment=$comment&conAppointmentId=$appointmentId&rating=$rating&sessionId=$appointmentId",
           options: Options(headers: headers));
+      print(response.data);
       if (response.statusCode == 200) {
         appointment = ExpatAppointment.fromJson(response.data);
       }
-    } catch (e) {
+    } on Exception catch (e) {
       print(e.toString());
     }
     return appointment;
@@ -122,6 +126,27 @@ class AppointmentProvider {
           options: Options(headers: headers), queryParameters: data);
       if (response.statusCode == 200) {
         result = response.data["token"];
+      }
+    } on Exception catch (e) {
+      print(e.toString());
+    }
+    return result;
+  }
+
+  Future<NotificationReceive> sendNotification(
+      {@required NotificationSend notificationSend}) async {
+    NotificationReceive result;
+    try {
+      Map<String, dynamic> headers = {
+        'Content-Type': 'application/json',
+        'Authorization':
+            'Basic ZDQwODY0MWYtNTEyYi00YTM1LWEyZTgtYWYxMjRmZTIxODI2',
+      };
+      Response response = await _dio.post(ApiName.SEND_NOTIFICATION,
+          options: Options(headers: headers),
+          data: notificationSendToJson(notificationSend));
+      if (response.statusCode == 200) {
+        result = NotificationReceive.fromJson(response.data);
       }
     } on Exception catch (e) {
       print(e.toString());

@@ -1,3 +1,4 @@
+import 'package:expat_assistant/src/models/notification.dart';
 import 'package:expat_assistant/src/providers/appointment_provider.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -52,5 +53,11 @@ class AppointmentRepository {
         token: token,
         expiredTime: expiredTime,
         role: role);
+  }
+
+  Future<NotificationReceive> sendNotification(
+      {@required NotificationSend notificationSend}) {
+    return _appointmentProvider.sendNotification(
+        notificationSend: notificationSend);
   }
 }

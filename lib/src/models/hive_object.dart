@@ -2,7 +2,7 @@ import 'package:hive/hive.dart';
 part 'hive_object.g.dart';
 
 @HiveType(typeId: 0)
-class LessonLocal extends HiveObject{
+class LessonLocal extends HiveObject {
   @HiveField(0)
   final int id;
 
@@ -25,7 +25,7 @@ class LessonLocal extends HiveObject{
 }
 
 @HiveType(typeId: 1)
-class LessonFileLocal extends HiveObject{
+class LessonFileLocal extends HiveObject {
   @HiveField(0)
   final String link;
 
@@ -33,12 +33,10 @@ class LessonFileLocal extends HiveObject{
   final String srcPath;
 
   LessonFileLocal(this.link, this.srcPath);
-
 }
 
 @HiveType(typeId: 2)
-class ConversationLocal extends HiveObject{
-
+class ConversationLocal extends HiveObject {
   @HiveField(0)
   final int id;
 
@@ -54,12 +52,12 @@ class ConversationLocal extends HiveObject{
   @HiveField(4)
   final String voiceLink;
 
-  ConversationLocal(this.id, this.conversation, this.description, this.imageLink, this.voiceLink);
+  ConversationLocal(this.id, this.conversation, this.description,
+      this.imageLink, this.voiceLink);
 }
 
 @HiveType(typeId: 3)
-class VocabularyLocal extends HiveObject{
-
+class VocabularyLocal extends HiveObject {
   @HiveField(0)
   final int id;
 
@@ -75,5 +73,24 @@ class VocabularyLocal extends HiveObject{
   @HiveField(4)
   final String voiceLink;
 
-  VocabularyLocal(this.id, this.vocabulary, this.description, this.imageLink, this.voiceLink);
+  VocabularyLocal(this.id, this.vocabulary, this.description, this.imageLink,
+      this.voiceLink);
+}
+
+@HiveType(typeId: 4)
+class Notifications extends HiveObject {
+
+  @HiveField(0)
+  final String title;
+
+  @HiveField(1)
+  final String content;
+
+  @HiveField(2)
+  final DateTime sentDate;
+
+  @HiveField(3)
+  final bool isView;
+
+  Notifications(this.content, this.isView, this.title, this.sentDate);
 }

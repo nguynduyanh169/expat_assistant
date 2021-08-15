@@ -1,3 +1,4 @@
+import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/models/hive_object.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
@@ -15,7 +16,8 @@ class HiveUtils {
       @required String boxName,
       @required String fullname,
       @required String avatar,
-      @required String password, @required int id}) {
+      @required String password,
+      @required int id}) {
     final openBox = Hive.box(boxName);
     openBox.put('userAuth', {
       'id': id,
@@ -150,5 +152,29 @@ class HiveUtils {
     lesson.vocabularies.addAll(list);
     lessons.delete(lessonKey);
     lessons.put(lessonKey, lesson);
+  }
+
+  addNotifications(
+      {@required String title,
+      @required String subtitle,
+      @required DateTime sentDate}) {
+    print(sentDate);
+    Notifications noti = Notifications(subtitle, false, title, sentDate);
+    var notiTable = Hive.box(HiveBoxName.NOTIFICATION_TABLE);
+    notiTable.put(title, noti);
+  }
+
+  List<Notifications> getNotifications() {
+    List<Notifications> result = [];
+    var notiTable = Hive.box(HiveBoxName.NOTIFICATION_TABLE);
+    for (int i = 0; i < notiTable.length; i++) {
+      result.add(notiTable.getAt(i));
+    }
+    return result;
+  }
+
+  static deleteNotifications() {
+    var notiTable = Hive.box(HiveBoxName.NOTIFICATION_TABLE);
+    notiTable.clear();
   }
 }

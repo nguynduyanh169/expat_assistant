@@ -90,7 +90,6 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
               CustomLoadingDialog.loadingDialog(
                   context: context, message: 'Please wait...');
             } else if (state.status.isPayWithMomoSuccess) {
-              print('object');
               BlocProvider.of<InvoiceCubit>(context).registrySessions(
                   selectedSession, state.paymentRespone, channelName);
             } else if (state.status.isPayWithMomoFailed) {

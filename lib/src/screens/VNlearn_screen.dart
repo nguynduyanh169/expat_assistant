@@ -140,7 +140,7 @@ class _VNlearnScreenState extends State<VNlearnScreen> {
                                 CupertinoIcons.search,
                                 color: AppColors.MAIN_COLOR,
                               ),
-                              iconSize: 30.0,
+                              iconSize: 30.0, onPressed: () {  },
                             ),
                             hintStyle: GoogleFonts.lato()),
                       ),

@@ -75,8 +75,6 @@ class _SpecialistDetailsState extends State<SpecialistDetailsScreen> {
         textAlign: TextAlign.center,
       ),
       duration: const Duration(milliseconds: 1500),
-      // width: SizeConfig.blockSizeHorizontal * 60,
-      // Width of the SnackBar.
       padding: const EdgeInsets.symmetric(
         horizontal: 8.0, // Inner padding for SnackBar content.
       ),
@@ -248,7 +246,7 @@ class _SpecialistDetailsState extends State<SpecialistDetailsScreen> {
                                         ),
                                         Text(
                                           specialistDetails.specialist.rating
-                                              .toString(),
+                                              .toStringAsFixed(1),
                                           style: GoogleFonts.lato(
                                               color: Colors.black54),
                                         )
@@ -405,7 +403,8 @@ class _SpecialistDetailsState extends State<SpecialistDetailsScreen> {
                                                             value[index]) ==
                                                     false) {
                                                   setState(() {
-                                                    selectedSession = changeValue;
+                                                    selectedSession =
+                                                        changeValue;
                                                   });
                                                 } else {
                                                   _displaySnackBar(context,

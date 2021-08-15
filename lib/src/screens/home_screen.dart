@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:badges/badges.dart';
 import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/configs/size_config.dart';
 import 'package:expat_assistant/src/cubits/home_cubit.dart';
@@ -8,14 +9,16 @@ import 'package:expat_assistant/src/repositories/blog_repository.dart';
 import 'package:expat_assistant/src/screens/blog_details_screen.dart';
 import 'package:expat_assistant/src/screens/channel_screen.dart';
 import 'package:expat_assistant/src/states/home_state.dart';
+import 'package:expat_assistant/src/utils/hive_utils.dart';
+import 'package:expat_assistant/src/utils/notification_utils.dart';
 import 'package:expat_assistant/src/widgets/loading.dart';
 import 'package:expat_assistant/src/widgets/news_card.dart';
 import 'package:expat_assistant/src/widgets/thumbnails_list.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:ionicons/ionicons.dart';
 import 'package:line_icons/line_icons.dart';
 
 // ignore: must_be_immutable
@@ -26,7 +29,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen>
-    with AutomaticKeepAliveClientMixin<HomeScreen> {
+    with AutomaticKeepAliveClientMixin<HomeScreen>, ChangeNotifier {
   final ScrollController newsScrollController = ScrollController();
   int currentPage = 0;
   List<ListBlog> prioritizedBlogs = [];
@@ -70,17 +73,31 @@ class _HomeScreenState extends State<HomeScreen>
           ),
           title: Text(
             'Home',
-            style: GoogleFonts.lato(fontSize: 22, color: Colors.white, fontWeight: FontWeight.w700),
+            style: GoogleFonts.lato(
+                fontSize: 22, color: Colors.white, fontWeight: FontWeight.w700),
           ),
           actions: [
             InkWell(
               onTap: () {
                 Navigator.pushNamed(context, RouteName.NOTIFICATION);
               },
-              child: Icon(
-                LineIcons.bellAlt,
-                color: Colors.white,
-                size: 30,
+              child: ValueListenableBuilder(
+                builder: (BuildContext context, int count, Widget child) {
+                  return Badge(
+                    position: BadgePosition(top: -1, end: -3),
+                    badgeContent: Text(
+                      count.toString(),
+                      style: GoogleFonts.lato(),
+                    ),
+                    child: Icon(
+                      LineIcons.bellAlt,
+                      color: Colors.white,
+                      size: 30,
+                    ),
+                  );
+                },
+                valueListenable:
+                    NotificationUtils.notificationCounterValueNotifer,
               ),
             ),
             SizedBox(
@@ -166,31 +183,39 @@ class _HomeScreenState extends State<HomeScreen>
                           SizedBox(
                             width: SizeConfig.blockSizeHorizontal * 2,
                           ),
-                          Container(
-                            //width: SizeConfig.blockSizeHorizontal * 30,
-                            padding: EdgeInsets.all(
-                                SizeConfig.blockSizeHorizontal * 2),
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10.0),
-                                boxShadow: [
-                                  BoxShadow(
-                                      color: Colors.black26.withOpacity(0.05),
-                                      offset: Offset(0.0, 6.0),
-                                      blurRadius: 10.0,
-                                      spreadRadius: 0.10)
-                                ]),
-                            child: Row(
-                              children: <Widget>[
-                                Icon(
-                                  LineIcons.hamburger,
-                                ),
-                                SizedBox(
-                                  width: SizeConfig.blockSizeHorizontal * 1,
-                                ),
-                                Text('Nearby Restaurants',
-                                    style: GoogleFonts.lato())
-                              ],
+                          InkWell(
+                            onTap: () {
+                              NotificationUtils.pushScheduleNotificaton(
+                                  'Upcoming Appointment at 25/09/2021',
+                                  'There is an appointment with Le Quang Bao at 25/09/2021',
+                                  DateTime(2021, 8, 15, 22, 5).toUtc());
+                            },
+                            child: Container(
+                              //width: SizeConfig.blockSizeHorizontal * 30,
+                              padding: EdgeInsets.all(
+                                  SizeConfig.blockSizeHorizontal * 2),
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: Colors.black26.withOpacity(0.05),
+                                        offset: Offset(0.0, 6.0),
+                                        blurRadius: 10.0,
+                                        spreadRadius: 0.10)
+                                  ]),
+                              child: Row(
+                                children: <Widget>[
+                                  Icon(
+                                    LineIcons.hamburger,
+                                  ),
+                                  SizedBox(
+                                    width: SizeConfig.blockSizeHorizontal * 1,
+                                  ),
+                                  Text('Nearby Restaurants',
+                                      style: GoogleFonts.lato())
+                                ],
+                              ),
                             ),
                           ),
                           SizedBox(
@@ -326,7 +351,9 @@ class _HomeScreenState extends State<HomeScreen>
                                   arguments: ChannelDetailsArguments(
                                       news[index].channel)),
                               openNews: () => Navigator.pushNamed(
-                                  context, RouteName.BLOG_DETAILS, arguments: BlogDetailsArguments(news[index].blogId)),
+                                  context, RouteName.BLOG_DETAILS,
+                                  arguments:
+                                      BlogDetailsArguments(news[index].blogId)),
                             ),
                           );
                         } else {

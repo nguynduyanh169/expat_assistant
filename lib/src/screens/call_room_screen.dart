@@ -9,7 +9,10 @@ import 'package:expat_assistant/src/models/room_call.dart';
 import 'package:expat_assistant/src/repositories/appointment_repository.dart';
 import 'package:expat_assistant/src/screens/feedback_call_screen.dart';
 import 'package:expat_assistant/src/states/call_room_state.dart';
+import 'package:expat_assistant/src/utils/date_utils.dart';
 import 'package:expat_assistant/src/widgets/loading.dart';
+import 'package:expat_assistant/src/widgets/loading_dialog.dart';
+import 'package:expat_assistant/src/widgets/message_for_call.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -32,10 +35,12 @@ class _CallRoomScreenState extends State<CallRoomScreen> {
   bool isOnline = false;
   RtcEngine _engine;
   final interval = const Duration(seconds: 1);
-  int timerMaxSeconds = 60;
+  int timerMaxSeconds = 0;
   int currentSeconds = 0;
   ExpatAppointment appointment;
+  BuildContext currentContext;
   RoomCall roomCall;
+  DateTimeUtils _dateTimeUtils = DateTimeUtils();
   String get timerText =>
       '${((timerMaxSeconds - currentSeconds) ~/ 60).toString().padLeft(2, '0')}: ${((timerMaxSeconds - currentSeconds) % 60).toString().padLeft(2, '0')}';
 
@@ -57,7 +62,6 @@ class _CallRoomScreenState extends State<CallRoomScreen> {
 
   Future<void> initialize(
       String channelName, ClientRole role, int uid, String agoraToken) async {
-    print(uid);
     if (Agora.APP_ID.isEmpty) {
       setState(() {
         _infoStrings.add(
@@ -84,10 +88,10 @@ class _CallRoomScreenState extends State<CallRoomScreen> {
     }, joinChannelSuccess: (channel, uid, elapsed) {
       setState(() {
         final info = 'onJoinChannel: $channel, uid: $uid';
-        isOnline = true;
         _infoStrings.add(info);
         print(info);
       });
+      startTimeout();
     }, leaveChannel: (stats) {
       setState(() {
         _infoStrings.add('onLeaveChannel');
@@ -100,14 +104,24 @@ class _CallRoomScreenState extends State<CallRoomScreen> {
         _infoStrings.add(info);
         _users.add(uid);
         isOnline = true;
+        CustomSnackBar.showSnackBar(
+            context: currentContext,
+            message:
+                '${appointment.session.specialist.fullname} has joined in.',
+            color: Colors.green);
         print(info);
       });
-      startTimeout();
+      // startTimeout();
     }, userOffline: (uid, elapsed) {
       setState(() {
         final info = 'userOffline: $uid';
         _infoStrings.add(info);
         _users.remove(uid);
+        isOnline = false;
+        CustomSnackBar.showSnackBar(
+            context: currentContext,
+            message: '${appointment.session.specialist.fullname} has out.',
+            color: Colors.green);
         print(info);
       });
     }));
@@ -126,12 +140,23 @@ class _CallRoomScreenState extends State<CallRoomScreen> {
   }
 
   void startTimeout([int milliseconds]) {
+    timerMaxSeconds =
+        _dateTimeUtils.caculateDurationFromNow(appointment.session.endTime);
     var duration = interval;
     timer = Timer.periodic(duration, (timer) {
-      setState(() {
-        currentSeconds = timer.tick;
-        if (timer.tick >= timerMaxSeconds) timer.cancel();
-      });
+      if (mounted) {
+        setState(() {
+          currentSeconds = timer.tick;
+          if (timer.tick >= timerMaxSeconds) {
+            timer.cancel();
+            Navigator.pushReplacementNamed(currentContext, RouteName.FEEDBACK,
+                arguments: FeedbackArgs(
+                    appointment.conAppId,
+                    appointment.session.specialist.fullname,
+                    appointment.session.consultId));
+          }
+        });
+      }
     });
   }
 
@@ -157,9 +182,9 @@ class _CallRoomScreenState extends State<CallRoomScreen> {
         body: BlocConsumer<CallRoomCubit, CallRoomState>(
           listener: (context, state) {
             if (state.status.isLoadedRoom) {
-              timerMaxSeconds = state.seconds;
               appointment = state.appointment;
               roomCall = state.roomCall;
+              currentContext = context;
               initialize(Agora.CHANNEL_NAME, ClientRole.Broadcaster,
                   roomCall.uid, roomCall.token);
             }
@@ -167,6 +192,19 @@ class _CallRoomScreenState extends State<CallRoomScreen> {
           builder: (context, state) {
             if (state.status.isLoadingRoom) {
               return LoadingView(message: 'Loading...');
+            } else if (state.status.isNotInTime) {
+              return MessageForCall(
+                image: 'assets/images/time_call.png',
+                title: 'Opps!',
+                message:
+                    'The start time of this appointment is 2020/12/03 7:00',
+                back: () => BlocProvider.of<CallRoomCubit>(context)
+                    .getAppointmentById(args.appointmentId),
+              );
+            } else if (state.status.isAppointmentCompleted) {
+              return CompletedInformationOfCall(
+                appointment: state.appointment,
+              );
             } else {
               return Container(
                 width: SizeConfig.blockSizeHorizontal * 100,
@@ -314,17 +352,21 @@ class _CallRoomScreenState extends State<CallRoomScreen> {
             );
           }).then((value) {
         if (value == true) {
-          Navigator.pushReplacementNamed(context, RouteName.FEEDBACK,
-              arguments: FeedbackArgs(appointment.conAppId,
-                  appointment.session.specialist.fullname));
+          Navigator.pushReplacementNamed(currentContext, RouteName.FEEDBACK,
+              arguments: FeedbackArgs(
+                  appointment.conAppId,
+                  appointment.session.specialist.fullname,
+                  appointment.session.consultId));
         } else {
           return;
         }
       });
     } else {
-      Navigator.pushReplacementNamed(context, RouteName.FEEDBACK,
+      Navigator.pushReplacementNamed(currentContext, RouteName.FEEDBACK,
           arguments: FeedbackArgs(
-              appointment.conAppId, appointment.session.specialist.fullname));
+              appointment.conAppId,
+              appointment.session.specialist.fullname,
+              appointment.session.consultId));
     }
   }
 

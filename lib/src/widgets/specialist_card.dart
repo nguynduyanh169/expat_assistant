@@ -86,7 +86,7 @@ class SpecialistCard extends StatelessWidget {
                         ),
                         Container(
                             child: Text(
-                          spec.specialist.rating.toString(),
+                          spec.specialist.rating.toStringAsFixed(1),
                           style: GoogleFonts.lato(fontSize: 12),
                         ))
                       ],
@@ -110,23 +110,6 @@ class SpecialistCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.start,
-                //   children: [
-                //     Text(
-                //       'Certificate: ',
-                //       style: GoogleFonts.lato(
-                //           fontWeight: FontWeight.w700, fontSize: 12),
-                //     ),
-                //     Text(
-                //       'Bachelor Degree of Lawyer',
-                //       style: GoogleFonts.lato(fontSize: 12),
-                //       overflow: TextOverflow.clip,
-                //       maxLines: 1,
-                //       softWrap: false,
-                //     ),
-                //   ],
-                // ),
               ],
             )
           ],

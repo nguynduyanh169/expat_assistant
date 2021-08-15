@@ -35,11 +35,21 @@ class CallRoomState extends Equatable {
   }
 }
 
-enum CallRoomStatus { init, loadingRoom, loadedRoom, loadRoomError }
+enum CallRoomStatus {
+  init,
+  loadingRoom,
+  loadedRoom,
+  loadRoomError,
+  notInTime,
+  appointmentCompleted
+}
 
 extension Explaination on CallRoomStatus {
   bool get isLoadingRoom => this == CallRoomStatus.loadingRoom;
   bool get isLoadedRoom => this == CallRoomStatus.loadedRoom;
   bool get isLoadRoomError => this == CallRoomStatus.loadRoomError;
   bool get isInit => this == CallRoomStatus.init;
+  bool get isNotInTime => this == CallRoomStatus.notInTime;
+  bool get isAppointmentCompleted =>
+      this == CallRoomStatus.appointmentCompleted;
 }

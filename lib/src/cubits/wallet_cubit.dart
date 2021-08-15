@@ -19,20 +19,21 @@ class WalletCubit extends Cubit<WalletState> {
           _hiveUtils.getUserAuth(boxName: HiveBoxName.USER_AUTH);
       String token = loginResponse['token'].toString();
       int expatId = loginResponse['id'];
+
       List<PaymentView> result = await _paymentRepository.getPaymentsByExpatId(
           token: token, expatId: expatId);
-      
       if (result == null) {
         emit(state.copyWith(
             status: WalletStatus.loadWalletError,
             message: 'An error occurs while loading payment history'));
       } else {
         result.sort((a, b) => DateTime(a.createDate[0], a.createDate[1],
-              a.createDate[2], a.createDate[3], a.createDate[4])
-          .compareTo(DateTime(b.createDate[0], b.createDate[1], b.createDate[2],
-              b.createDate[3], b.createDate[4])));
+                a.createDate[2], a.createDate[3], a.createDate[4])
+            .compareTo(DateTime(b.createDate[0], b.createDate[1],
+                b.createDate[2], b.createDate[3], b.createDate[4])));
         emit(state.copyWith(
-            status: WalletStatus.loadedWallet, paymentLists: result.reversed.toList()));
+            status: WalletStatus.loadedWallet,
+            paymentLists: result.reversed.toList()));
       }
     } on Exception catch (e) {
       emit(state.copyWith(

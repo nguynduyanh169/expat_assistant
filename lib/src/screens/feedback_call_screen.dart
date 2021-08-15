@@ -21,6 +21,7 @@ class FeedBackScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     final args = ModalRoute.of(context).settings.arguments as FeedbackArgs;
+    print(args.sessionId);
     return BlocProvider(
       create: (context) => FeedbackCubit(AppointmentRepository())
         ..initializeFeedback(args.appointmentId),
@@ -256,6 +257,7 @@ class FeedBackScreen extends StatelessWidget {
 class FeedbackArgs {
   final int appointmentId;
   final String sepcialistName;
+  final int sessionId;
 
-  const FeedbackArgs(this.appointmentId, this.sepcialistName);
+  const FeedbackArgs(this.appointmentId, this.sepcialistName, this.sessionId);
 }

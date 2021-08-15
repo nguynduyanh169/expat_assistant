@@ -104,24 +104,6 @@ class UpcomingAppointmentScreen extends StatelessWidget {
                   SizedBox(
                     height: SizeConfig.blockSizeVertical * 2,
                   ),
-                  // Expanded(
-                  //     child: ListView.separated(
-                  //   itemBuilder: (context, index) => Container(
-                  //     padding: EdgeInsets.only(
-                  //         left: SizeConfig.blockSizeHorizontal * 2,
-                  //         right: SizeConfig.blockSizeHorizontal * 2),
-                  //     child: AppointmentCard(
-                  //       appointment: appointments[index],
-                  //       action: () {
-                  //         Navigator.pushNamed(context, RouteName.CALL_ROOM);
-                  //       },
-                  //     ),
-                  //   ),
-                  //   itemCount: appointments.length,
-                  //   separatorBuilder: (context, index) => SizedBox(
-                  //     height: SizeConfig.blockSizeVertical * 2,
-                  //   ),
-                  // ))
                   Container(
                     height: SizeConfig.blockSizeVertical * 52,
                     child: SfCalendar(
@@ -225,7 +207,10 @@ class UpcomingAppointmentScreen extends StatelessWidget {
       if (expatAppointment.status == 2) {
         appointmentColor = Colors.green;
       }
-      if (expatAppointment.status == 0 || startTime.isBefore(DateTime.now())) {
+      if (expatAppointment.status == 0 && startTime.isBefore(DateTime.now())) {
+        appointmentColor = Colors.grey;
+      }
+      if (expatAppointment.status == 1 && startTime.isBefore(DateTime.now())) {
         appointmentColor = Colors.grey;
       }
       result.add(Appointment(

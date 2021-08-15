@@ -10,33 +10,28 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
-import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
-  OneSignal.shared.setAppId("0962ef23-5b94-41af-8b39-17c26c2546a3");
-  OneSignal.shared.promptUserForPushNotificationPermission().then((accepted) {
-    print("Accepted permission: $accepted");
-  });
   final appDirectory = await path_provider.getApplicationDocumentsDirectory();
   Hive.init(appDirectory.path);
   Hive.registerAdapter<LessonLocal>(LessonLocalAdapter());
   Hive.registerAdapter<ConversationLocal>(ConversationLocalAdapter());
   Hive.registerAdapter<LessonFileLocal>(LessonFileLocalAdapter());
   Hive.registerAdapter<VocabularyLocal>(VocabularyLocalAdapter());
+  Hive.registerAdapter<Notifications>(NotificationsAdapter());
   await Hive.openBox(HiveBoxName.USER_AUTH);
   await Hive.openBox(HiveBoxName.LESSON_SRC);
   await Hive.openBox(HiveBoxName.LESSON);
   await Hive.openBox(HiveBoxName.CONVERSATION);
   await Hive.openBox(HiveBoxName.VOCABULARY);
+  await Hive.openBox(HiveBoxName.NOTIFICATION_TABLE);
   runApp(MyApp());
 }
 
 class MyApp extends StatefulWidget {
-  // This widget is the root of your application.
   _MyAppState createState() => _MyAppState();
 }
 
@@ -47,9 +42,14 @@ class _MyAppState extends State<MyApp> {
   @override
   void dispose() {
     Hive.close();
-    NotificationUtils.notificationHandler();
     EventBusUtils.instance.destroy();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    NotificationUtils.notificationHandler();
+    super.initState();
   }
 
   @override
