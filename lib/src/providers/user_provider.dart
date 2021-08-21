@@ -33,7 +33,6 @@ class UserProvider {
       Map<String, String> headers = {
         Headers.contentTypeHeader: "application/json"
       };
-      print(expat.toJson());
       Response response = await _dio.post(ApiName.SIGN_UP.trim(),
           options: Options(headers: headers), data: expat.toJson());
       loginResponse = LoginResponse.fromJson(response.data);
@@ -77,7 +76,6 @@ class UserProvider {
         Headers.acceptHeader: "application/json",
         'Authorization': 'Bearer $token'
       };
-      print(expat.toJson());
       Response response = await _dio.put(
           ApiName.EDIT_PROFILE + expatId.toString(),
           options: Options(headers: headers),
@@ -87,5 +85,26 @@ class UserProvider {
       print(e.toString());
     }
     return profile;
+  }
+
+  Future<dynamic> changePassword(
+      {@required String email, @required String newPassword}) async {
+    String result;
+    try {
+      Map<String, String> headers = {
+        Headers.contentTypeHeader: "text/plain;charset=ISO-8859-1",
+      };
+      Response response = await _dio.put(
+          ApiName.CHANGE_PASSWORD + "?email=$email&password=$newPassword",
+          options: Options(headers: headers));
+      print(response.data);
+      if (response.statusCode == 200) {
+        result = response.data;
+      }
+      print(result);
+    } catch (e) {
+      print(e);
+    }
+    return result;
   }
 }

@@ -108,6 +108,8 @@ class _FoodCameraState extends State<FoodCameraScreen>
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
+    final args =
+        ModalRoute.of(context).settings.arguments as FoodCameraArguments;
     if (_controller == null) {
       return Scaffold(body: LoadingView(message: 'Loading...'));
     } else {
@@ -141,19 +143,22 @@ class _FoodCameraState extends State<FoodCameraScreen>
                     context: context, message: 'Please wait....');
               } else if (state.status.isUploadImageError) {
                 Navigator.pop(context);
-                print(state.message);
-              }else if (state.status.isRecognizeSuccess) {
-              Navigator.pop(context);
-              Navigator.pushNamed(context, RouteName.RESTAURANTS_BY_FOOD,
-                  arguments: RestaurantByFoodArgs(
-                      state.foodName, "10.80477002973667, 106.75600530688988", 10.80477002973667, 106.75600530688988, state.imageUrl));
-            } else if (state.status.isRecognizeFoodError) {
-              Navigator.pop(context);
-              CustomSnackBar.showSnackBar(
-                  context: context,
-                  message: 'An error occurs while recoginzing food image',
-                  color: Colors.red);
-            }
+              } else if (state.status.isRecognizeSuccess) {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, RouteName.RESTAURANTS_BY_FOOD,
+                    arguments: RestaurantByFoodArgs(
+                        state.foodName,
+                        args.locationText,
+                        args.currentLat,
+                        args.currentLong,
+                        state.imageUrl));
+              } else if (state.status.isRecognizeFoodError) {
+                Navigator.pop(context);
+                CustomSnackBar.showSnackBar(
+                    context: context,
+                    message: state.message,
+                    color: Colors.red);
+              }
             },
             builder: (context, state) {
               return Stack(
@@ -241,7 +246,9 @@ class _FoodCameraState extends State<FoodCameraScreen>
 }
 
 class FoodCameraArguments {
-  final List<CameraDescription> cameraList;
+  final String locationText;
+  final double currentLat;
+  final double currentLong;
 
-  FoodCameraArguments(this.cameraList);
+  FoodCameraArguments(this.currentLat, this.currentLong, this.locationText);
 }

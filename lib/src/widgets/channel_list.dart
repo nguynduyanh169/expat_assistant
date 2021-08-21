@@ -7,6 +7,7 @@ import 'package:expat_assistant/src/models/blog.dart';
 import 'package:expat_assistant/src/repositories/channel_repository.dart';
 import 'package:expat_assistant/src/screens/channel_screen.dart';
 import 'package:expat_assistant/src/states/channels_list_state.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -95,12 +96,11 @@ class _ChannelListState extends State<ChannelList>
                                 child: Stack(
                                   alignment: Alignment.topLeft,
                                   children: <Widget>[
-                                    Image(
+                                    ExtendedImage.network(
+                                      channels[index].image,
                                       width:
                                           SizeConfig.blockSizeHorizontal * 30,
-                                      height: SizeConfig.blockSizeVertical * 15,
-                                      image:
-                                          NetworkImage(channels[index].image),
+                                      height: SizeConfig.blockSizeVertical * 15,                                     
                                       fit: BoxFit.cover,
                                     ),
                                     Container(

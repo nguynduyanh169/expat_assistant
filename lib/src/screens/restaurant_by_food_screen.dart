@@ -7,6 +7,7 @@ import 'package:expat_assistant/src/models/place.dart';
 import 'package:expat_assistant/src/repositories/restaurant_repository.dart';
 import 'package:expat_assistant/src/screens/restaurant_details_screen.dart';
 import 'package:expat_assistant/src/states/restaurant_by_food_state.dart';
+import 'package:expat_assistant/src/widgets/error.dart';
 import 'package:expat_assistant/src/widgets/loading.dart';
 import 'package:expat_assistant/src/widgets/restaurant_card.dart';
 import 'package:extended_image/extended_image.dart';
@@ -124,11 +125,16 @@ class _RestaurantByFoodState extends State<RestaurantByFoodScreen> {
                       )
                     ]),
                   );
+                } else if (state.status.isLoadError) {
+                  return DisplayError(
+                      message: 'An error while getting restaurants',
+                      reload: () {
+                        BlocProvider.of<RestaurantByFoodCubit>(context)
+                            .getRestaurantsByFood(args.foodName, args.locationText);
+                      });
                 } else {
                   if (state.status.isLoaded) {
                     restaurantList = state.locations;
-                  } else if (state.status.isLoadError) {
-                    print('error');
                   }
                   return SliverList(
                     delegate: SliverChildBuilderDelegate((context, index) {

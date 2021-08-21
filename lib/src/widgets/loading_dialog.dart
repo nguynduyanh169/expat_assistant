@@ -54,14 +54,16 @@ class CustomLoadingDialog {
 
 class CustomSnackBar {
   static void showSnackBar(
-      {@required BuildContext context, @required String message, @required Color color}) {
+      {@required BuildContext context,
+      @required String message,
+      @required Color color}) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(
         message,
         style: GoogleFonts.lato(color: Colors.white),
         textAlign: TextAlign.center,
       ),
-      duration: const Duration(milliseconds: 1500),
+      duration: const Duration(milliseconds: 5000),
       // width: SizeConfig.blockSizeHorizontal * 60,
       // Width of the SnackBar.
       padding: const EdgeInsets.symmetric(

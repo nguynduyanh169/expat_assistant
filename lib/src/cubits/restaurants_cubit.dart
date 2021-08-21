@@ -47,6 +47,9 @@ class RestaurantsCubit extends Cubit<RestaurantsState> {
               errorMessage: 'An error occurs while loading restaurants!'));
         } else {
           addressText = await PlacesUtils.getAddress(myLocation);
+          if (addressText == null) {
+            addressText = "Cannot recognize your address";
+          }
           emit(state.copyWith(
               status: RestaurantsStatus.loaded,
               currentAddress: addressText,
@@ -71,7 +74,7 @@ class RestaurantsCubit extends Cubit<RestaurantsState> {
           emit(state.copyWith(
               status: RestaurantsStatus.loadMoreRestaurantError,
               nextLocations: oldData,
-              errorMessage: "An error occurs while fetching data"));
+              errorMessage: "An error occurs while loading data"));
         } else {
           oldData.htmlAttributions = nextData.htmlAttributions;
           oldData.nextPageToken = nextData.nextPageToken;
@@ -119,6 +122,10 @@ class RestaurantsCubit extends Cubit<RestaurantsState> {
         emit(state.copyWith(
             status: RestaurantsStatus.recognizeFoodError,
             errorMessage: 'An error occur while recognizing food'));
+      }else if(foodName == 'Cannot detect food!'){
+        emit(state.copyWith(
+            status: RestaurantsStatus.recognizeFoodError,
+            errorMessage: 'Cannot detect food in the image'));
       } else {
         String result = TextUtils.getFoodName(foodName);
         emit(state.copyWith(

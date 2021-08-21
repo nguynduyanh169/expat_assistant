@@ -37,7 +37,46 @@ class _VocabularyDetailState extends State<VocabularyDetailScreen> {
         iconTheme: IconThemeData(color: Colors.white),
         title: Text(
           args.title,
-          style: GoogleFonts.lato(fontSize: 22, color: Colors.white),
+          style: GoogleFonts.lato(fontSize: 22, color: Colors.white, fontWeight: FontWeight.w700),
+        ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        child: Container(
+          decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+              boxShadow: [
+                BoxShadow(
+                    color: Colors.black26.withOpacity(0.2),
+                    offset: Offset(0.0, 6.0),
+                    blurRadius: 10.0,
+                    spreadRadius: 0.10)
+              ]),
+          height: SizeConfig.blockSizeVertical * 9,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Container(
+                width: SizeConfig.blockSizeHorizontal * 80,
+                child: ElevatedButton(
+                    style: ButtonStyle(
+                        padding: MaterialStateProperty.all<EdgeInsets>(
+                            EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4)),
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            AppColors.MAIN_COLOR),
+                        textStyle: MaterialStateProperty.all<TextStyle>(
+                            GoogleFonts.lato(fontSize: 17))),
+                    child: Text("Practice"),
+                    onPressed: () {
+                      Navigator.pushNamed(
+                          context, RouteName.PRACTICE_VOCABULARY,
+                          arguments: PracticeVocabularyScreenArguments(
+                              vocabularyList));
+                    }),
+              )
+            ],
+          ),
         ),
       ),
       body: Container(
@@ -70,48 +109,6 @@ class _VocabularyDetailState extends State<VocabularyDetailScreen> {
               ),
             ),
           ),
-          Center(
-            child: Container(
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(10),
-                      topRight: Radius.circular(10)),
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.black26.withOpacity(0.2),
-                        offset: Offset(0.0, 6.0),
-                        blurRadius: 10.0,
-                        spreadRadius: 0.10)
-                  ]),
-              height: SizeConfig.blockSizeVertical * 9,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Container(
-                    width: SizeConfig.blockSizeHorizontal * 80,
-                    child: ElevatedButton(
-                        style: ButtonStyle(
-                            padding: MaterialStateProperty.all<EdgeInsets>(
-                                EdgeInsets.all(
-                                    SizeConfig.blockSizeHorizontal * 4)),
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                                AppColors.MAIN_COLOR),
-                            textStyle: MaterialStateProperty.all<TextStyle>(
-                                GoogleFonts.lato(fontSize: 17))),
-                        child: Text("Practice"),
-                        onPressed: () {
-                          print('object');
-                          Navigator.pushNamed(
-                              context, RouteName.PRACTICE_VOCABULARY,
-                              arguments: PracticeVocabularyScreenArguments(
-                                  vocabularyList));
-                        }),
-                  )
-                ],
-              ),
-            ),
-          )
         ],
       )),
     );

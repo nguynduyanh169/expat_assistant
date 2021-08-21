@@ -45,9 +45,8 @@ class SpecialistProvider {
       Response response = await _dio.get(
           ApiName.GET_SPECIALISTS_INFO + "$specId",
           options: Options(headers: headers));
-      if (response.statusCode == 204) {
-        result = null;
-      } else {
+          print(response.data);
+      if (response.statusCode == 200) {
         result = SpecialistDetails.fromJson(response.data);
       }
     } catch (e) {
@@ -68,8 +67,6 @@ class SpecialistProvider {
         Headers.acceptHeader: "application/json",
         'Authorization': 'Bearer $token',
       };
-      print(ApiName.GET_SPECIALISTS_BY_NAME +
-          "?fullname=$keyword&page=$page&size=$size");
       Response response = await _dio.get(
           ApiName.GET_SPECIALISTS_BY_NAME +
               "?fullname=$keyword&page=$page&size=$size",

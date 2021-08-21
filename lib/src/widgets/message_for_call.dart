@@ -11,8 +11,9 @@ class MessageForCall extends StatelessWidget {
   String message;
   Function back;
   String image;
+  String buttonLabel;
 
-  MessageForCall({this.image, this.message, this.back, this.title});
+  MessageForCall({this.image, this.message, this.back, this.title, this.buttonLabel});
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -58,7 +59,7 @@ class MessageForCall extends StatelessWidget {
                         MaterialStateProperty.all<Color>(Colors.blueAccent),
                     textStyle: MaterialStateProperty.all<TextStyle>(
                         GoogleFonts.lato(fontSize: 17))),
-                child: Text("Retry"),
+                child: Text(buttonLabel),
                 onPressed: back),
           )
         ],
@@ -116,7 +117,7 @@ class CompletedInformationOfCall extends StatelessWidget {
                     color: AppColors.MAIN_COLOR,
                     size: 30,
                   ),
-                  title: Text("Le Quang Bao",
+                  title: Text(appointment.session.specialist.fullname,
                       style: GoogleFonts.lato(fontSize: 18)),
                 ),
                 ListTile(
@@ -134,7 +135,8 @@ class CompletedInformationOfCall extends StatelessWidget {
                     color: AppColors.MAIN_COLOR,
                     size: 30,
                   ),
-                  title: Text("4.5", style: GoogleFonts.lato(fontSize: 18)),
+                  title: Text(appointment.rating.toStringAsFixed(1),
+                      style: GoogleFonts.lato(fontSize: 18)),
                 ),
                 Container(
                   width: SizeConfig.blockSizeHorizontal * 100,
@@ -158,10 +160,9 @@ class CompletedInformationOfCall extends StatelessWidget {
                       padding:
                           EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
                       child: Text(
-                        'The specialist joined on time and answer ok',
-                        style: GoogleFonts.lato(
-                            color: Colors.black,
-                            fontSize: 15),
+                        appointment.comment,
+                        style:
+                            GoogleFonts.lato(color: Colors.black, fontSize: 15),
                       ),
                     )),
               ],

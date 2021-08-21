@@ -2,6 +2,7 @@ import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/configs/size_config.dart';
 import 'package:expat_assistant/src/models/event.dart';
 import 'package:expat_assistant/src/utils/date_utils.dart';
+import 'package:expat_assistant/src/utils/events_utils.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -188,14 +189,14 @@ class EventCard extends StatelessWidget {
                 alignment: Alignment.center,
                 width: SizeConfig.blockSizeHorizontal * 18,
                 height: SizeConfig.blockSizeVertical * 3,
-                child: Text('Scheduled',
-                    style: TextStyle(
+                child: Text(EventUtils.getEventStatus(content),
+                    style: GoogleFonts.lato(
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
                       color: Colors.white,
                     )),
                 decoration: BoxDecoration(
-                    color: Colors.green,
+                    color: EventUtils.getEventStatusColor(content),
                     borderRadius: BorderRadius.circular(5.0),
                     boxShadow: [
                       BoxShadow(

@@ -19,10 +19,10 @@ class WelcomeSignUp extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
             child: Image(
-              width: SizeConfig.blockSizeHorizontal * 100,
+              width: SizeConfig.blockSizeHorizontal * 50,
               height: SizeConfig.blockSizeVertical * 25,
               image: AssetImage('assets/images/sign_up_logo.png'),
-              fit: BoxFit.cover,
+              fit: BoxFit.scaleDown,
             ),
           ),
           SizedBox(

@@ -10,6 +10,7 @@ import 'package:expat_assistant/src/repositories/appointment_repository.dart';
 import 'package:expat_assistant/src/screens/feedback_call_screen.dart';
 import 'package:expat_assistant/src/states/call_room_state.dart';
 import 'package:expat_assistant/src/utils/date_utils.dart';
+import 'package:expat_assistant/src/widgets/error.dart';
 import 'package:expat_assistant/src/widgets/loading.dart';
 import 'package:expat_assistant/src/widgets/loading_dialog.dart';
 import 'package:expat_assistant/src/widgets/message_for_call.dart';
@@ -192,14 +193,35 @@ class _CallRoomScreenState extends State<CallRoomScreen> {
           builder: (context, state) {
             if (state.status.isLoadingRoom) {
               return LoadingView(message: 'Loading...');
+            } else if (state.status.isLoadRoomError) {
+              return DisplayError(
+                  message: 'A problem occurs while loading call room',
+                  reload: () {
+                    BlocProvider.of<CallRoomCubit>(context)
+                        .getAppointmentById(args.appointmentId);
+                  });
             } else if (state.status.isNotInTime) {
+              appointment = state.appointment;
+              String startDate = DateTimeUtils.getAppointmentDate(
+                  startDateTime: appointment.session.startTime);
               return MessageForCall(
                 image: 'assets/images/time_call.png',
                 title: 'Opps!',
-                message:
-                    'The start time of this appointment is 2020/12/03 7:00',
+                buttonLabel: 'Retry',
+                message: 'The start time of this appointment is $startDate',
                 back: () => BlocProvider.of<CallRoomCubit>(context)
                     .getAppointmentById(args.appointmentId),
+              );
+            } else if (state.status.isOutOfDate) {
+              appointment = state.appointment;
+              String endDate = DateTimeUtils.getAppointmentDate(
+                  startDateTime: appointment.session.endTime);
+              return MessageForCall(
+                image: 'assets/images/time_call.png',
+                title: 'Opps!',
+                buttonLabel: 'Back',
+                message: 'This appointment is expired at $endDate',
+                back: () => Navigator.pop(context),
               );
             } else if (state.status.isAppointmentCompleted) {
               return CompletedInformationOfCall(

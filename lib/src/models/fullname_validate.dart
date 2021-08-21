@@ -16,7 +16,7 @@ extension Explanation on FullNameValidateError {
   String get name {
     switch (this) {
       case FullNameValidateError.invalid:
-        return "Full name must be valid";
+        return "Full name is required";
       default:
         return null;
     }

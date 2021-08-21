@@ -9,7 +9,9 @@ import 'package:expat_assistant/src/models/specialist.dart';
 import 'package:expat_assistant/src/repositories/specialist_repository.dart';
 import 'package:expat_assistant/src/screens/specialist_details_screen.dart';
 import 'package:expat_assistant/src/states/filter_specialist_state.dart';
-import 'package:expat_assistant/src/widgets/alert_dialog_vocabulary.dart';
+import 'package:expat_assistant/src/utils/specialist_utils.dart';
+import 'package:expat_assistant/src/widgets/error.dart';
+import 'package:expat_assistant/src/widgets/loading.dart';
 import 'package:expat_assistant/src/widgets/search_specialist.dart';
 import 'package:expat_assistant/src/widgets/specialist_card.dart';
 import 'package:flutter/cupertino.dart';
@@ -30,6 +32,7 @@ class _SpecialistFilterScreenState extends State<SpecialistFilterScreen> {
   Content selectedMajor;
   bool isFilteredByMajor = false;
   bool isFilteredByDate = false;
+  bool canPressFilter = false;
 
   final ScrollController scrollController = ScrollController();
 
@@ -118,17 +121,20 @@ class _SpecialistFilterScreenState extends State<SpecialistFilterScreen> {
                       children: <Widget>[
                         InkWell(
                           onTap: () async {
-                            selectedMajor = await showMajors(context: context);
-                            if (selectedMajor != null) {
-                              setState(() {
-                                specialists.clear();
-                                isFilteredByMajor = true;
-                                isFilteredByDate = false;
-                                currentPage = 0;
-                              });
-                              BlocProvider.of<FilterSpecialistsCubit>(context)
-                                  .getSpecialistsByMajor(
-                                      currentPage, selectedMajor.majorId);
+                            if (canPressFilter == true) {
+                              selectedMajor =
+                                  await showMajors(context: context);
+                              if (selectedMajor != null) {
+                                setState(() {
+                                  specialists.clear();
+                                  isFilteredByMajor = true;
+                                  isFilteredByDate = false;
+                                  currentPage = 0;
+                                });
+                                BlocProvider.of<FilterSpecialistsCubit>(context)
+                                    .getSpecialistsByMajor(
+                                        currentPage, selectedMajor.majorId);
+                              }
                             }
                           },
                           child: Container(
@@ -171,14 +177,16 @@ class _SpecialistFilterScreenState extends State<SpecialistFilterScreen> {
                         ),
                         InkWell(
                           onTap: () {
-                            setState(() {
-                              specialists.clear();
-                              isFilteredByMajor = false;
-                              isFilteredByDate = true;
-                              currentPage = 0;
-                            });
-                            BlocProvider.of<FilterSpecialistsCubit>(context)
-                                .getSpecialistsByCreateDate(currentPage);
+                            if (canPressFilter == true) {
+                              setState(() {
+                                specialists.clear();
+                                isFilteredByMajor = false;
+                                isFilteredByDate = true;
+                                currentPage = 0;
+                              });
+                              BlocProvider.of<FilterSpecialistsCubit>(context)
+                                  .getSpecialistsByCreateDate(currentPage);
+                            }
                           },
                           child: Container(
                             padding: EdgeInsets.all(
@@ -213,20 +221,21 @@ class _SpecialistFilterScreenState extends State<SpecialistFilterScreen> {
                             ),
                           ),
                         ),
-                        
                         SizedBox(
                           width: SizeConfig.blockSizeHorizontal * 2,
                         ),
                         InkWell(
                           onTap: () {
-                            setState(() {
-                              specialists.clear();
-                              isFilteredByMajor = false;
-                              isFilteredByDate = false;
-                              currentPage = 0;
-                            });
-                            BlocProvider.of<FilterSpecialistsCubit>(context)
-                                .getSpecialists(currentPage);
+                            if (canPressFilter == true) {
+                              setState(() {
+                                specialists.clear();
+                                isFilteredByMajor = false;
+                                isFilteredByDate = false;
+                                currentPage = 0;
+                              });
+                              BlocProvider.of<FilterSpecialistsCubit>(context)
+                                  .getSpecialists(currentPage);
+                            }
                           },
                           child: Container(
                             padding: EdgeInsets.all(
@@ -257,67 +266,97 @@ class _SpecialistFilterScreenState extends State<SpecialistFilterScreen> {
                   BlocBuilder<FilterSpecialistsCubit, FilterSpecialistState>(
                     builder: (context, state) {
                       setupScrollController(context);
-                      bool isLoading = false;
-                      if (state.status.isLoadingSpecialists) {
-                        specialists = state.oldSpecialists;
-                        isLoading = true;
-                      } else if (state.status.isLoadSpecialistsSuccess) {
-                        specialists = state.specialists;
-                        currentPage = state.page;
-                      } else if (state.status.isFilteringByMajor) {
-                        specialists = state.oldSpecialistsMajor;
-                        isLoading = true;
-                      } else if (state.status.isFilterByMajorSuccess) {
-                        specialists = state.specialistsMajor;
-                        currentPage = state.page;
-                      }else if (state.status.isFilteringByDate) {
-                        specialists = state.oldSpecialistsDate;
-                        isLoading = true;
-                      } else if (state.status.isFilterByDateSuccess) {
-                        specialists = state.specialistsDate;
-                        currentPage = state.page;
-                      }
-                      return Container(
-                          padding: EdgeInsets.all(
-                              SizeConfig.blockSizeHorizontal * 2),
-                          child: LimitedBox(
-                            maxHeight: SizeConfig.blockSizeVertical * 76.3,
-                            child: ListView.separated(
-                              shrinkWrap: true,
-                              physics: const AlwaysScrollableScrollPhysics(),
-                              controller: scrollController,
-                              itemCount:
-                                  specialists.length + (isLoading ? 1 : 0),
-                              separatorBuilder: (context, index) => SizedBox(
-                                height: SizeConfig.blockSizeVertical * 2,
-                              ),
-                              itemBuilder: (BuildContext context, int index) {
-                                if (index < specialists.length) {
-                                  return SpecialistCard(
-                                    spec: specialists[index],
-                                    action: () {
-                                      Navigator.pushNamed(
-                                          context, RouteName.SPECIALIST_DETAILS,
-                                          arguments: SpecialistDetailsArguments(
-                                              specialists[index]
-                                                  .specialist
-                                                  .specId));
-                                    },
-                                  );
-                                } else {
-                                  Timer(Duration(milliseconds: 30), () {
-                                    scrollController.jumpTo(scrollController
-                                        .position.maxScrollExtent);
-                                  });
-                                  return Padding(
-                                    padding: const EdgeInsets.all(30.0),
-                                    child: Center(
-                                        child: CupertinoActivityIndicator()),
-                                  );
-                                }
-                              },
+                      if (state.status.isLoadingSpecialists &&
+                          state.isFirstFetch) {
+                        return Column(
+                          children: [
+                            SizedBox(
+                              height: SizeConfig.blockSizeVertical * 30,
                             ),
-                          ));
+                            LoadingView(message: 'Loading...'),
+                          ],
+                        );
+                      } else if (state.status.isFilterByMajorError ||
+                          state.status.isFilterByDateError ||
+                          state.status.isLoadSpecialistsFailed) {
+                        return DisplayError(
+                            message:
+                                'An error occurs while loading specialists',
+                            reload: () {
+                              setState(() {
+                                specialists.clear();
+                                isFilteredByMajor = false;
+                                isFilteredByDate = false;
+                                currentPage = 0;
+                              });
+                              BlocProvider.of<FilterSpecialistsCubit>(context)
+                                  .getSpecialists(currentPage);
+                            });
+                      } else {
+                        bool isLoading = false;
+                        if (state.status.isLoadingSpecialists) {
+                          specialists = state.oldSpecialists;
+                          isLoading = true;
+                        } else if (state.status.isLoadSpecialistsSuccess) {
+                          canPressFilter = true;
+                          specialists = state.specialists;
+                          currentPage = state.page;
+                        } else if (state.status.isFilteringByMajor) {
+                          specialists = state.oldSpecialistsMajor;
+                          isLoading = true;
+                        } else if (state.status.isFilterByMajorSuccess) {
+                          specialists = state.specialistsMajor;
+                          currentPage = state.page;
+                        } else if (state.status.isFilteringByDate) {
+                          specialists = state.oldSpecialistsDate;
+                          isLoading = true;
+                        } else if (state.status.isFilterByDateSuccess) {
+                          specialists = state.specialistsDate;
+                          currentPage = state.page;
+                        }
+                        return Container(
+                            padding: EdgeInsets.all(
+                                SizeConfig.blockSizeHorizontal * 2),
+                            child: LimitedBox(
+                              maxHeight: SizeConfig.blockSizeVertical * 76.3,
+                              child: ListView.separated(
+                                shrinkWrap: true,
+                                physics: const AlwaysScrollableScrollPhysics(),
+                                controller: scrollController,
+                                itemCount:
+                                    specialists.length + (isLoading ? 1 : 0),
+                                separatorBuilder: (context, index) => SizedBox(
+                                  height: SizeConfig.blockSizeVertical * 2,
+                                ),
+                                itemBuilder: (BuildContext context, int index) {
+                                  if (index < specialists.length) {
+                                    return SpecialistCard(
+                                      spec: specialists[index],
+                                      action: () {
+                                        Navigator.pushNamed(context,
+                                            RouteName.SPECIALIST_DETAILS,
+                                            arguments:
+                                                SpecialistDetailsArguments(
+                                                    specialists[index]
+                                                        .specialist
+                                                        .specId));
+                                      },
+                                    );
+                                  } else {
+                                    Timer(Duration(milliseconds: 30), () {
+                                      scrollController.jumpTo(scrollController
+                                          .position.maxScrollExtent);
+                                    });
+                                    return Padding(
+                                      padding: const EdgeInsets.all(30.0),
+                                      child: Center(
+                                          child: CupertinoActivityIndicator()),
+                                    );
+                                  }
+                                },
+                              ),
+                            ));
+                      }
                     },
                   )
                 ],

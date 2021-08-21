@@ -58,7 +58,7 @@ class SpecialistCard extends StatelessWidget {
                   children: <Widget>[
                     Container(
                         child: Text(
-                      spec.majors.first.name,
+                      spec.majors.first.name != null ? spec.majors.first.name : "",
                       style: GoogleFonts.lato(fontSize: 12),
                     )),
                     SizedBox(

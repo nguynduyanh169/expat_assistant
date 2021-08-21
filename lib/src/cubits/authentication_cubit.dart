@@ -18,7 +18,6 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
     } else {
       String email = loginResponse['email'];
       String password = loginResponse['password'];
-      print(email + password);
       UserCredential userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
       if (userCredential != null) {

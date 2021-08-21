@@ -19,7 +19,6 @@ class WalletCubit extends Cubit<WalletState> {
           _hiveUtils.getUserAuth(boxName: HiveBoxName.USER_AUTH);
       String token = loginResponse['token'].toString();
       int expatId = loginResponse['id'];
-
       List<PaymentView> result = await _paymentRepository.getPaymentsByExpatId(
           token: token, expatId: expatId);
       if (result == null) {

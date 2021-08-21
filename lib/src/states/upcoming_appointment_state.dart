@@ -28,7 +28,8 @@ enum UpcomingAppointmentStatus {
   init,
   loadingAppointments,
   loadedAppointments,
-  loadAppointmentsFailed
+  loadAppointmentsFailed,
+  loadedNoAppointments,
 }
 
 extension Explaination on UpcomingAppointmentStatus {
@@ -42,4 +43,7 @@ extension Explaination on UpcomingAppointmentStatus {
 
   bool get isLoadAppointmentsFailed =>
       this == UpcomingAppointmentStatus.loadAppointmentsFailed;
+
+  bool get isLoadedNoAppointments =>
+      this == UpcomingAppointmentStatus.loadedNoAppointments;
 }

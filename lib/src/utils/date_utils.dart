@@ -1,5 +1,6 @@
 import 'package:expat_assistant/src/models/appointment.dart';
 import 'package:intl/intl.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class DateTimeUtils {
   String getStartMonthText({List<int> startDateTime}) {
@@ -76,10 +77,9 @@ class DateTimeUtils {
     return DateFormat("dd/MM/yyyy HH:mm").format(_date);
   }
 
-  int caculateDays({List<int> date}) {
+  String caculateDays({List<int> date}) {
     DateTime _date = DateTime(date[0], date[1], date[2], date[3], date[4]);
-    DateTime to = DateTime.now();
-    return (to.difference(_date).inHours / 24).round();
+    return timeago.format(_date);
   }
 
   String getTime(DateTime dateTime) {
@@ -151,8 +151,9 @@ class DateTimeUtils {
     return DateFormat("dd/MM/yyyy HH:mm").format(_date);
   }
 
-  static int caculateDaysNoti({DateTime date}) {
-    DateTime to = DateTime.now();
-    return to.difference(date).inMinutes;
+  static String caculateDaysNoti({DateTime date}) {
+    // DateTime to = DateTime.now();
+    // return to.difference(date).inMinutes;
+    return timeago.format(date);
   }
 }

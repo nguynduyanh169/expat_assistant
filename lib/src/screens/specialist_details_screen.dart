@@ -13,6 +13,7 @@ import 'package:expat_assistant/src/screens/invoice_screen.dart';
 import 'package:expat_assistant/src/states/specialis_details_state.dart';
 import 'package:expat_assistant/src/utils/session_utils.dart';
 import 'package:expat_assistant/src/utils/text_utils.dart';
+import 'package:expat_assistant/src/widgets/error.dart';
 import 'package:expat_assistant/src/widgets/loading.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
@@ -79,7 +80,6 @@ class _SpecialistDetailsState extends State<SpecialistDetailsScreen> {
         horizontal: 8.0, // Inner padding for SnackBar content.
       ),
       backgroundColor: Colors.blueAccent,
-
       behavior: SnackBarBehavior.floating,
     ));
   }
@@ -169,6 +169,13 @@ class _SpecialistDetailsState extends State<SpecialistDetailsScreen> {
           builder: (context, state) {
             if (state.status.isLoadingSpecialistDetail) {
               return LoadingView(message: 'Loading...');
+            } else if (state.status.isLoadSpecialistDetailError) {
+              return DisplayError(message: 'An error occur while loading specialist', reload: () {
+                BlocProvider.of<SpecialistDetailsCubit>(context)
+                              .getSpecialistDetails(args.specId);
+                          kSession.clear();
+                          selectedSession = null;
+              });
             } else {
               if (state.status.isLoadedSpecialistDetail) {
                 kSession = state.sessions;
@@ -184,244 +191,266 @@ class _SpecialistDetailsState extends State<SpecialistDetailsScreen> {
                       padding:
                           EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
                       height: SizeConfig.blockSizeVertical * 78.4,
-                      child: ListView(
-                        children: <Widget>[
-                          Container(
-                            height: SizeConfig.blockSizeVertical * 14,
-                            child: Row(
-                              children: <Widget>[
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  child: ExtendedImage.network(
-                                    specialistDetails.specialist.avatar,
-                                    fit: BoxFit.cover,
-                                    width: SizeConfig.blockSizeHorizontal * 26,
-                                    height: SizeConfig.blockSizeVertical * 14,
+                      child: RefreshIndicator(
+                        onRefresh: () async {
+                          BlocProvider.of<SpecialistDetailsCubit>(context)
+                              .getSpecialistDetails(args.specId);
+                          kSession.clear();
+                          selectedSession = null;
+                        },
+                        child: ListView(
+                          children: <Widget>[
+                            Container(
+                              height: SizeConfig.blockSizeVertical * 14,
+                              child: Row(
+                                children: <Widget>[
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    child: ExtendedImage.network(
+                                      specialistDetails.specialist.avatar,
+                                      fit: BoxFit.cover,
+                                      width:
+                                          SizeConfig.blockSizeHorizontal * 26,
+                                      height: SizeConfig.blockSizeVertical * 14,
+                                    ),
                                   ),
-                                ),
-                                SizedBox(
-                                  width: SizeConfig.blockSizeHorizontal * 2,
-                                ),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Text(
-                                      specialistDetails.specialist.fullname,
-                                      style: GoogleFonts.lato(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w700),
-                                    ),
-                                    Text(
-                                      specialistDetails.majors.first.name,
-                                      style: GoogleFonts.lato(),
-                                    ),
-                                    SizedBox(
-                                      height:
-                                          SizeConfig.blockSizeVertical * 0.7,
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: [
-                                        RatingBar.builder(
-                                          itemSize: 14,
-                                          initialRating: specialistDetails
-                                              .specialist.rating,
-                                          minRating: 1,
-                                          direction: Axis.horizontal,
-                                          allowHalfRating: true,
-                                          itemCount: 5,
-                                          itemPadding: EdgeInsets.symmetric(
-                                              horizontal: 1.0),
-                                          itemBuilder: (context, _) => Icon(
-                                            CupertinoIcons.star_fill,
-                                            color:
-                                                Color.fromRGBO(252, 191, 7, 30),
-                                            size: 12,
+                                  SizedBox(
+                                    width: SizeConfig.blockSizeHorizontal * 2,
+                                  ),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(
+                                        specialistDetails.specialist.fullname,
+                                        style: GoogleFonts.lato(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w700),
+                                      ),
+                                      Text(
+                                        specialistDetails.majors.first.name,
+                                        style: GoogleFonts.lato(),
+                                      ),
+                                      SizedBox(
+                                        height:
+                                            SizeConfig.blockSizeVertical * 0.7,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          RatingBar.builder(
+                                            itemSize: 14,
+                                            initialRating: specialistDetails
+                                                .specialist.rating,
+                                            minRating: 1,
+                                            direction: Axis.horizontal,
+                                            allowHalfRating: true,
+                                            itemCount: 5,
+                                            itemPadding: EdgeInsets.symmetric(
+                                                horizontal: 1.0),
+                                            itemBuilder: (context, _) => Icon(
+                                              CupertinoIcons.star_fill,
+                                              color: Color.fromRGBO(
+                                                  252, 191, 7, 30),
+                                              size: 12,
+                                            ),
+                                            onRatingUpdate: (rating) {
+                                              print(rating);
+                                            },
                                           ),
-                                          onRatingUpdate: (rating) {
-                                            print(rating);
-                                          },
-                                        ),
-                                        Text(
-                                          specialistDetails.specialist.rating
-                                              .toStringAsFixed(1),
-                                          style: GoogleFonts.lato(
-                                              color: Colors.black54),
-                                        )
-                                      ],
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Language: ',
-                                          style: GoogleFonts.lato(
-                                              fontWeight: FontWeight.w700),
-                                        ),
-                                        Text(
-                                          _textUtils.getLanguages(
-                                              languages:
-                                                  specialistDetails.language),
-                                          style: GoogleFonts.lato(),
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Certificate: ',
-                                          style: GoogleFonts.lato(
-                                              fontWeight: FontWeight.w700),
-                                        ),
-                                        Text(
-                                          'Bachelor Degree of Lawyer',
-                                          style: GoogleFonts.lato(),
-                                          overflow: TextOverflow.clip,
-                                          maxLines: 1,
-                                          softWrap: false,
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                )
-                              ],
+                                          Text(
+                                            specialistDetails.specialist.rating
+                                                .toStringAsFixed(1),
+                                            style: GoogleFonts.lato(
+                                                color: Colors.black54),
+                                          )
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Language: ',
+                                            style: GoogleFonts.lato(
+                                                fontWeight: FontWeight.w700),
+                                          ),
+                                          Text(
+                                            _textUtils.getLanguages(
+                                                languages:
+                                                    specialistDetails.language),
+                                            style: GoogleFonts.lato(),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Certificate: ',
+                                            style: GoogleFonts.lato(
+                                                fontWeight: FontWeight.w700),
+                                          ),
+                                          Container(
+                                            width:
+                                                SizeConfig.blockSizeHorizontal *
+                                                    40,
+                                            child: Text(
+                                              specialistDetails.specialist
+                                                          .certificate ==
+                                                      null
+                                                  ? 'No Certificate'
+                                                  : specialistDetails
+                                                      .specialist.certificate,
+                                              style: GoogleFonts.lato(),
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 1,
+                                              softWrap: true,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
                             ),
-                          ),
-                          Divider(color: Colors.grey),
-                          Text(
-                            "Profile",
-                            style: GoogleFonts.lato(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w500,
-                                color: Color.fromRGBO(0, 99, 99, 30)),
-                          ),
-                          ExpandableText(
-                            specialistDetails.specialist.biography,
-                            expandText: 'read more',
-                            collapseText: 'read less',
-                            linkStyle: GoogleFonts.lato(),
-                            maxLines: 6,
-                            linkColor: Colors.blue,
-                            style: GoogleFonts.lato(),
-                          ),
-                          SizedBox(
-                            height: SizeConfig.blockSizeHorizontal * 2,
-                          ),
-                          Text(
-                            "Schedule",
-                            style: GoogleFonts.lato(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w500,
-                                color: Color.fromRGBO(0, 99, 99, 30)),
-                          ),
-                          Container(
-                            height: SizeConfig.blockSizeVertical * 60,
-                            child: Column(
-                              children: <Widget>[
-                                TableCalendar<SessionDisplay>(
-                                  locale: 'en_US',
-                                  firstDay: kFirstDay,
-                                  lastDay: kLastDay,
-                                  focusedDay: _focusedDay,
-                                  selectedDayPredicate: (day) =>
-                                      isSameDay(_selectedDay, day),
-                                  calendarFormat: _calendarFormat,
-                                  eventLoader: _getEventsForDay,
-                                  startingDayOfWeek: StartingDayOfWeek.monday,
-                                  calendarStyle: CalendarStyle(
-                                    outsideDaysVisible: false,
+                            Divider(color: Colors.grey),
+                            Text(
+                              "Profile",
+                              style: GoogleFonts.lato(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                  color: Color.fromRGBO(0, 99, 99, 30)),
+                            ),
+                            ExpandableText(
+                              specialistDetails.specialist.biography,
+                              expandText: 'read more',
+                              collapseText: 'read less',
+                              linkStyle: GoogleFonts.lato(),
+                              maxLines: 6,
+                              linkColor: Colors.blue,
+                              style: GoogleFonts.lato(),
+                            ),
+                            SizedBox(
+                              height: SizeConfig.blockSizeHorizontal * 2,
+                            ),
+                            Text(
+                              "Schedule",
+                              style: GoogleFonts.lato(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                  color: Color.fromRGBO(0, 99, 99, 30)),
+                            ),
+                            Container(
+                              height: SizeConfig.blockSizeVertical * 60,
+                              child: Column(
+                                children: <Widget>[
+                                  TableCalendar<SessionDisplay>(
+                                    locale: 'en_US',
+                                    firstDay: kFirstDay,
+                                    lastDay: kLastDay,
+                                    focusedDay: _focusedDay,
+                                    selectedDayPredicate: (day) =>
+                                        isSameDay(_selectedDay, day),
+                                    calendarFormat: _calendarFormat,
+                                    eventLoader: _getEventsForDay,
+                                    startingDayOfWeek: StartingDayOfWeek.monday,
+                                    calendarStyle: CalendarStyle(
+                                      outsideDaysVisible: false,
+                                    ),
+                                    onDaySelected: _onDaySelected,
+                                    onFormatChanged: (format) {
+                                      if (_calendarFormat != format) {
+                                        setState(() {
+                                          _calendarFormat = format;
+                                        });
+                                      }
+                                    },
+                                    onPageChanged: (focusedDay) {
+                                      _focusedDay = focusedDay;
+                                    },
                                   ),
-                                  onDaySelected: _onDaySelected,
-                                  onFormatChanged: (format) {
-                                    if (_calendarFormat != format) {
-                                      setState(() {
-                                        _calendarFormat = format;
-                                      });
-                                    }
-                                  },
-                                  onPageChanged: (focusedDay) {
-                                    _focusedDay = focusedDay;
-                                  },
-                                ),
-                                Expanded(
-                                  child: ValueListenableBuilder<
-                                      List<SessionDisplay>>(
-                                    valueListenable: _selectedEvents,
-                                    builder: (context, value, _) {
-                                      return ListView.separated(
-                                        itemCount: value.length,
-                                        itemBuilder: (context, index) {
-                                          return GFRadioListTile(
-                                              groupValue: selectedSession,
-                                              value: value[index],
-                                              size: 20,
-                                              avatar: Icon(
-                                                LineIcons.businessTime,
-                                                color: _sessionUtils
-                                                        .checkDisableSession(
-                                                            value[index])
-                                                    ? Colors.grey
-                                                    : AppColors.MAIN_COLOR,
-                                              ),
-                                              title: Text(
-                                                value[index].toString(),
-                                                style: GoogleFonts.lato(
-                                                    color: _sessionUtils
-                                                            .checkDisableSession(
-                                                                value[index])
-                                                        ? Colors.grey
-                                                        : Colors.black),
-                                              ),
-                                              description: Text(
-                                                  value[index]
-                                                          .price
-                                                          .toString() +
-                                                      "VND",
+                                  Expanded(
+                                    child: ValueListenableBuilder<
+                                        List<SessionDisplay>>(
+                                      valueListenable: _selectedEvents,
+                                      builder: (context, value, _) {
+                                        return ListView.separated(
+                                          itemCount: value.length,
+                                          itemBuilder: (context, index) {
+                                            return GFRadioListTile(
+                                                groupValue: selectedSession,
+                                                value: value[index],
+                                                size: 20,
+                                                avatar: Icon(
+                                                  LineIcons.businessTime,
+                                                  color: _sessionUtils
+                                                          .checkDisableSession(
+                                                              value[index])
+                                                      ? Colors.grey
+                                                      : AppColors.MAIN_COLOR,
+                                                ),
+                                                title: Text(
+                                                  value[index].toString(),
                                                   style: GoogleFonts.lato(
-                                                      fontSize: 11,
                                                       color: _sessionUtils
                                                               .checkDisableSession(
                                                                   value[index])
                                                           ? Colors.grey
-                                                          : Colors.black)),
-                                              activeBgColor: Colors.green,
-                                              inactiveBorderColor: Colors.grey,
-                                              //type: GFCheckboxType.circle,
-                                              activeIcon: Icon(
-                                                Icons.check,
-                                                size: 15,
-                                                color: Colors.white,
-                                              ),
-                                              onChanged: (changeValue) {
-                                                if (_sessionUtils
-                                                        .checkDisableSession(
-                                                            value[index]) ==
-                                                    false) {
-                                                  setState(() {
-                                                    selectedSession =
-                                                        changeValue;
-                                                  });
-                                                } else {
-                                                  _displaySnackBar(context,
-                                                      'Cannot select this session!');
-                                                }
-                                              });
-                                        },
-                                        separatorBuilder: (context, index) =>
-                                            Divider(color: Colors.grey),
-                                      );
-                                    },
+                                                          : Colors.black),
+                                                ),
+                                                description: Text(
+                                                    value[index]
+                                                            .price
+                                                            .toString() +
+                                                        "VND",
+                                                    style: GoogleFonts.lato(
+                                                        fontSize: 11,
+                                                        color: _sessionUtils
+                                                                .checkDisableSession(
+                                                                    value[
+                                                                        index])
+                                                            ? Colors.grey
+                                                            : Colors.black)),
+                                                activeBgColor: Colors.green,
+                                                inactiveBorderColor:
+                                                    Colors.grey,
+                                                //type: GFCheckboxType.circle,
+                                                activeIcon: Icon(
+                                                  Icons.check,
+                                                  size: 15,
+                                                  color: Colors.white,
+                                                ),
+                                                onChanged: (changeValue) {
+                                                  if (_sessionUtils
+                                                          .checkDisableSession(
+                                                              value[index]) ==
+                                                      false) {
+                                                    setState(() {
+                                                      selectedSession =
+                                                          changeValue;
+                                                    });
+                                                  } else {
+                                                    _displaySnackBar(context,
+                                                        'Cannot select this session!');
+                                                  }
+                                                });
+                                          },
+                                          separatorBuilder: (context, index) =>
+                                              Divider(color: Colors.grey),
+                                        );
+                                      },
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ],

@@ -9,6 +9,8 @@ import 'package:expat_assistant/src/repositories/specialist_repository.dart';
 import 'package:expat_assistant/src/screens/specialist_details_screen.dart';
 import 'package:expat_assistant/src/states/specialists_state.dart';
 import 'package:expat_assistant/src/utils/event_bus_utils.dart';
+import 'package:expat_assistant/src/widgets/error.dart';
+import 'package:expat_assistant/src/widgets/loading.dart';
 import 'package:expat_assistant/src/widgets/specialist_card.dart';
 import 'package:expat_assistant/src/widgets/upcomming_appointment.dart';
 import 'package:flutter/cupertino.dart';
@@ -75,123 +77,148 @@ class _SpecialistsScreenState extends State<SpecialistsScreen> {
           ],
           centerTitle: true,
         ),
-        body: Container(
-          child: Column(
-            children: <Widget>[
-              SizedBox(
-                height: SizeConfig.blockSizeVertical * 2,
-              ),
-              Container(
-                padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 3),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        body: BlocBuilder<SpecialistCubit, SpecialistState>(
+          builder: (context, state) {
+            if (state.status.isLoadingSpecialist && state.isFirstFetch) {
+              return LoadingView(message: 'Loading...');
+            } else if (state.status.isLoadSpecialistError) {
+              return DisplayError(
+                  message: 'A problem occurs while loading specialists',
+                  reload: () {
+                    currentPage = 0;
+                    specialists.clear();
+                    BlocProvider.of<SpecialistCubit>(context)
+                        .getSpecialists(currentPage);
+                  });
+            } else {
+              setupScrollController(context);
+              bool isLoading = false;
+              if (state.status.isLoadingSpecialist) {
+                specialists = state.oldSpecialists;
+                isLoading = true;
+              } else if (state.status.isLoadedSpecialist) {
+                specialists = state.specialists;
+                currentPage = state.page;
+              }
+              return Container(
+                child: Column(
                   children: <Widget>[
-                    Text(
-                      'Upcoming Appointment',
-                      style: GoogleFonts.lato(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                          color: Color.fromRGBO(0, 99, 99, 30)),
+                    SizedBox(
+                      height: SizeConfig.blockSizeVertical * 2,
                     ),
-                    InkWell(
-                      onTap: () {
-                        Navigator.pushNamed(
-                            context, RouteName.UPCOMING_APPOINTMENT);
-                      },
-                      child: Text('See more',
-                          style: GoogleFonts.lato(
-                              color: Color.fromRGBO(30, 193, 194, 30))),
-                    )
-                  ],
-                ),
-              ),
-              TodayAppointment(isReload),
-              SizedBox(
-                height: SizeConfig.blockSizeVertical * 2,
-              ),
-              Container(
-                padding: EdgeInsets.only(
-                    left: SizeConfig.blockSizeHorizontal * 3,
-                    right: SizeConfig.blockSizeHorizontal * 3),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text(
-                      "Top Specialists",
-                      style: GoogleFonts.lato(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                          color: Color.fromRGBO(0, 99, 99, 30)),
-                    ),
-                    TextButton(
-                      onPressed: () => Navigator.pushNamed(
-                          context, RouteName.FILTER_SPECIALIST),
-                      child: Text('See more',
-                          style: GoogleFonts.lato(
-                              color: Color.fromRGBO(30, 193, 194, 30))),
-                    )
-                  ],
-                ),
-              ),
-              BlocBuilder<SpecialistCubit, SpecialistState>(
-                builder: (context, state) {
-                  setupScrollController(context);
-                  bool isLoading = false;
-                  if (state.status.isLoadingSpecialist) {
-                    specialists = state.oldSpecialists;
-                    isLoading = true;
-                  } else if (state.status.isLoadedSpecialist) {
-                    specialists = state.specialists;
-                    currentPage = state.page;
-                  }
-                  return Container(
-                    padding: EdgeInsets.only(
-                        left: SizeConfig.blockSizeHorizontal * 2,
-                        right: SizeConfig.blockSizeHorizontal * 2),
-                    height: SizeConfig.blockSizeVertical * 48,
-                    child: ListView.separated(
-                      controller: scrollController,
-                      itemCount: specialists.length + (isLoading ? 1 : 0),
-                      separatorBuilder: (context, index) => SizedBox(
-                        height: SizeConfig.blockSizeVertical * 2,
-                      ),
-                      itemBuilder: (BuildContext context, int index) {
-                        if (index < specialists.length) {
-                          return SpecialistCard(
-                            spec: specialists[index],
-                            action: () {
-                              EventBusUtils.getInstance()
-                                  .on<UpdateAppointment>()
-                                  .listen((result) {
-                                if (result.update) {
-                                  setState(() {
-                                    isReload = true;
-                                  });
-                                }
-                              });
+                    Container(
+                      padding:
+                          EdgeInsets.all(SizeConfig.blockSizeHorizontal * 3),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(
+                            'Upcoming Appointment',
+                            style: GoogleFonts.lato(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
+                                color: Color.fromRGBO(0, 99, 99, 30)),
+                          ),
+                          InkWell(
+                            onTap: () {
                               Navigator.pushNamed(
-                                  context, RouteName.SPECIALIST_DETAILS,
-                                  arguments: SpecialistDetailsArguments(
-                                      specialists[index].specialist.specId));
+                                  context, RouteName.UPCOMING_APPOINTMENT);
                             },
-                          );
-                        } else {
-                          Timer(Duration(milliseconds: 30), () {
-                            scrollController.jumpTo(
-                                scrollController.position.maxScrollExtent);
-                          });
-                          return Padding(
-                            padding: const EdgeInsets.all(30.0),
-                            child: Center(child: CupertinoActivityIndicator()),
-                          );
-                        }
-                      },
+                            child: Text('See more',
+                                style: GoogleFonts.lato(
+                                    color: Color.fromRGBO(30, 193, 194, 30))),
+                          )
+                        ],
+                      ),
                     ),
-                  );
-                },
-              )
-            ],
-          ),
+                    TodayAppointment(isReload),
+                    SizedBox(
+                      height: SizeConfig.blockSizeVertical * 2,
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(
+                          left: SizeConfig.blockSizeHorizontal * 3,
+                          right: SizeConfig.blockSizeHorizontal * 3),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(
+                            "Top Specialists",
+                            style: GoogleFonts.lato(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
+                                color: Color.fromRGBO(0, 99, 99, 30)),
+                          ),
+                          TextButton(
+                            onPressed: () => Navigator.pushNamed(
+                                context, RouteName.FILTER_SPECIALIST),
+                            child: Text('See more',
+                                style: GoogleFonts.lato(
+                                    color: Color.fromRGBO(30, 193, 194, 30))),
+                          )
+                        ],
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(
+                          left: SizeConfig.blockSizeHorizontal * 2,
+                          right: SizeConfig.blockSizeHorizontal * 2),
+                      height: SizeConfig.blockSizeVertical * 48,
+                      child: RefreshIndicator(
+                        onRefresh: () async {
+                          currentPage = 0;
+                          specialists.clear();
+                          BlocProvider.of<SpecialistCubit>(context)
+                              .getSpecialists(currentPage);
+                        },
+                        child: ListView.separated(
+                          controller: scrollController,
+                          itemCount: specialists.length + (isLoading ? 1 : 0),
+                          separatorBuilder: (context, index) => SizedBox(
+                            height: SizeConfig.blockSizeVertical * 2,
+                          ),
+                          itemBuilder: (BuildContext context, int index) {
+                            if (index < specialists.length) {
+                              return SpecialistCard(
+                                spec: specialists[index],
+                                action: () {
+                                  EventBusUtils.getInstance()
+                                      .on<UpdateAppointment>()
+                                      .listen((result) {
+                                    if (result.update) {
+                                      setState(() {
+                                        isReload = true;
+                                      });
+                                    }
+                                  });
+                                  Navigator.pushNamed(
+                                      context, RouteName.SPECIALIST_DETAILS,
+                                      arguments: SpecialistDetailsArguments(
+                                          specialists[index]
+                                              .specialist
+                                              .specId));
+                                },
+                              );
+                            } else {
+                              Timer(Duration(milliseconds: 30), () {
+                                scrollController.jumpTo(
+                                    scrollController.position.maxScrollExtent);
+                              });
+                              return Padding(
+                                padding: const EdgeInsets.all(30.0),
+                                child:
+                                    Center(child: CupertinoActivityIndicator()),
+                              );
+                            }
+                          },
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              );
+            }
+          },
         ),
       ),
     );

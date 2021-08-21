@@ -21,9 +21,12 @@ class UpcomingAppointmentCubit extends Cubit<UpcomingAppointmentState> {
       int expatId = loginResponse['id'];
       List<ExpatAppointment> appointments = await _appointmentRepository
           .getAppointmentsByExpat(token: token, expatId: expatId);
-      if (appointments.isEmpty) {
+      if (appointments == null) {
         emit(state.copyWith(
             status: UpcomingAppointmentStatus.loadAppointmentsFailed));
+      } else if (appointments.isEmpty) {
+        emit(state.copyWith(
+            status: UpcomingAppointmentStatus.loadedNoAppointments));
       } else {
         ExpatAppointment appointment = _getAppointment(appointments);
         emit(state.copyWith(
@@ -63,7 +66,10 @@ class UpcomingAppointmentCubit extends Cubit<UpcomingAppointmentState> {
             a.session.startTime[2],
             a.session.startTime[3],
             a.session.startTime[4])));
-    final nextAppointment = nextAppointments.last;
+    var nextAppointment;
+    if (nextAppointments.length != 0) {
+      nextAppointment = nextAppointments.last;
+    }
     return nextAppointment;
   }
 }

@@ -23,6 +23,7 @@ enum TodayAppointmentStatus {
   init,
   loadingAppointment,
   loadedAppointment,
+  loadedNoAppointment,
   loadAppointmentError
 }
 
@@ -34,6 +35,9 @@ extension Explanation on TodayAppointmentStatus {
 
   bool get isLoadedAppointment =>
       this == TodayAppointmentStatus.loadedAppointment;
+
+  bool get isLoadedNoAppointment =>
+      this == TodayAppointmentStatus.loadedNoAppointment;
 
   bool get isLoadAppointmentError =>
       this == TodayAppointmentStatus.loadAppointmentError;

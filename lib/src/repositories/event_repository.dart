@@ -36,4 +36,13 @@ class EventRepository {
     return _eventProvider.unjoinAnEvent(
         token: token, expatId: expatId, eventId: eventId);
   }
+
+  Future<dynamic> findEventsByStatus(
+      {@required String token, @required String status}) {
+    return _eventProvider.findEventsByStatus(token: token, status: status);
+  }
+
+  Future<dynamic> getEventsByTopicId({@required int topicId}) {
+    return _eventProvider.getEventsByTopicId(topicId: topicId);
+  }
 }

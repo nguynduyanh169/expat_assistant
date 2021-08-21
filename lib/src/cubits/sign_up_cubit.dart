@@ -30,7 +30,9 @@ class SignUpCubit extends Cubit<SignUpState> {
         emit(state.copyWith(status: SignUpStatus.sendConfirmEmailFailed));
       } else {
         emit(state.copyWith(
-            status: SignUpStatus.confirmEmail, code: check['message']));
+            status: SignUpStatus.confirmEmail,
+            code: check['message'],
+            email: email));
       }
     } on Exception catch (e) {
       emit(state.copyWith(status: SignUpStatus.sendConfirmEmailFailed));
@@ -62,8 +64,15 @@ class SignUpCubit extends Cubit<SignUpState> {
         emit(state.copyWith(status: SignUpStatus.signUpFailed));
       }
     } on Exception catch (e) {
-      emit(state.copyWith(
-          status: SignUpStatus.signUpFailed, message: e.toString()));
+      print(e.toString());
+      if (e.toString().contains('[firebase_auth/email-already-in-use]')) {
+        emit(state.copyWith(
+            status: SignUpStatus.signUpFailed,
+            message: 'The email address is already in use by another account'));
+      } else {
+        emit(state.copyWith(
+            status: SignUpStatus.signUpFailed, message: e.toString()));
+      }
     }
   }
 }

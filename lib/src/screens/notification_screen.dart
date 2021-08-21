@@ -59,7 +59,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   child: ListView.separated(
                       itemBuilder: (context, index) => ListTile(
                             leading: Icon(
-                              LineIcons.phoneVolume,
+                              LineIcons.calendarCheck,
                               color: AppColors.MAIN_COLOR,
                             ),
                             title: Text(
@@ -72,9 +72,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                             ),
                             trailing: Text(
                               DateTimeUtils.caculateDaysNoti(
-                                          date: notifications[index].sentDate)
-                                      .toString() +
-                                  " minutes ago",
+                                  date: notifications[index].sentDate),
                               style: GoogleFonts.lato(),
                             ),
                           ),

@@ -7,6 +7,7 @@ import 'package:expat_assistant/src/screens/call_room_screen.dart';
 import 'package:expat_assistant/src/states/today_appointment_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'appointment_card.dart';
 
@@ -43,6 +44,30 @@ class _TodayAppointmentState extends State<TodayAppointment> {
               child: Center(
                 child: CircularProgressIndicator(
                   strokeWidth: 0.5,
+                ),
+              ),
+            );
+          } else if (state.status.isLoadedNoAppointment || state.status.isLoadAppointmentError) {
+            return Container(
+              width: SizeConfig.blockSizeHorizontal * 90,
+              height: SizeConfig.blockSizeVertical * 22,
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10.0),
+                  boxShadow: [
+                    BoxShadow(
+                        color: Colors.black26.withOpacity(0.05),
+                        offset: Offset(0.0, 6.0),
+                        blurRadius: 10.0,
+                        spreadRadius: 0.10)
+                  ]),
+              padding: EdgeInsets.only(
+                  left: SizeConfig.blockSizeHorizontal * 2,
+                  right: SizeConfig.blockSizeHorizontal * 2),
+              child: Center(
+                child: Text(
+                  'There is no upcomming appointment',
+                  style: GoogleFonts.lato(fontSize: 20),
                 ),
               ),
             );

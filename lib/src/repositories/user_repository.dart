@@ -25,4 +25,9 @@ class UserRepository {
     return _userProvider.editExpatProfile(
         token: token, expatId: expatId, expat: expat);
   }
+
+  Future<dynamic> changePassword(
+      {@required String email, @required String newPassword}) {
+    return _userProvider.changePassword(email: email, newPassword: newPassword);
+  }
 }

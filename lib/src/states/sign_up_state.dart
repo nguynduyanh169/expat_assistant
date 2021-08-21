@@ -40,17 +40,20 @@ class SignUpState extends Equatable {
   final SignUpStatus status;
   final String message;
   final int code;
+  final String email;
 
-  const SignUpState({this.status, this.message, this.code});
+  const SignUpState({this.status, this.message, this.code, this.email});
 
   @override
   // TODO: implement props
-  List<Object> get props => [status, message, code];
+  List<Object> get props => [status, message, code, email];
 
-  SignUpState copyWith({SignUpStatus status, String message, int code}) {
+  SignUpState copyWith(
+      {SignUpStatus status, String message, int code, String email}) {
     return SignUpState(
         status: status ?? this.status,
         message: message ?? this.message,
-        code: code ?? this.code);
+        code: code ?? this.code,
+        email: email ?? this.email);
   }
 }

@@ -8,9 +8,11 @@ enum VNlearnStatus {
   loadFailed,
   downloadConversationSuccess,
   downloadingConversation,
+  downloadConversationEmpty,
   downloadConversationFailed,
   downloadVocabularySuccess,
   downloadingVocabulary,
+  dowloadVocabularyEmpty,
   downloadVocabularyFailed,
   searchSuccess,
   searchFailed,
@@ -29,6 +31,9 @@ extension Explanation on VNlearnStatus {
   bool get isDownloadConversationSuccess =>
       this == VNlearnStatus.downloadConversationSuccess;
 
+  bool get isDownloadConversationEmpty =>
+      this == VNlearnStatus.downloadConversationEmpty;
+
   bool get isDownloadConversationFailed =>
       this == VNlearnStatus.downloadConversationFailed;
 
@@ -37,6 +42,9 @@ extension Explanation on VNlearnStatus {
 
   bool get isDownloadVocabularySuccess =>
       this == VNlearnStatus.downloadVocabularySuccess;
+
+  bool get isDownloadVocabularyEmpty =>
+      this == VNlearnStatus.downloadVocabularyFailed;
 
   bool get isDownloadVocabularyFailed =>
       this == VNlearnStatus.downloadVocabularyFailed;

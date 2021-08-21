@@ -32,12 +32,14 @@ class CallRoomCubit extends Cubit<CallRoomState> {
         int status = _dateTimeUtils.equalsStartTime(appointment);
         if (status == 1) {
           emit(state.copyWith(
-            status: CallRoomStatus.notInTime,
-          ));
+              status: CallRoomStatus.notInTime, appointment: appointment));
         } else if (status == 2) {
           emit(state.copyWith(
               status: CallRoomStatus.appointmentCompleted,
               appointment: appointment));
+        } else if (status == -1) {
+          emit(state.copyWith(
+              status: CallRoomStatus.outOfDate, appointment: appointment));
         } else {
           int duration = _dateTimeUtils.caculateDuration(
               appointment.session.startTime, appointment.session.endTime);

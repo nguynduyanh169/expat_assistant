@@ -51,8 +51,7 @@ class ChannelCard extends StatelessWidget {
                   GoogleFonts.lato(fontSize: 20, fontWeight: FontWeight.w700),
             ),
             subtitle: Text(
-              _dateUtils.caculateDays(date: blog.createDate).toString() +
-                  " days ago",
+              _dateUtils.caculateDays(date: blog.createDate),
               style: GoogleFonts.lato(),
             ),
           ),

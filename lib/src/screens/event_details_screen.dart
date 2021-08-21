@@ -11,6 +11,8 @@ import 'package:expat_assistant/src/screens/map_screen.dart';
 import 'package:expat_assistant/src/states/event_details_state.dart';
 import 'package:expat_assistant/src/utils/date_utils.dart';
 import 'package:expat_assistant/src/utils/event_bus_utils.dart';
+import 'package:expat_assistant/src/utils/events_utils.dart';
+import 'package:expat_assistant/src/widgets/error.dart';
 import 'package:expat_assistant/src/widgets/loading.dart';
 import 'package:expat_assistant/src/widgets/loading_dialog.dart';
 import 'package:extended_image/extended_image.dart';
@@ -49,12 +51,12 @@ class EventDetailsScreen extends StatelessWidget {
           elevation: 0.5,
           iconTheme: IconThemeData(color: Colors.white),
           backgroundColor: AppColors.MAIN_COLOR,
-          //toolbarHeight: SizeConfig.blockSizeVertical * 10,
           automaticallyImplyLeading: true,
           centerTitle: true,
           title: Text(
             'Event Details',
-            style: GoogleFonts.lato(fontSize: 22, color: Colors.white, fontWeight: FontWeight.w700),
+            style: GoogleFonts.lato(
+                fontSize: 22, color: Colors.white, fontWeight: FontWeight.w700),
           ),
           actions: [
             IconButton(
@@ -71,6 +73,66 @@ class EventDetailsScreen extends StatelessWidget {
             )
           ],
         ),
+        bottomNavigationBar: BottomAppBar(
+          child: BlocBuilder<EventDetailsCubit, EventDetailsState>(
+            builder: (context, state) {
+              if (state.status.isLoadingContent || state.status.isLoadError) {
+                return Container(
+                  height: SizeConfig.blockSizeVertical * 0.1,
+                );
+              } else {
+                return Container(
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(10),
+                          topRight: Radius.circular(10)),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.black26.withOpacity(0.2),
+                            offset: Offset(0.0, 6.0),
+                            blurRadius: 10.0,
+                            spreadRadius: 0.10)
+                      ]),
+                  height: SizeConfig.blockSizeVertical * 10,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Container(
+                        width: SizeConfig.blockSizeHorizontal * 80,
+                        child: ElevatedButton(
+                            style: ButtonStyle(
+                                padding: MaterialStateProperty.all<EdgeInsets>(
+                                    EdgeInsets.all(
+                                        SizeConfig.blockSizeHorizontal * 4)),
+                                backgroundColor: event.isJoined == false
+                                    ? MaterialStateProperty.all<Color>(
+                                        AppColors.MAIN_COLOR)
+                                    : MaterialStateProperty.all<Color>(
+                                        Color.fromRGBO(22, 160, 133, 2)),
+                                textStyle: MaterialStateProperty.all<TextStyle>(
+                                    GoogleFonts.lato(fontSize: 17))),
+                            child: event.isJoined == false
+                                ? Text("Join")
+                                : Text("Unjoin"),
+                            onPressed: () {
+                              if (event.isJoined == false) {
+                                BlocProvider.of<EventDetailsCubit>(context)
+                                    .joinEvent(event: event);
+                              } else {
+                                BlocProvider.of<EventDetailsCubit>(context)
+                                    .unJoinEvent(
+                                        event: event);
+                              }
+                            }),
+                      )
+                    ],
+                  ),
+                );
+              }
+            },
+          ),
+        ),
         body: BlocConsumer<EventDetailsCubit, EventDetailsState>(
             listener: (context, state) {
           if (state.status.isJoiningEvent) {
@@ -82,59 +144,57 @@ class EventDetailsScreen extends StatelessWidget {
                 context: context, message: 'Unjoining...');
           } else if (state.status.isJoinEventFailed) {
             Navigator.pop(context);
-            print('ok');
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-            content: Text(
-              'Cannot join this event!',
-              style: GoogleFonts.lato(color: Colors.white),
-              textAlign: TextAlign.center,
-            ),
-            duration: const Duration(milliseconds: 1500),
-            // width: SizeConfig.blockSizeHorizontal * 60,
-            // Width of the SnackBar.
-            padding: const EdgeInsets.symmetric(
-              horizontal: 8.0, // Inner padding for SnackBar content.
-            ),
-            backgroundColor: Colors.red,
-            behavior: SnackBarBehavior.fixed,
-          ));
+            CustomSnackBar.showSnackBar(
+                context: context,
+                message: 'An error occurs while joining in event!',
+                color: Colors.red);
           } else if (state.status.isUnjoinEventFailed) {
             Navigator.pop(context);
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-            content: Text(
-              'Cannot unjoin this event!',
-              style: GoogleFonts.lato(color: Colors.white),
-              textAlign: TextAlign.center,
-            ),
-            duration: const Duration(milliseconds: 1500),
-            // width: SizeConfig.blockSizeHorizontal * 60,
-            // Width of the SnackBar.
-            padding: const EdgeInsets.symmetric(
-              horizontal: 8.0, // Inner padding for SnackBar content.
-            ),
-            backgroundColor: Colors.red,
-            behavior: SnackBarBehavior.fixed,
-          ));
+            CustomSnackBar.showSnackBar(
+                context: context,
+                message: 'An error occurs while unjoining event!',
+                color: Colors.red);
           } else if (state.status.isJoinEventSuccess) {
             Navigator.pop(context);
             event.isJoined = true;
             EventBusUtils.getInstance()
                 .fire(JoinedInEvent(event.content.eventId, true));
+            CustomSnackBar.showSnackBar(
+                context: context,
+                message: 'Join event success!',
+                color: Colors.green);
           } else if (state.status.isUnjoinEventSuccess) {
             Navigator.pop(context);
             event.isJoined = false;
             EventBusUtils.getInstance()
                 .fire(JoinedInEvent(event.content.eventId, false));
+            CustomSnackBar.showSnackBar(
+                context: context,
+                message: 'Unjoin event success!',
+                color: Colors.green);
+          }else if(state.status.isPreventJoinEvent){
+            Navigator.pop(context);
+            CustomSnackBar.showSnackBar(
+                context: context,
+                message: 'Cannot join this event!',
+                color: Colors.blueAccent);
+          }
+          else if(state.status.isPreventUnJoinEvent){
+            Navigator.pop(context);
+            CustomSnackBar.showSnackBar(
+                context: context,
+                message: 'Cannot unjoin this event!',
+                color: Colors.blueAccent);
           }
         }, builder: (context, state) {
           if (state.status.isLoadingContent) {
             return LoadingView(message: 'Loading...');
+          } else if (state.status.isLoadError) {
+            return DisplayError(
+                message: 'An error occurs while loading event',
+                reload: () => BlocProvider.of<EventDetailsCubit>(context)
+                    .getEventContent(eventId: args.eventId));
           } else {
-            if (state.status.isLoadError) {
-              print('error');
-            }
             if (state.status.isLoadedContent) {
               event = state.eventContent;
             }
@@ -227,53 +287,38 @@ class EventDetailsScreen extends StatelessWidget {
                                                   1,
                                         ),
                                         Container(
-                                            child: Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                          children: [
-                                            Icon(
-                                              LineIcons.userFriends,
-                                              color: Colors.green,
-                                              size: 20,
-                                            ),
-                                            SizedBox(
-                                              width: SizeConfig
-                                                      .blockSizeHorizontal *
-                                                  1,
-                                            ),
-                                            Container(
-                                                child: Text(
-                                              '20',
+                                          alignment: Alignment.center,
+                                          width:
+                                              SizeConfig.blockSizeHorizontal *
+                                                  20,
+                                          padding: EdgeInsets.all(
+                                              SizeConfig.blockSizeHorizontal *
+                                                  1),
+                                          height:
+                                              SizeConfig.blockSizeVertical * 4,
+                                          child: Text(
+                                              EventUtils.getEventStatus(
+                                                  event),
                                               style: GoogleFonts.lato(
-                                                  fontSize: 18,
-                                                  color: Colors.black54),
-                                            ))
-                                          ],
-                                        )),
-                                        SizedBox(
-                                          width:
-                                              SizeConfig.blockSizeHorizontal *
-                                                  1,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w500,
+                                                color: Colors.white,
+                                              )),
+                                          decoration: BoxDecoration(
+                                              color: EventUtils
+                                                  .getEventStatusColor(
+                                                      event),
+                                              borderRadius:
+                                                  BorderRadius.circular(5.0),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                    color: Colors.black26
+                                                        .withOpacity(0.1),
+                                                    offset: Offset(0.0, 6.0),
+                                                    blurRadius: 10.0,
+                                                    spreadRadius: 0.10)
+                                              ]),
                                         ),
-                                        Container(
-                                            child: Text(
-                                          '.',
-                                          style: GoogleFonts.lato(fontSize: 15),
-                                        )),
-                                        SizedBox(
-                                          width:
-                                              SizeConfig.blockSizeHorizontal *
-                                                  1,
-                                        ),
-                                        Container(
-                                            child: Text(
-                                          'Scheduled',
-                                          style: GoogleFonts.lato(
-                                              fontSize: 18,
-                                              color: Colors.green),
-                                        )),
                                       ],
                                     ),
                                     SizedBox(
@@ -413,60 +458,6 @@ class EventDetailsScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Center(
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(10),
-                              topRight: Radius.circular(10)),
-                          boxShadow: [
-                            BoxShadow(
-                                color: Colors.black26.withOpacity(0.2),
-                                offset: Offset(0.0, 6.0),
-                                blurRadius: 10.0,
-                                spreadRadius: 0.10)
-                          ]),
-                      height: SizeConfig.blockSizeVertical * 10,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Container(
-                            width: SizeConfig.blockSizeHorizontal * 80,
-                            child: ElevatedButton(
-                                style: ButtonStyle(
-                                    padding:
-                                        MaterialStateProperty.all<EdgeInsets>(
-                                            EdgeInsets.all(
-                                                SizeConfig.blockSizeHorizontal *
-                                                    4)),
-                                    backgroundColor: event.isJoined == false
-                                        ? MaterialStateProperty.all<Color>(
-                                            AppColors.MAIN_COLOR)
-                                        : MaterialStateProperty.all<Color>(
-                                            Color.fromRGBO(22, 160, 133, 2)),
-                                    textStyle:
-                                        MaterialStateProperty.all<TextStyle>(
-                                            GoogleFonts.lato(fontSize: 17))),
-                                child: event.isJoined == false
-                                    ? Text("Join")
-                                    : Text("Unjoin"),
-                                onPressed: () {
-                                  if (event.isJoined == false) {
-                                    BlocProvider.of<EventDetailsCubit>(context)
-                                        .joinEvent(
-                                            eventId: event.content.eventId);
-                                  } else {
-                                    BlocProvider.of<EventDetailsCubit>(context)
-                                        .unJoinEvent(
-                                            eventId: event.content.eventId);
-                                  }
-                                }),
-                          )
-                        ],
-                      ),
-                    ),
-                  )
                 ],
               ),
             );

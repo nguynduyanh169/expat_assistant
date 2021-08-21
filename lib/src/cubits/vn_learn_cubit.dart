@@ -98,75 +98,81 @@ class VNlearnCubit extends Cubit<VNlearnState> {
       List<Conversation> result = await _conversationRepository
           .findConversationsByLessonId(topicId: lessonId, token: token);
       if (result != null) {
-        var status = await Permission.storage.status;
-        if (!status.isGranted) {
-          await Permission.storage.request();
-        }
-        for (Conversation conversation in result) {
-          ConversationLocal conversationLocal = ConversationLocal(
-              conversation.conversationId,
-              conversation.conversation,
-              conversation.description,
-              conversation.conversationImage,
-              conversation.voiceLink);
-          _conversationLocals.add(conversationLocal);
-          var path =
-              await AndroidExternalStorage.getExternalStoragePublicDirectory(
-                  DirType.documentsDirectory);
-          String imagePath =
-              '$path/$lessonName/conversation/${DateFormat('yyyyMMddHHmmss').format(DateTime.now())}.png';
-          String audioPath =
-              '$path/$lessonName/conversation/${DateFormat('yyyyMMddHHmmss').format(DateTime.now())}.mp3';
-          if (conversationLocal.imageLink != null) {
-            await Flowder.download(
-                conversationLocal.imageLink,
-                DownloaderUtils(
-                  progressCallback: (current, total) {
-                    final int progress = ((current / total) * 100).toInt();
-                    print('downloading: ' + progress.toString());
-                  },
-                  file: File(imagePath),
-                  progress: ProgressImplementation(),
-                  onDone: () {
-                    LessonFileLocal lessonFileLocal =
-                        LessonFileLocal(conversationLocal.imageLink, imagePath);
-                    _hiveUtils.addFilePath(
-                        boxName: HiveBoxName.LESSON_SRC,
-                        lessonFileLocal: lessonFileLocal);
-                  },
-                  deleteOnCancel: true,
-                ));
+        if (result.isNotEmpty) {
+          var status = await Permission.storage.status;
+          if (!status.isGranted) {
+            await Permission.storage.request();
           }
-          if (conversationLocal.voiceLink != null) {
-            await Flowder.download(
-                conversationLocal.voiceLink,
-                DownloaderUtils(
-                  progressCallback: (current, total) {
-                    final int progress = ((current / total) * 100).toInt();
-                    print('downloading: ' + progress.toString());
-                  },
-                  file: File(audioPath),
-                  progress: ProgressImplementation(),
-                  onDone: () {
-                    LessonFileLocal lessonFileLocal =
-                        LessonFileLocal(conversationLocal.voiceLink, audioPath);
-                    _hiveUtils.addFilePath(
-                        boxName: HiveBoxName.LESSON_SRC,
-                        lessonFileLocal: lessonFileLocal);
-                  },
-                  deleteOnCancel: true,
-                ));
+          for (Conversation conversation in result) {
+            ConversationLocal conversationLocal = ConversationLocal(
+                conversation.conversationId,
+                conversation.conversation,
+                conversation.description,
+                conversation.conversationImage,
+                conversation.voiceLink);
+            _conversationLocals.add(conversationLocal);
+            var path =
+                await AndroidExternalStorage.getExternalStoragePublicDirectory(
+                    DirType.documentsDirectory);
+            String imagePath =
+                '$path/$lessonName/conversation/${DateFormat('yyyyMMddHHmmss').format(DateTime.now())}.png';
+            String audioPath =
+                '$path/$lessonName/conversation/${DateFormat('yyyyMMddHHmmss').format(DateTime.now())}.mp3';
+            if (conversationLocal.imageLink != null) {
+              await Flowder.download(
+                  conversationLocal.imageLink,
+                  DownloaderUtils(
+                    progressCallback: (current, total) {
+                      final int progress = ((current / total) * 100).toInt();
+                      print('downloading: ' + progress.toString());
+                    },
+                    file: File(imagePath),
+                    progress: ProgressImplementation(),
+                    onDone: () {
+                      LessonFileLocal lessonFileLocal = LessonFileLocal(
+                          conversationLocal.imageLink, imagePath);
+                      _hiveUtils.addFilePath(
+                          boxName: HiveBoxName.LESSON_SRC,
+                          lessonFileLocal: lessonFileLocal);
+                    },
+                    deleteOnCancel: true,
+                  ));
+            }
+            if (conversationLocal.voiceLink != null) {
+              await Flowder.download(
+                  conversationLocal.voiceLink,
+                  DownloaderUtils(
+                    progressCallback: (current, total) {
+                      final int progress = ((current / total) * 100).toInt();
+                      print('downloading: ' + progress.toString());
+                    },
+                    file: File(audioPath),
+                    progress: ProgressImplementation(),
+                    onDone: () {
+                      LessonFileLocal lessonFileLocal = LessonFileLocal(
+                          conversationLocal.voiceLink, audioPath);
+                      _hiveUtils.addFilePath(
+                          boxName: HiveBoxName.LESSON_SRC,
+                          lessonFileLocal: lessonFileLocal);
+                    },
+                    deleteOnCancel: true,
+                  ));
+            }
           }
+          _hiveUtils.addConversation(
+              conversationBox: HiveBoxName.CONVERSATION,
+              list: _conversationLocals,
+              lessonBox: HiveBoxName.LESSON,
+              lessonKey: lessonId);
+          emit(state.copyWith(
+              status: VNlearnStatus.downloadConversationSuccess,
+              lessonLocalList:
+                  _hiveUtils.getAllLesson(boxName: HiveBoxName.LESSON)));
+        } else {
+          emit(state.copyWith(
+            status: VNlearnStatus.downloadConversationEmpty,
+          ));
         }
-        _hiveUtils.addConversation(
-            conversationBox: HiveBoxName.CONVERSATION,
-            list: _conversationLocals,
-            lessonBox: HiveBoxName.LESSON,
-            lessonKey: lessonId);
-        emit(state.copyWith(
-            status: VNlearnStatus.downloadConversationSuccess,
-            lessonLocalList:
-                _hiveUtils.getAllLesson(boxName: HiveBoxName.LESSON)));
       } else {
         emit(state.copyWith(
             status: VNlearnStatus.downloadConversationFailed,
@@ -190,74 +196,78 @@ class VNlearnCubit extends Cubit<VNlearnState> {
       List<Vocabulary> result = await _vocabularyRepository
           .getVocabulariesByLessonId(lessonId: lessonId, token: token);
       if (result != null) {
-        for (Vocabulary vocabulary in result) {
-          VocabularyLocal vocabularyLocal = VocabularyLocal(
-              vocabulary.vocabularyId,
-              vocabulary.vocabulary,
-              vocabulary.description,
-              vocabulary.imageLink,
-              vocabulary.voiceLink);
-          _vocabularyLocals.add(vocabularyLocal);
-          var path =
-              await AndroidExternalStorage.getExternalStoragePublicDirectory(
-                  DirType.documentsDirectory);
-          String imagePath =
-              '$path/$lessonName/vocabulary/${DateFormat('yyyyMMddHHmmss').format(DateTime.now())}.png';
-          String audioPath =
-              '$path/$lessonName/vocabulary/${DateFormat('yyyyMMddHHmmss').format(DateTime.now())}.mp3';
-          if (vocabularyLocal.imageLink != null) {
-            await Flowder.download(
-                vocabularyLocal.imageLink,
-                DownloaderUtils(
-                  progressCallback: (current, total) {
-                    final int progress = ((current / total) * 100).toInt();
-                    print('downloading: ' + progress.toString());
-                  },
-                  file: File(imagePath),
-                  progress: ProgressImplementation(),
-                  onDone: () {
-                    LessonFileLocal lessonFileLocal =
-                        LessonFileLocal(vocabularyLocal.imageLink, imagePath);
-                    _hiveUtils.addFilePath(
-                        boxName: HiveBoxName.LESSON_SRC,
-                        lessonFileLocal: lessonFileLocal);
-                  },
-                  deleteOnCancel: true,
-                ));
+        if (result.isNotEmpty) {
+          for (Vocabulary vocabulary in result) {
+            VocabularyLocal vocabularyLocal = VocabularyLocal(
+                vocabulary.vocabularyId,
+                vocabulary.vocabulary,
+                vocabulary.description,
+                vocabulary.imageLink,
+                vocabulary.voiceLink);
+            _vocabularyLocals.add(vocabularyLocal);
+            var path =
+                await AndroidExternalStorage.getExternalStoragePublicDirectory(
+                    DirType.documentsDirectory);
+            String imagePath =
+                '$path/$lessonName/vocabulary/${DateFormat('yyyyMMddHHmmss').format(DateTime.now())}.png';
+            String audioPath =
+                '$path/$lessonName/vocabulary/${DateFormat('yyyyMMddHHmmss').format(DateTime.now())}.mp3';
+            if (vocabularyLocal.imageLink != null) {
+              await Flowder.download(
+                  vocabularyLocal.imageLink,
+                  DownloaderUtils(
+                    progressCallback: (current, total) {
+                      final int progress = ((current / total) * 100).toInt();
+                      print('downloading: ' + progress.toString());
+                    },
+                    file: File(imagePath),
+                    progress: ProgressImplementation(),
+                    onDone: () {
+                      LessonFileLocal lessonFileLocal =
+                          LessonFileLocal(vocabularyLocal.imageLink, imagePath);
+                      _hiveUtils.addFilePath(
+                          boxName: HiveBoxName.LESSON_SRC,
+                          lessonFileLocal: lessonFileLocal);
+                    },
+                    deleteOnCancel: true,
+                  ));
+            }
+            if (vocabularyLocal.voiceLink != null) {
+              await Flowder.download(
+                  vocabularyLocal.voiceLink,
+                  DownloaderUtils(
+                    progressCallback: (current, total) {
+                      final int progress = ((current / total) * 100).toInt();
+                      print('downloading: ' + progress.toString());
+                    },
+                    file: File(audioPath),
+                    progress: ProgressImplementation(),
+                    onDone: () {
+                      LessonFileLocal lessonFileLocal =
+                          LessonFileLocal(vocabularyLocal.voiceLink, audioPath);
+                      _hiveUtils.addFilePath(
+                          boxName: HiveBoxName.LESSON_SRC,
+                          lessonFileLocal: lessonFileLocal);
+                    },
+                    deleteOnCancel: true,
+                  ));
+            }
           }
-          if (vocabularyLocal.voiceLink != null) {
-            await Flowder.download(
-                vocabularyLocal.voiceLink,
-                DownloaderUtils(
-                  progressCallback: (current, total) {
-                    final int progress = ((current / total) * 100).toInt();
-                    print('downloading: ' + progress.toString());
-                  },
-                  file: File(audioPath),
-                  progress: ProgressImplementation(),
-                  onDone: () {
-                    LessonFileLocal lessonFileLocal =
-                        LessonFileLocal(vocabularyLocal.voiceLink, audioPath);
-                    _hiveUtils.addFilePath(
-                        boxName: HiveBoxName.LESSON_SRC,
-                        lessonFileLocal: lessonFileLocal);
-                  },
-                  deleteOnCancel: true,
-                ));
-          }
+          _hiveUtils.addVocabulary(
+              vocabularyBox: HiveBoxName.VOCABULARY,
+              list: _vocabularyLocals,
+              lessonBox: HiveBoxName.LESSON,
+              lessonKey: lessonId);
+          emit(state.copyWith(
+              status: VNlearnStatus.downloadVocabularySuccess,
+              lessonLocalList:
+                  _hiveUtils.getAllLesson(boxName: HiveBoxName.LESSON)));
+        }else{
+          emit(state.copyWith(
+          status: VNlearnStatus.dowloadVocabularyEmpty));
         }
-        _hiveUtils.addVocabulary(
-            vocabularyBox: HiveBoxName.VOCABULARY,
-            list: _vocabularyLocals,
-            lessonBox: HiveBoxName.LESSON,
-            lessonKey: lessonId);
-        emit(state.copyWith(
-            status: VNlearnStatus.downloadVocabularySuccess,
-            lessonLocalList:
-                _hiveUtils.getAllLesson(boxName: HiveBoxName.LESSON)));
       }
     } on Exception catch (e) {
-      print(e.toString());
       emit(state.copyWith(
           status: VNlearnStatus.downloadVocabularyFailed, error: e.toString()));
     }

@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:expat_assistant/src/models/event.dart';
+
 class RouteName {
   static const RESTAURANTS_BY_FOOD = "/restaurantsFood";
   static const SPECIALISTS = "/specialists";
@@ -38,6 +40,8 @@ class RouteName {
   static const LOADING = "/loading";
   static const FEEDBACK = "/feedback";
   static const PAYMENT_DONE = "/paymentDone";
+  static const CHANGE_PASSWORD = "/changePassword";
+  static const FORGET_PASSWORD = "/forgetPassword";
 }
 
 class ApiName {
@@ -59,6 +63,8 @@ class ApiName {
       BASE_URL + "/api/events/expatEvent";
   static const String JOIN_EVENT = BASE_URL + "/api/events/confirm";
   static const String UNJOIN_EVENT = BASE_URL + "/api/events/join";
+  static const String GET_EVENTS_BY_STATUS = BASE_URL + "/api/events/status";
+  static const String GET_EVENTS_BY_TOPIC = BASE_URL + "/api/events/topic";
   static const String GET_BLOGS = BASE_URL + "/api/blogs/blog";
   static const String GET_BLOGS_BY_PRIORITY = BASE_URL + "/api/blogs/priority";
   static const String GET_CHANNELS_STATUS = BASE_URL + "/api/channels/status";
@@ -78,6 +84,7 @@ class ApiName {
   static const String SIGN_UP = BASE_URL + "/api/authen/signup";
   static const String GET_PROFILE_EXPAT = BASE_URL + "/api/authen/expat";
   static const String EDIT_PROFILE = BASE_URL + "/api/authen/";
+  static const String CHANGE_PASSWORD = BASE_URL + "/api/authen/forget";
   static const String REGISTRY_SESSION = BASE_URL + "/api/appointment/registry";
   static const String GET_APPOINTMENT_BY_EXPAT =
       BASE_URL + "/api/appointment/expat";
@@ -106,7 +113,7 @@ class AppColors {
 }
 
 class GooglePlaces {
-  static const String API_KEY = "AIzaSyAu6qctFpBzrvWpBj7nlzcrzJU1cW4F09c";
+  static const String API_KEY = "AIzaSyBxw5zB_V76V0K1yQgu-oCKeXvcnGNkh_g";
 }
 
 class Agora {

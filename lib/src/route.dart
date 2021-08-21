@@ -4,6 +4,7 @@ import 'package:expat_assistant/src/screens/blog_details_screen.dart';
 import 'package:expat_assistant/src/screens/blogs_screen.dart';
 import 'package:expat_assistant/src/screens/call_room_screen.dart';
 import 'package:expat_assistant/src/screens/calling_screen.dart';
+import 'package:expat_assistant/src/screens/change_password_screen.dart';
 import 'package:expat_assistant/src/screens/channel_screen.dart';
 import 'package:expat_assistant/src/screens/conversation_details_screen.dart';
 import 'package:expat_assistant/src/screens/edit_profile_screen.dart';
@@ -12,6 +13,7 @@ import 'package:expat_assistant/src/screens/events_screen.dart';
 import 'package:expat_assistant/src/screens/feedback_call_screen.dart';
 import 'package:expat_assistant/src/screens/finish_screen.dart';
 import 'package:expat_assistant/src/screens/food_camera_screen.dart';
+import 'package:expat_assistant/src/screens/forget_password_screen.dart';
 import 'package:expat_assistant/src/screens/home_page.dart';
 import 'package:expat_assistant/src/screens/home_screen.dart';
 import 'package:expat_assistant/src/screens/invoice_screen.dart';
@@ -82,5 +84,9 @@ final routes = {
   RouteName.EDIT_PROFILE: (BuildContext context) => new EditProfileScreen(),
   RouteName.LOADING: (BuildContext context) => new LoadingIndicatorScreen(),
   RouteName.FEEDBACK: (BuildContext context) => new FeedBackScreen(),
-  RouteName.PAYMENT_DONE: (BuildContext context) => new PaymentDoneScreen()
+  RouteName.PAYMENT_DONE: (BuildContext context) => new PaymentDoneScreen(),
+  RouteName.CHANGE_PASSWORD: (BuildContext context) =>
+      new ChangePasswordScreen(),
+  RouteName.FORGET_PASSWORD: (BuildContext context) =>
+      new ForgetPasswordScreen()
 };

@@ -42,10 +42,25 @@ class SessionUtils {
       DateTime endDate = DateTime(session.endTime[0], session.endTime[1],
           session.endTime[2], session.endTime[3], session.endTime[4]);
       String endTime = _dateTimeUtils.getTime(endDate);
-      final int index = appointments.indexWhere((element) => checkDuplicateSession(startDate, endDate, DateTime(element.session.startTime[0], element.session.startTime[1],
-          element.session.startTime[2], element.session.startTime[3], element.session.startTime[4]), DateTime(element.session.endTime[0], element.session.endTime[1],
-          element.session.endTime[2], element.session.endTime[3], element.session.endTime[4])));
-      
+      int index = -1;
+      if (appointments != null) {
+        index = appointments.indexWhere((element) => checkDuplicateSession(
+            startDate,
+            endDate,
+            DateTime(
+                element.session.startTime[0],
+                element.session.startTime[1],
+                element.session.startTime[2],
+                element.session.startTime[3],
+                element.session.startTime[4]),
+            DateTime(
+                element.session.endTime[0],
+                element.session.endTime[1],
+                element.session.endTime[2],
+                element.session.endTime[3],
+                element.session.endTime[4])));
+      }
+
       if (session.status == 2 || session.status == 0 || index >= 0) {
         SessionDisplay sessionDisplay = SessionDisplay(
             dateOfSession: dateOfSession,
@@ -78,9 +93,11 @@ class SessionUtils {
   bool checkDisableSession(SessionDisplay sessionDisplay) {
     bool cannotChoose = false;
     if (sessionDisplay.isDisable == true) {
+      print('object');
       cannotChoose = true;
     }
-    if (sessionDisplay.startDate.isBefore(DateTime.now())) {
+    if (sessionDisplay.startDate.subtract(Duration(minutes: 15)).isBefore(DateTime.now())) {
+      
       cannotChoose = true;
     }
     return cannotChoose;
@@ -91,7 +108,7 @@ class SessionUtils {
       DateTime endDateOfSession,
       DateTime startDateOfAppointment,
       DateTime endDateOfAppointment) {
-        //apointment 16:00 17:00
+    //apointment 16:00 17:00
     bool check = false;
     if (startDateOfSession.isAtSameMomentAs(startDateOfAppointment)) {
       check = true;
@@ -101,7 +118,7 @@ class SessionUtils {
     } else if (startDateOfSession.isBefore(startDateOfAppointment) &&
         endDateOfSession.isAfter(startDateOfAppointment) &&
         endDateOfSession.isBefore(endDateOfAppointment)) {
-          //15:30 - 16:30
+      //15:30 - 16:30
       check = true;
     } else if (startDateOfSession.isAfter(startDateOfAppointment) &&
         startDateOfSession.isBefore(endDateOfAppointment)) {
@@ -109,7 +126,7 @@ class SessionUtils {
     } else if (startDateOfSession.isBefore(startDateOfAppointment) &&
         endDateOfSession.isAfter(endDateOfAppointment)) {
       check = true;
-    } 
+    }
     return check;
   }
 }

@@ -19,6 +19,7 @@ import 'package:google_fonts/google_fonts.dart';
 class SignUpScreen extends StatelessWidget {
   Expat expat;
   int code;
+  String emailSent;
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -75,11 +76,9 @@ class SignUpScreen extends StatelessWidget {
                   style: GoogleFonts.lato(color: Colors.white),
                   textAlign: TextAlign.center,
                 ),
-                duration: const Duration(milliseconds: 1500),
-                // width: SizeConfig.blockSizeHorizontal * 60,
-                // Width of the SnackBar.
+                duration: const Duration(milliseconds: 2500),
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 8.0, // Inner padding for SnackBar content.
+                  horizontal: 8.0,
                 ),
                 backgroundColor: Colors.red,
                 behavior: SnackBarBehavior.fixed,
@@ -137,9 +136,11 @@ class SignUpScreen extends StatelessWidget {
             } else {
               if (state.status.isConfirmEmail) {
                 code = state.code;
+                emailSent = state.email;
               }
               return ConfirmEmail(
                 code: code,
+                email: emailSent,
                 buttonAction: () =>
                     BlocProvider.of<SignUpCubit>(context).signUp(expat),
                 confirmEmailButton: () => BlocProvider.of<SignUpCubit>(context)

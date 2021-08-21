@@ -8,9 +8,11 @@ enum EventDetailsStatus {
   joiningEvent,
   joinEventSuccess,
   joinEventFailed,
+  preventJoinEvent,
   unjoiningEvent,
   unjoinEventSuccess,
-  unjoinEventFailed
+  unjoinEventFailed, 
+  preventUnjoinEvent
 }
 
 extension Explanation on EventDetailsStatus {
@@ -22,9 +24,12 @@ extension Explanation on EventDetailsStatus {
   bool get isJoiningEvent => this == EventDetailsStatus.joiningEvent;
   bool get isJoinEventSuccess => this == EventDetailsStatus.joinEventSuccess;
   bool get isJoinEventFailed => this == EventDetailsStatus.joinEventFailed;
+  bool get isPreventJoinEvent => this == EventDetailsStatus.preventJoinEvent;
   bool get isUnjoiningEvent => this == EventDetailsStatus.unjoiningEvent;
   bool get isUnjoinEventSuccess => this == EventDetailsStatus.unjoinEventSuccess;
   bool get isUnjoinEventFailed => this == EventDetailsStatus.unjoinEventFailed;
+  bool get isPreventUnJoinEvent => this == EventDetailsStatus.preventUnjoinEvent;
+
 }
 
 class EventDetailsState extends Equatable {

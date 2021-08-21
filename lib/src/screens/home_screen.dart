@@ -9,8 +9,8 @@ import 'package:expat_assistant/src/repositories/blog_repository.dart';
 import 'package:expat_assistant/src/screens/blog_details_screen.dart';
 import 'package:expat_assistant/src/screens/channel_screen.dart';
 import 'package:expat_assistant/src/states/home_state.dart';
-import 'package:expat_assistant/src/utils/hive_utils.dart';
 import 'package:expat_assistant/src/utils/notification_utils.dart';
+import 'package:expat_assistant/src/utils/text_utils.dart';
 import 'package:expat_assistant/src/widgets/loading.dart';
 import 'package:expat_assistant/src/widgets/news_card.dart';
 import 'package:expat_assistant/src/widgets/thumbnails_list.dart';
@@ -60,7 +60,6 @@ class _HomeScreenState extends State<HomeScreen>
               ),
               preferredSize: Size.fromHeight(0.25)),
           backgroundColor: AppColors.MAIN_COLOR,
-          //toolbarHeight: SizeConfig.blockSizeVertical * 10,
           elevation: 0.5,
           foregroundColor: Colors.black54,
           automaticallyImplyLeading: false,
@@ -87,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen>
                     position: BadgePosition(top: -1, end: -3),
                     badgeContent: Text(
                       count.toString(),
-                      style: GoogleFonts.lato(),
+                      style: GoogleFonts.lato(color: Colors.white),
                     ),
                     child: Icon(
                       LineIcons.bellAlt,
@@ -150,7 +149,7 @@ class _HomeScreenState extends State<HomeScreen>
                     ),
                     Container(
                       child: Text(
-                        'Welcome Bao!',
+                        TextUtils.getDayMessage(),
                         style: GoogleFonts.lato(
                             fontSize: 30, fontWeight: FontWeight.w600),
                       ),
@@ -185,10 +184,11 @@ class _HomeScreenState extends State<HomeScreen>
                           ),
                           InkWell(
                             onTap: () {
-                              NotificationUtils.pushScheduleNotificaton(
-                                  'Upcoming Appointment at 25/09/2021',
-                                  'There is an appointment with Le Quang Bao at 25/09/2021',
-                                  DateTime(2021, 8, 15, 22, 5).toUtc());
+                              // NotificationUtils.pushScheduleNotificaton(
+                              //     'Upcoming Appointment at 25/09/2021',
+                              //     'There is an appointment with Le Quang Bao at 25/09/2021',
+                              //     DateTime(2021, 8, 15, 22, 5).toUtc());
+                              Navigator.pushNamed(context, RouteName.SPECIALISTS);
                             },
                             child: Container(
                               //width: SizeConfig.blockSizeHorizontal * 30,
@@ -207,12 +207,13 @@ class _HomeScreenState extends State<HomeScreen>
                               child: Row(
                                 children: <Widget>[
                                   Icon(
-                                    LineIcons.hamburger,
+                                    LineIcons.phoneVolume,
+                                    color: AppColors.MAIN_COLOR,
                                   ),
                                   SizedBox(
                                     width: SizeConfig.blockSizeHorizontal * 1,
                                   ),
-                                  Text('Nearby Restaurants',
+                                  Text('Incoming Appointments',
                                       style: GoogleFonts.lato())
                                 ],
                               ),
@@ -221,88 +222,37 @@ class _HomeScreenState extends State<HomeScreen>
                           SizedBox(
                             width: SizeConfig.blockSizeHorizontal * 2,
                           ),
-                          Container(
-                            padding: EdgeInsets.all(
-                                SizeConfig.blockSizeHorizontal * 2),
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10.0),
-                                boxShadow: [
-                                  BoxShadow(
-                                      color: Colors.black26.withOpacity(0.05),
-                                      offset: Offset(0.0, 6.0),
-                                      blurRadius: 10.0,
-                                      spreadRadius: 0.10)
-                                ]),
-                            child: Row(
-                              children: <Widget>[
-                                Icon(
-                                  LineIcons.phoneVolume,
-                                ),
-                                SizedBox(
-                                  width: SizeConfig.blockSizeHorizontal * 1,
-                                ),
-                                Text('Incoming Appointments',
-                                    style: GoogleFonts.lato())
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            width: SizeConfig.blockSizeHorizontal * 2,
-                          ),
-                          Container(
-                            padding: EdgeInsets.all(
-                                SizeConfig.blockSizeHorizontal * 2),
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10.0),
-                                boxShadow: [
-                                  BoxShadow(
-                                      color: Colors.black26.withOpacity(0.05),
-                                      offset: Offset(0.0, 6.0),
-                                      blurRadius: 10.0,
-                                      spreadRadius: 0.10)
-                                ]),
-                            child: Row(
-                              children: <Widget>[
-                                Icon(
-                                  LineIcons.calendarCheck,
-                                ),
-                                SizedBox(
-                                  width: SizeConfig.blockSizeHorizontal * 1,
-                                ),
-                                Text('Incoming Events',
-                                    style: GoogleFonts.lato())
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            width: SizeConfig.blockSizeHorizontal * 2,
-                          ),
-                          Container(
-                            padding: EdgeInsets.all(
-                                SizeConfig.blockSizeHorizontal * 2),
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10.0),
-                                boxShadow: [
-                                  BoxShadow(
-                                      color: Colors.black26.withOpacity(0.05),
-                                      offset: Offset(0.0, 6.0),
-                                      blurRadius: 10.0,
-                                      spreadRadius: 0.10)
-                                ]),
-                            child: Row(
-                              children: <Widget>[
-                                Icon(
-                                  LineIcons.book,
-                                ),
-                                SizedBox(
-                                  width: SizeConfig.blockSizeHorizontal * 1,
-                                ),
-                                Text('Latest Vietnamese Lessons',
-                                    style: GoogleFonts.lato())
-                              ],
+                          InkWell(
+                            onTap: () {
+                              Navigator.pushNamed(
+                                  context, RouteName.VIETNAMESE_LEARN);
+                            },
+                            child: Container(
+                              padding: EdgeInsets.all(
+                                  SizeConfig.blockSizeHorizontal * 2),
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: Colors.black26.withOpacity(0.05),
+                                        offset: Offset(0.0, 6.0),
+                                        blurRadius: 10.0,
+                                        spreadRadius: 0.10)
+                                  ]),
+                              child: Row(
+                                children: <Widget>[
+                                  Icon(
+                                    LineIcons.book,
+                                    color: AppColors.MAIN_COLOR,
+                                  ),
+                                  SizedBox(
+                                    width: SizeConfig.blockSizeHorizontal * 1,
+                                  ),
+                                  Text('Latest Vietnamese Lessons',
+                                      style: GoogleFonts.lato())
+                                ],
+                              ),
                             ),
                           )
                         ],

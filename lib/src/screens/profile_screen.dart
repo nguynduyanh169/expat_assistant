@@ -190,25 +190,28 @@ class _ProfileScreenState extends State<ProfileScreen>
                 SizedBox(
                   height: SizeConfig.blockSizeVertical * 2,
                 ),
-                Container(
-                  padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10.0),
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.black26.withOpacity(0.1),
-                            offset: Offset(0.0, 6.0),
-                            blurRadius: 10.0,
-                            spreadRadius: 0.10)
-                      ]),
-                  child: ListTile(
-                    leading: Icon(CupertinoIcons.lock),
-                    title: Text(
-                      'Change Password',
-                      style: GoogleFonts.lato(),
+                InkWell(
+                  onTap: () => Navigator.pushNamed(context, RouteName.CHANGE_PASSWORD),
+                  child: Container(
+                    padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10.0),
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.black26.withOpacity(0.1),
+                              offset: Offset(0.0, 6.0),
+                              blurRadius: 10.0,
+                              spreadRadius: 0.10)
+                        ]),
+                    child: ListTile(
+                      leading: Icon(CupertinoIcons.lock),
+                      title: Text(
+                        'Change Password',
+                        style: GoogleFonts.lato(),
+                      ),
+                      trailing: Icon(Icons.arrow_forward_ios_outlined),
                     ),
-                    trailing: Icon(Icons.arrow_forward_ios_outlined),
                   ),
                 ),
                 SizedBox(

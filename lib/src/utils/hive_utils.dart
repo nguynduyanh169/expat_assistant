@@ -40,6 +40,13 @@ class HiveUtils {
     openBox.put('userAuth', user);
   }
 
+  editPassword({@required String newPassword}) {
+    final openBox = Hive.box(HiveBoxName.USER_AUTH);
+    Map<dynamic, dynamic> user = getUserAuth(boxName: HiveBoxName.USER_AUTH);
+    user['password'] = newPassword;
+    openBox.put('userAuth', user);
+  }
+
   Map<dynamic, dynamic> getUserAuth({@required String boxName}) {
     final openBox = Hive.box(boxName);
     Map<dynamic, dynamic> userAuth = openBox.get('userAuth');
@@ -171,6 +178,11 @@ class HiveUtils {
       result.add(notiTable.getAt(i));
     }
     return result;
+  }
+
+  deleteAllNotifications() {
+    var notiTable = Hive.box(HiveBoxName.NOTIFICATION_TABLE);
+    notiTable.clear();
   }
 
   static deleteNotifications() {

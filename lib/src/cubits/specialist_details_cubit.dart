@@ -17,7 +17,8 @@ class SpecialistDetailsCubit extends Cubit<SpecialistDetailState> {
   HiveUtils _hiveUtils = HiveUtils();
   SessionUtils _sessionUtils = SessionUtils();
 
-  SpecialistDetailsCubit(this._specialistRepository, this._appointmentRepository)
+  SpecialistDetailsCubit(
+      this._specialistRepository, this._appointmentRepository)
       : super(const SpecialistDetailState(status: SpecialistDetailStatus.init));
 
   Future<void> getSpecialistDetails(int specId) async {
@@ -36,8 +37,8 @@ class SpecialistDetailsCubit extends Cubit<SpecialistDetailState> {
             status: SpecialistDetailStatus.loadDetailsFailed,
             message: 'Cannot load Specialist Infomation'));
       } else {
-        List<SessionDisplay> sessionDisplays =
-            _sessionUtils.addSession(sessions: specialistDetails.sessions, appointments: appointments);
+        List<SessionDisplay> sessionDisplays = _sessionUtils.addSession(
+            sessions: specialistDetails.sessions, appointments: appointments);
         LinkedHashMap<DateTime, List<SessionDisplay>> sessionsForCalendar =
             _sessionUtils.getSessiontToCalendar(sessionLists: sessionDisplays);
         emit(state.copyWith(

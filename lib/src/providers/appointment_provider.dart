@@ -41,15 +41,18 @@ class AppointmentProvider {
         Headers.acceptHeader: "application/json",
         'Authorization': 'Bearer $token',
       };
+      print(ApiName.REGISTRY_SESSION +
+          "?channelName=$channelName&expatId=$expatId&sessionId=$sessionId");
       Response response = await _dio.post(
           ApiName.REGISTRY_SESSION +
-              "?expatId=$expatId&sessionId=$sessionId&channelName=$channelName",
+              "?channelName=$channelName&expatId=$expatId&sessionId=$sessionId",
           options: Options(headers: headers));
+      print(response.statusCode);
       if (response.statusCode == 200) {
         appointment = ExpatAppointment.fromJson(response.data);
       }
     } catch (e) {
-      print(e.toString());
+      print('Error' + e.toString());
     }
     return appointment;
   }

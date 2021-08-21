@@ -20,14 +20,22 @@ class TodayAppointmentCubit extends Cubit<TodayAppointmentState> {
       int expatId = loginResponse['id'];
       List<ExpatAppointment> appointments = await _appointmentRepository
           .getAppointmentsByExpat(token: token, expatId: expatId);
-      if (appointments.isEmpty) {
+      if (appointments == null) {
         emit(state.copyWith(
             status: TodayAppointmentStatus.loadAppointmentError));
+      } else if (appointments.isEmpty) {
+        emit(
+            state.copyWith(status: TodayAppointmentStatus.loadedNoAppointment));
       } else {
         ExpatAppointment appointment = _getAppointment(appointments);
-        emit(state.copyWith(
-            status: TodayAppointmentStatus.loadedAppointment,
-            appointment: appointment));
+        if (appointment == null) {
+          emit(state.copyWith(
+              status: TodayAppointmentStatus.loadedNoAppointment));
+        } else {
+          emit(state.copyWith(
+              status: TodayAppointmentStatus.loadedAppointment,
+              appointment: appointment));
+        }
       }
     } on Exception catch (e) {
       emit(state.copyWith(status: TodayAppointmentStatus.loadAppointmentError));
@@ -60,7 +68,11 @@ class TodayAppointmentCubit extends Cubit<TodayAppointmentState> {
             a.session.startTime[2],
             a.session.startTime[3],
             a.session.startTime[4])));
-    final nextAppointment = nextAppointments.last;
+    var nextAppointment;
+    if (nextAppointments.length != 0) {
+      nextAppointment = nextAppointments.last;
+    }
+
     return nextAppointment;
   }
 }

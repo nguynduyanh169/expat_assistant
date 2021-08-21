@@ -1,31 +1,26 @@
 import 'package:formz/formz.dart';
 
-enum PasswordValidationError{
-  invalid,
-  empty
-}
-class PasswordValidate extends FormzInput<String, PasswordValidationError>{
-  const PasswordValidate.pure(): super.pure('');
+enum PasswordValidationError { invalid, empty }
+
+class PasswordValidate extends FormzInput<String, PasswordValidationError> {
+  const PasswordValidate.pure() : super.pure('');
   const PasswordValidate.dirty(String value) : super.dirty(value);
-  // static final _passwordRegExp = RegExp(
-  //     r'^[A-Za-z\d@$!%*?&]{8,}$'
-  // );
   @override
   PasswordValidationError validator(String value) {
-    if(value.isEmpty){
+    if (value.isEmpty) {
       return PasswordValidationError.empty;
     }
-    return value.length > 5 ? null : PasswordValidationError.invalid;
+    return value.length >= 6 ? null : PasswordValidationError.invalid;
   }
-
-
 }
 
 extension Explanation on PasswordValidationError {
   String get name {
-    switch(this) {
+    switch (this) {
       case PasswordValidationError.invalid:
-        return "Password must be valid";
+        return "Password must be at least 6 characters";
+      case PasswordValidationError.empty:
+        return "Password is required";
       default:
         return null;
     }

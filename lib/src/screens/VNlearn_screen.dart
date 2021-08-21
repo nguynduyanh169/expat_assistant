@@ -16,7 +16,6 @@ import 'package:expat_assistant/src/widgets/not_found.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -29,13 +28,8 @@ class _VNlearnScreenState extends State<VNlearnScreen> {
   FocusNode _focus = new FocusNode();
   bool emptyLessons = false;
 
-  void _onFocusChange() {
-    SystemChrome.setEnabledSystemUIOverlays([]); // hide status + action buttons
-  }
-
   @override
   Widget build(BuildContext context) {
-    _focus.addListener(_onFocusChange);
     SizeConfig().init(context);
     return Scaffold(
       backgroundColor: Color.fromRGBO(245, 244, 244, 2),
@@ -48,12 +42,12 @@ class _VNlearnScreenState extends State<VNlearnScreen> {
             preferredSize: Size.fromHeight(0.25)),
         elevation: 0.5,
         backgroundColor: AppColors.MAIN_COLOR,
-        
         automaticallyImplyLeading: true,
         iconTheme: IconThemeData(color: Colors.white),
         title: Text(
           'Learn Vietnamese',
-          style: GoogleFonts.lato(fontSize: 22, color: Colors.white),
+          style: GoogleFonts.lato(
+              fontSize: 22, color: Colors.white, fontWeight: FontWeight.w700),
         ),
         actions: [
           InkWell(
@@ -76,15 +70,47 @@ class _VNlearnScreenState extends State<VNlearnScreen> {
                   context: context, message: 'Downloading...');
             } else if (state.status.isDownloadVocabularySuccess) {
               Navigator.pop(context);
+              CustomSnackBar.showSnackBar(
+                  context: context,
+                  message: 'Download success',
+                  color: Colors.green);
             } else if (state.status.isDownloadingConversation) {
               CustomLoadingDialog.loadingDialog(
                   context: context, message: 'Downloading...');
             } else if (state.status.isDownloadConversationSuccess) {
               Navigator.pop(context);
+              CustomSnackBar.showSnackBar(
+                  context: context,
+                  message: 'Download success',
+                  color: Colors.green);
             } else if (state.status.isSearchFailed) {
               emptyLessons = true;
             } else if (state.status.isSearchSuccess) {
               emptyLessons = false;
+            } else if (state.status.isDownloadConversationFailed) {
+              Navigator.pop(context);
+              CustomSnackBar.showSnackBar(
+                  context: context,
+                  message: 'Download failed',
+                  color: Colors.red);
+            } else if (state.status.isDownloadConversationEmpty) {
+              Navigator.pop(context);
+              CustomSnackBar.showSnackBar(
+                  context: context,
+                  message: 'This topic does not have any conversation',
+                  color: Colors.red);
+            } else if (state.status.isDownloadVocabularyFailed) {
+              Navigator.pop(context);
+              CustomSnackBar.showSnackBar(
+                  context: context,
+                  message: 'Download failed',
+                  color: Colors.red);
+            } else if (state.status.isDownloadVocabularyEmpty) {
+              Navigator.pop(context);
+              CustomSnackBar.showSnackBar(
+                  context: context,
+                  message: 'This topic does not have any conversation',
+                  color: Colors.red);
             }
           },
           builder: (context, state) {
@@ -140,7 +166,8 @@ class _VNlearnScreenState extends State<VNlearnScreen> {
                                 CupertinoIcons.search,
                                 color: AppColors.MAIN_COLOR,
                               ),
-                              iconSize: 30.0, onPressed: () {  },
+                              iconSize: 30.0,
+                              onPressed: () {},
                             ),
                             hintStyle: GoogleFonts.lato()),
                       ),

@@ -110,7 +110,13 @@ class _BlogsScreenState extends State<BlogsScreen> {
                 height: SizeConfig.blockSizeVertical * 1,
               ),
               BlocBuilder<BlogsCubit, BlogsState>(builder: (context, state) {
-                return ChannelList();
+                if (state.isFirstFetch && state.status.isLoadingBlogs) {
+                  return Container(
+                    height: SizeConfig.blockSizeVertical * 0.5,
+                  );
+                } else {
+                  return ChannelList();
+                }
               }),
               BlocBuilder<BlogsCubit, BlogsState>(builder: (context, state) {
                 setupScrollController(context);
@@ -126,259 +132,261 @@ class _BlogsScreenState extends State<BlogsScreen> {
                       LoadingView(message: 'Loading...')
                     ],
                   );
-                }
-                bool isLoadingNews = false;
-                if (state.status.isLoadingBlogs) {
-                  news = state.oldBlogs;
-                  isLoadingNews = true;
-                } else if (state.status.isLoadBlogsSuccess) {
-                  news = state.blogs;
-                  currentPage = state.page;
-                } else if (state.status.isLoadingBlogCategory) {
-                  news = state.oldBlogsCategory;
-                  isLoadingNews = true;
-                } else if (state.status.isLoadBlogCategorySuccess) {
-                  news = state.blogsCategory;
-                  currentPage = state.page;
-                } else if (state.status.isLoadingBlogDate) {
-                  news = state.oldBlogsDate;
-                  isLoadingNews = true;
-                } else if (state.status.isLoadBlogDateSuccess) {
-                  news = state.blogsDate;
-                  currentPage = state.page;
-                }
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Container(
-                      width: SizeConfig.blockSizeHorizontal * 100,
-                      height: SizeConfig.blockSizeVertical * 7.5,
-                      padding: EdgeInsets.only(
-                          left: SizeConfig.blockSizeHorizontal * 1,
-                          top: SizeConfig.blockSizeHorizontal * 3,
-                          right: SizeConfig.blockSizeHorizontal * 1),
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: <Widget>[
-                          InkWell(
-                            onTap: () {
-                              showCategory(context: context, list: categoryList)
-                                  .then((value) {
-                                if (value != null) {
+                } else {
+                  bool isLoadingNews = false;
+                  if (state.status.isLoadingBlogs) {
+                    news = state.oldBlogs;
+                    isLoadingNews = true;
+                  } else if (state.status.isLoadBlogsSuccess) {
+                    news = state.blogs;
+                    currentPage = state.page;
+                  } else if (state.status.isLoadingBlogCategory) {
+                    news = state.oldBlogsCategory;
+                    isLoadingNews = true;
+                  } else if (state.status.isLoadBlogCategorySuccess) {
+                    news = state.blogsCategory;
+                    currentPage = state.page;
+                  } else if (state.status.isLoadingBlogDate) {
+                    news = state.oldBlogsDate;
+                    isLoadingNews = true;
+                  } else if (state.status.isLoadBlogDateSuccess) {
+                    news = state.blogsDate;
+                    currentPage = state.page;
+                  }
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Container(
+                        width: SizeConfig.blockSizeHorizontal * 100,
+                        height: SizeConfig.blockSizeVertical * 7.5,
+                        padding: EdgeInsets.only(
+                            left: SizeConfig.blockSizeHorizontal * 1,
+                            top: SizeConfig.blockSizeHorizontal * 3,
+                            right: SizeConfig.blockSizeHorizontal * 1),
+                        child: ListView(
+                          scrollDirection: Axis.horizontal,
+                          children: <Widget>[
+                            InkWell(
+                              onTap: () {
+                                showCategory(
+                                        context: context, list: categoryList)
+                                    .then((value) {
+                                  if (value != null) {
+                                    setState(() {
+                                      category = value;
+                                      currentPage = 0;
+                                      isFilterByCategory = true;
+                                      isFilterByDate = false;
+                                      news.clear();
+                                    });
+                                    BlocProvider.of<BlogsCubit>(context)
+                                        .getBlogByCategory(
+                                            currentPage, category.categoryId);
+                                  }
+                                });
+                              },
+                              child: Container(
+                                padding: EdgeInsets.all(
+                                    SizeConfig.blockSizeHorizontal * 3),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.black12),
+                                  color: isFilterByCategory == true
+                                      ? AppColors.MAIN_COLOR
+                                      : Colors.white,
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                    Icon(
+                                      CupertinoIcons.square_list,
+                                      size: 16,
+                                      color: isFilterByCategory == true
+                                          ? Colors.white
+                                          : AppColors.MAIN_COLOR,
+                                    ),
+                                    SizedBox(
+                                      width: SizeConfig.blockSizeHorizontal * 1,
+                                    ),
+                                    Text(category.categoryName,
+                                        style: GoogleFonts.lato(
+                                            color: isFilterByCategory == true
+                                                ? Colors.white
+                                                : Colors.black))
+                                  ],
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: SizeConfig.blockSizeHorizontal * 2,
+                            ),
+                            InkWell(
+                              onTap: () async {
+                                final DateTime picked = await showDatePicker(
+                                    context: context,
+                                    initialDate: selectedDate,
+                                    firstDate: DateTime(2015, 8),
+                                    lastDate: DateTime(2101));
+                                if (picked != null && picked != selectedDate)
                                   setState(() {
-                                    category = value;
+                                    selectedDate = picked;
                                     currentPage = 0;
-                                    isFilterByCategory = true;
-                                    isFilterByDate = false;
+                                    isFilterByCategory = false;
+                                    isFilterByDate = true;
                                     news.clear();
                                   });
-                                  BlocProvider.of<BlogsCubit>(context)
-                                      .getBlogByCategory(
-                                          currentPage, category.categoryId);
-                                }
-                              });
-                            },
-                            child: Container(
-                              padding: EdgeInsets.all(
-                                  SizeConfig.blockSizeHorizontal * 3),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Colors.black12),
-                                color: isFilterByCategory == true
-                                    ? AppColors.MAIN_COLOR
-                                    : Colors.white,
-                                borderRadius: BorderRadius.circular(20.0),
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: <Widget>[
-                                  Icon(
-                                    CupertinoIcons.square_list,
-                                    size: 16,
-                                    color: isFilterByCategory == true
-                                        ? Colors.white
-                                        : AppColors.MAIN_COLOR,
-                                  ),
-                                  SizedBox(
-                                    width: SizeConfig.blockSizeHorizontal * 1,
-                                  ),
-                                  Text(category.categoryName,
-                                      style: GoogleFonts.lato(
-                                          color: isFilterByCategory == true
-                                              ? Colors.white
-                                              : Colors.black))
-                                ],
+                                BlocProvider.of<BlogsCubit>(context)
+                                    .getBlogByDate(
+                                        currentPage,
+                                        DateFormat('yyyy-MM-dd')
+                                            .format(selectedDate));
+                              },
+                              child: Container(
+                                padding: EdgeInsets.all(
+                                    SizeConfig.blockSizeHorizontal * 3),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.black12),
+                                  color: isFilterByDate == true
+                                      ? AppColors.MAIN_COLOR
+                                      : Colors.white,
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                    Icon(
+                                      CupertinoIcons.calendar,
+                                      size: 16,
+                                      color: isFilterByDate == true
+                                          ? Colors.white
+                                          : AppColors.MAIN_COLOR,
+                                    ),
+                                    SizedBox(
+                                      width: SizeConfig.blockSizeHorizontal * 1,
+                                    ),
+                                    Text(
+                                        isFilterByDate == true
+                                            ? DateFormat('yyyy-MM-dd')
+                                                .format(selectedDate)
+                                            : 'Date',
+                                        style: GoogleFonts.lato(
+                                            color: isFilterByDate == true
+                                                ? Colors.white
+                                                : Colors.black))
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                          SizedBox(
-                            width: SizeConfig.blockSizeHorizontal * 2,
-                          ),
-                          InkWell(
-                            onTap: () async {
-                              final DateTime picked = await showDatePicker(
-                                  context: context,
-                                  initialDate: selectedDate,
-                                  firstDate: DateTime(2015, 8),
-                                  lastDate: DateTime(2101));
-                              if (picked != null && picked != selectedDate)
+                            SizedBox(
+                              width: SizeConfig.blockSizeHorizontal * 2,
+                            ),
+                            InkWell(
+                              onTap: () {
                                 setState(() {
-                                  selectedDate = picked;
+                                  category = Category(
+                                      categoryId: 0, categoryName: 'Category');
+                                  selectedDate = DateTime.now();
                                   currentPage = 0;
                                   isFilterByCategory = false;
-                                  isFilterByDate = true;
+                                  isFilterByDate = false;
                                   news.clear();
                                 });
-                              BlocProvider.of<BlogsCubit>(context)
-                                  .getBlogByDate(
-                                      currentPage,
-                                      DateFormat('yyyy-MM-dd')
-                                          .format(selectedDate));
-                            },
-                            child: Container(
-                              padding: EdgeInsets.all(
-                                  SizeConfig.blockSizeHorizontal * 3),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Colors.black12),
-                                color: isFilterByDate == true
-                                    ? AppColors.MAIN_COLOR
-                                    : Colors.white,
-                                borderRadius: BorderRadius.circular(20.0),
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: <Widget>[
-                                  Icon(
-                                    CupertinoIcons.calendar,
-                                    size: 16,
-                                    color: isFilterByDate == true
-                                        ? Colors.white
-                                        : AppColors.MAIN_COLOR,
-                                  ),
-                                  SizedBox(
-                                    width: SizeConfig.blockSizeHorizontal * 1,
-                                  ),
-                                  Text(
-                                      isFilterByDate == true
-                                          ? DateFormat('yyyy-MM-dd')
-                                              .format(selectedDate)
-                                          : 'Date',
-                                      style: GoogleFonts.lato(
-                                          color: isFilterByDate == true
-                                              ? Colors.white
-                                              : Colors.black))
-                                ],
+                                BlocProvider.of<BlogsCubit>(context)
+                                    .getBlogsPaging(currentPage);
+                              },
+                              child: Container(
+                                padding: EdgeInsets.all(
+                                    SizeConfig.blockSizeHorizontal * 3),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.black12),
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                    Icon(
+                                      CupertinoIcons.refresh_bold,
+                                      size: 16,
+                                      color: AppColors.MAIN_COLOR,
+                                    ),
+                                    SizedBox(
+                                      width: SizeConfig.blockSizeHorizontal * 1,
+                                    ),
+                                    Text('Refresh', style: GoogleFonts.lato())
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                          SizedBox(
-                            width: SizeConfig.blockSizeHorizontal * 2,
-                          ),
-                          InkWell(
-                            onTap: () {
-                              setState(() {
-                                category = Category(
-                                    categoryId: 0, categoryName: 'Category');
-                                selectedDate = DateTime.now();
-                                currentPage = 0;
-                                isFilterByCategory = false;
-                                isFilterByDate = false;
-                                news.clear();
-                              });
-                              BlocProvider.of<BlogsCubit>(context)
-                                  .getBlogsPaging(currentPage);
-                            },
-                            child: Container(
-                              padding: EdgeInsets.all(
-                                  SizeConfig.blockSizeHorizontal * 3),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Colors.black12),
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(20.0),
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: <Widget>[
-                                  Icon(
-                                    CupertinoIcons.refresh_bold,
-                                    size: 16,
-                                    color: AppColors.MAIN_COLOR,
-                                  ),
-                                  SizedBox(
-                                    width: SizeConfig.blockSizeHorizontal * 1,
-                                  ),
-                                  Text('Refresh', style: GoogleFonts.lato())
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: SizeConfig.blockSizeVertical * 1,
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(
-                          left: SizeConfig.blockSizeHorizontal * 2),
-                      child: Text(
-                        'Latest News',
-                        style: GoogleFonts.lato(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w500,
-                            color: Color.fromRGBO(0, 99, 99, 30)),
-                      ),
-                    ),
-                    SizedBox(
-                      height: SizeConfig.blockSizeVertical * 1,
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(
-                          left: SizeConfig.blockSizeHorizontal * 1,
-                          right: SizeConfig.blockSizeHorizontal * 1),
-                      height: SizeConfig.blockSizeVertical * 53.3,
-                      child: ListView.separated(
-                        controller: newsScrollController,
-                        separatorBuilder: (context, index) => SizedBox(
-                          height: SizeConfig.blockSizeVertical * 2,
+                          ],
                         ),
-                        itemCount: news.length + (isLoadingNews ? 1 : 0),
-                        itemBuilder: (context, index) {
-                          if (index < news.length) {
-                            return Container(
-                              padding: EdgeInsets.only(
-                                  left: SizeConfig.blockSizeHorizontal * 1,
-                                  right: SizeConfig.blockSizeHorizontal * 1),
-                              child: ChannelCard(
-                                blog: news[index],
-                                openChannel: () => Navigator.pushNamed(
-                                    context, RouteName.CHANNEL,
-                                    arguments: ChannelDetailsArguments(
-                                        news[index].channel)),
-                                openNews: () => Navigator.pushNamed(
-                                    context, RouteName.BLOG_DETAILS,
-                                    arguments: BlogDetailsArguments(
-                                        news[index].blogId)),
-                              ),
-                            );
-                          } else {
-                            Timer(Duration(milliseconds: 30), () {
-                              newsScrollController.jumpTo(newsScrollController
-                                  .position.maxScrollExtent);
-                            });
-                            return Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child:
-                                  Center(child: CupertinoActivityIndicator()),
-                            );
-                          }
-                        },
                       ),
-                    )
-                  ],
-                );
+                      SizedBox(
+                        height: SizeConfig.blockSizeVertical * 1,
+                      ),
+                      Container(
+                        padding: EdgeInsets.only(
+                            left: SizeConfig.blockSizeHorizontal * 2),
+                        child: Text(
+                          'Latest News',
+                          style: GoogleFonts.lato(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
+                              color: Color.fromRGBO(0, 99, 99, 30)),
+                        ),
+                      ),
+                      SizedBox(
+                        height: SizeConfig.blockSizeVertical * 1,
+                      ),
+                      Container(
+                        padding: EdgeInsets.only(
+                            left: SizeConfig.blockSizeHorizontal * 1,
+                            right: SizeConfig.blockSizeHorizontal * 1),
+                        height: SizeConfig.blockSizeVertical * 53.3,
+                        child: ListView.separated(
+                          controller: newsScrollController,
+                          separatorBuilder: (context, index) => SizedBox(
+                            height: SizeConfig.blockSizeVertical * 2,
+                          ),
+                          itemCount: news.length + (isLoadingNews ? 1 : 0),
+                          itemBuilder: (context, index) {
+                            if (index < news.length) {
+                              return Container(
+                                padding: EdgeInsets.only(
+                                    left: SizeConfig.blockSizeHorizontal * 1,
+                                    right: SizeConfig.blockSizeHorizontal * 1),
+                                child: ChannelCard(
+                                  blog: news[index],
+                                  openChannel: () => Navigator.pushNamed(
+                                      context, RouteName.CHANNEL,
+                                      arguments: ChannelDetailsArguments(
+                                          news[index].channel)),
+                                  openNews: () => Navigator.pushNamed(
+                                      context, RouteName.BLOG_DETAILS,
+                                      arguments: BlogDetailsArguments(
+                                          news[index].blogId)),
+                                ),
+                              );
+                            } else {
+                              Timer(Duration(milliseconds: 30), () {
+                                newsScrollController.jumpTo(newsScrollController
+                                    .position.maxScrollExtent);
+                              });
+                              return Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child:
+                                    Center(child: CupertinoActivityIndicator()),
+                              );
+                            }
+                          },
+                        ),
+                      )
+                    ],
+                  );
+                }
               })
             ],
           ),

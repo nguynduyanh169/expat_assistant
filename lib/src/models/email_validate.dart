@@ -20,7 +20,7 @@ extension Explanation on EmailValidationError {
   String get name {
     switch(this) {
       case EmailValidationError.invalid:
-        return "Email must be valid";
+        return "Enter an valid email";
       default:
         return null;
     }

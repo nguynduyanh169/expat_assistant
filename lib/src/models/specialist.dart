@@ -50,6 +50,7 @@ class ListSpec {
     // this.createDate,
     // this.updateDate,
     this.rating,
+    this.certificate
   });
 
   int specId;
@@ -62,6 +63,7 @@ class ListSpec {
   // List<int> createDate;
   // List<int> updateDate;
   double rating;
+  String certificate;
 
   factory ListSpec.fromJson(Map<String, dynamic> json) => ListSpec(
         specId: json["specId"],
@@ -73,7 +75,9 @@ class ListSpec {
         status: json["status"],
         // createDate: List<int>.from(json["createDate"].map((x) => x)),
         // updateDate: List<int>.from(json["updateDate"].map((x) => x)),
-        rating: json["rating"].toDouble(),
+        rating: json["rating"] == null ? 0.0 : json["rating"].toDouble(),
+        certificate: json['certificate']
+
       );
 
   Map<String, dynamic> toJson() => {
@@ -87,6 +91,7 @@ class ListSpec {
         // "createDate": List<dynamic>.from(createDate.map((x) => x)),
         // "updateDate": List<dynamic>.from(updateDate.map((x) => x)),
         "rating": rating,
+        "certificate": certificate
       };
 }
 
@@ -199,4 +204,3 @@ class Session {
         "status": status,
       };
 }
-

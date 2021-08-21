@@ -37,10 +37,15 @@ class CameraCubit extends Cubit<CameraState> {
     try {
       String foodName =
           await _restaurantRepository.detectFood(imageUrl: imageUrl);
+      print(foodName);
       if (foodName == null) {
         emit(state.copyWith(
             status: CameraStatus.recognizeFoodError,
             message: 'An error occur while recognizing food'));
+      } else if (foodName == 'Cannot detect food!') {
+        emit(state.copyWith(
+            status: CameraStatus.recognizeFoodError,
+            message: 'Cannot detect food in the image'));
       } else {
         String result = TextUtils.getFoodName(foodName);
         emit(state.copyWith(

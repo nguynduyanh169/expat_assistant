@@ -1,4 +1,3 @@
-
 import 'package:dio/dio.dart';
 import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/models/payment.dart';
@@ -41,6 +40,8 @@ class PaymentProvider {
           options: Options(headers: headers), data: paymentSave.toJson());
       if (response.statusCode == 200) {
         result = PaymentResult.fromJson(response.data);
+      } else {
+        print(response.data);
       }
     } catch (e) {
       print(e.toString());

@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:expat_assistant/src/configs/constants.dart';
@@ -105,6 +104,7 @@ class EventProvider {
         Headers.acceptHeader: "application/json",
         'Authorization': 'Bearer $token',
       };
+      print(ApiName.JOIN_EVENT + "?eventId=$eventId&expatId=$expatId");
       Response response = await _dio.post(
           ApiName.JOIN_EVENT + "?eventId=$eventId&expatId=$expatId",
           options: Options(headers: headers));
@@ -129,6 +129,52 @@ class EventProvider {
           ApiName.UNJOIN_EVENT + "?eventId=$eventId&expatId=$expatId",
           options: Options(headers: headers));
       result = response.data;
+    } catch (e) {
+      print(e.toString());
+    }
+    return result;
+  }
+
+  Future<dynamic> findEventsByStatus(
+      {@required String token, @required String status}) async {
+    List<Content> result;
+    try {
+      Map<String, dynamic> headers = {
+        Headers.contentTypeHeader: "application/json",
+        Headers.acceptHeader: "application/json",
+        'Authorization': 'Bearer $token',
+      };
+      Response response = await _dio.get(
+          ApiName.GET_EVENTS_BY_STATUS + "?status=$status",
+          options: Options(headers: headers));
+      if (response.statusCode == 200) {
+        result = (response.data as List<dynamic>)
+            .map((i) => Content.fromJson(i))
+            .toList()
+            .cast<Content>();
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+    return result;
+  }
+
+  Future<dynamic> getEventsByTopicId({@required int topicId}) async {
+    List<Content> result;
+    try {
+      Map<String, dynamic> headers = {
+        Headers.contentTypeHeader: "application/json",
+        Headers.acceptHeader: "application/json",
+      };
+      Response response = await _dio.get(
+          ApiName.GET_EVENTS_BY_TOPIC + "?topicId=$topicId",
+          options: Options(headers: headers));
+      if (response.statusCode == 200) {
+        result = (response.data as List<dynamic>)
+            .map((i) => Content.fromJson(i))
+            .toList()
+            .cast<Content>();
+      }
     } catch (e) {
       print(e.toString());
     }

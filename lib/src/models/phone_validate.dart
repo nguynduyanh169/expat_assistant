@@ -6,7 +6,7 @@ extension Explanation on PhoneValidateError {
   String get name {
     switch (this) {
       case PhoneValidateError.invalid:
-        return "Phone number must be valid";
+        return "Phone number should be 10 digit number";
       default:
         return null;
     }

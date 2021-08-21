@@ -20,6 +20,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       _hiveUtils.deleteAllLesson(boxName: HiveBoxName.VOCABULARY);
       _hiveUtils.deleteAllLesson(boxName: HiveBoxName.LESSON_SRC);
       _hiveUtils.deleteUserAuth(boxName: HiveBoxName.USER_AUTH);
+      _hiveUtils.deleteAllNotifications();
       List<LessonLocal> lessons =
           _hiveUtils.getAllLesson(boxName: HiveBoxName.LESSON);
       var path = await AndroidExternalStorage.getExternalStoragePublicDirectory(

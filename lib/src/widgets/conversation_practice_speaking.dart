@@ -1,6 +1,5 @@
 import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/configs/size_config.dart';
-import 'package:expat_assistant/src/cubits/conversation_practice_listening_cubit.dart';
 import 'package:expat_assistant/src/cubits/conversation_practice_speaking_cubit.dart';
 import 'package:expat_assistant/src/models/hive_object.dart';
 import 'package:expat_assistant/src/states/conversation_practice_speaking_state.dart';

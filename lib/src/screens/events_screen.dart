@@ -12,6 +12,8 @@ import 'package:expat_assistant/src/repositories/topic_repository.dart';
 import 'package:expat_assistant/src/screens/event_details_screen.dart';
 import 'package:expat_assistant/src/states/events_state.dart';
 import 'package:expat_assistant/src/utils/event_bus_utils.dart';
+import 'package:expat_assistant/src/widgets/alert_dialog_vocabulary.dart';
+import 'package:expat_assistant/src/widgets/error.dart';
 import 'package:expat_assistant/src/widgets/event_card.dart';
 import 'package:expat_assistant/src/widgets/loading.dart';
 import 'package:expat_assistant/src/widgets/search_events.dart';
@@ -31,6 +33,11 @@ class _EventsScreenState extends State<EventsScreen>
   List<Topic> topicList = [];
   List<EventShow> events = [];
   bool checkFilterJoined = false;
+  bool canPressFilter = false;
+  bool checkFilterStatus = false;
+  bool checkFilterTopic = false;
+  String statusLable = "Status";
+  String topicLable = "Category";
 
   void setupScrollController(BuildContext context) {
     scrollController.addListener(() {
@@ -66,7 +73,8 @@ class _EventsScreenState extends State<EventsScreen>
         centerTitle: true,
         title: Text(
           'Events',
-          style: GoogleFonts.lato(fontSize: 22, color: Colors.white, fontWeight: FontWeight.w700),
+          style: GoogleFonts.lato(
+              fontSize: 22, color: Colors.white, fontWeight: FontWeight.w700),
         ),
         actions: [
           BlocProvider(
@@ -129,16 +137,32 @@ class _EventsScreenState extends State<EventsScreen>
                       scrollDirection: Axis.horizontal,
                       children: <Widget>[
                         InkWell(
-                          onTap: () {
-                            BlocProvider.of<EventsCubit>(context)
-                                .chooseTopic(context, topicList);
+                          onTap: () async {
+                            if (canPressFilter == true) {
+                              Topic topic =
+                                  await showConfimationDialogForCategory(
+                                      context: context, topics: topicList);
+                              if (topic != null) {
+                                setState(() {
+                                  checkFilterTopic = true;
+                                  checkFilterJoined = false;
+                                  checkFilterStatus = false;
+                                  statusLable = "Status";
+                                  topicLable = topic.topicDesc;
+                                });
+                                BlocProvider.of<EventsCubit>(context)
+                                    .pressCategory(topic.topicId);
+                              }
+                            }
                           },
                           child: Container(
                             padding: EdgeInsets.all(
                                 SizeConfig.blockSizeHorizontal * 3),
                             decoration: BoxDecoration(
                               border: Border.all(color: Colors.black12),
-                              color: Colors.white,
+                              color: checkFilterTopic == true
+                                  ? AppColors.MAIN_COLOR
+                                  : Colors.white,
                               borderRadius: BorderRadius.circular(20.0),
                             ),
                             child: Row(
@@ -146,14 +170,19 @@ class _EventsScreenState extends State<EventsScreen>
                                 Icon(
                                   CupertinoIcons.square_list,
                                   size: 16,
-                                  color: AppColors.MAIN_COLOR,
+                                  color: checkFilterTopic == true
+                                      ? Colors.white
+                                      : AppColors.MAIN_COLOR,
                                 ),
                                 SizedBox(
                                   width: SizeConfig.blockSizeHorizontal * 1,
                                 ),
                                 Text(
-                                  'Category',
-                                  style: GoogleFonts.lato(),
+                                  topicLable,
+                                  style: GoogleFonts.lato(
+                                      color: checkFilterTopic == true
+                                          ? Colors.white
+                                          : Colors.black),
                                 )
                               ],
                             ),
@@ -163,13 +192,31 @@ class _EventsScreenState extends State<EventsScreen>
                           width: SizeConfig.blockSizeHorizontal * 2,
                         ),
                         InkWell(
-                          onTap: () {},
+                          onTap: () async {
+                            if (canPressFilter == true) {
+                              EventStatus status =
+                                  await showEventStatus(context: context);
+                              if (status != null) {
+                                setState(() {
+                                  checkFilterJoined = false;
+                                  checkFilterStatus = true;
+                                  checkFilterTopic = false;
+                                  topicLable = "Category";
+                                  statusLable = status.content;
+                                });
+                                BlocProvider.of<EventsCubit>(context)
+                                    .pressStatus(status.status.toString());
+                              }
+                            }
+                          },
                           child: Container(
                             padding: EdgeInsets.all(
                                 SizeConfig.blockSizeHorizontal * 3),
                             decoration: BoxDecoration(
                               border: Border.all(color: Colors.black12),
-                              color: Colors.white,
+                              color: checkFilterStatus == true
+                                  ? AppColors.MAIN_COLOR
+                                  : Colors.white,
                               borderRadius: BorderRadius.circular(20.0),
                             ),
                             child: Row(
@@ -177,14 +224,20 @@ class _EventsScreenState extends State<EventsScreen>
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
                                 Icon(
-                                  CupertinoIcons.placemark,
+                                  CupertinoIcons.app_badge,
                                   size: 16,
-                                  color: AppColors.MAIN_COLOR,
+                                  color: checkFilterStatus == true
+                                      ? Colors.white
+                                      : AppColors.MAIN_COLOR,
                                 ),
                                 SizedBox(
                                   width: SizeConfig.blockSizeHorizontal * 1,
                                 ),
-                                Text('Places', style: GoogleFonts.lato())
+                                Text(statusLable,
+                                    style: GoogleFonts.lato(
+                                        color: checkFilterStatus == true
+                                            ? Colors.white
+                                            : Colors.black))
                               ],
                             ),
                           ),
@@ -194,8 +247,16 @@ class _EventsScreenState extends State<EventsScreen>
                         ),
                         InkWell(
                           onTap: () {
-                            BlocProvider.of<EventsCubit>(context)
-                                .pressJoinedIn();
+                            if (canPressFilter == true) {
+                              setState(() {
+                                checkFilterStatus = false;
+                                statusLable = 'Status';
+                                checkFilterTopic = false;
+                                topicLable = "Category";
+                              });
+                              BlocProvider.of<EventsCubit>(context)
+                                  .pressJoinedIn();
+                            }
                           },
                           child: Container(
                             padding: EdgeInsets.all(
@@ -233,48 +294,15 @@ class _EventsScreenState extends State<EventsScreen>
                         ),
                         InkWell(
                           onTap: () {
-                            showDatePicker(
-                              context: context,
-                              initialDate: DateTime.now(),
-                              firstDate: DateTime(2020),
-                              lastDate: DateTime(2022),
-                            );
-                          },
-                          child: Container(
-                            padding: EdgeInsets.all(
-                                SizeConfig.blockSizeHorizontal * 3),
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.black12),
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(20.0),
-                            ),
-                            child: Row(
-                              children: <Widget>[
-                                Icon(
-                                  CupertinoIcons.calendar,
-                                  size: 16,
-                                  color: AppColors.MAIN_COLOR,
-                                ),
-                                SizedBox(
-                                  width: SizeConfig.blockSizeHorizontal * 1,
-                                ),
-                                Text(
-                                  'Date',
-                                  style: GoogleFonts.lato(),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: SizeConfig.blockSizeHorizontal * 2,
-                        ),
-                        InkWell(
-                          onTap: () {
                             setState(() {
                               currentPage = 0;
                               events.clear();
                               checkFilterJoined = false;
+                              checkFilterStatus = false;
+                              statusLable = "Status";
+                              canPressFilter = false;
+                              topicLable = "Category";
+                              checkFilterTopic = false;
                             });
                             BlocProvider.of<EventsCubit>(context)
                                 .loadEvents(currentPage);
@@ -310,7 +338,9 @@ class _EventsScreenState extends State<EventsScreen>
               BlocBuilder<EventsCubit, EventsState>(builder: (context, state) {
                 setupScrollController(context);
                 if ((state.isFirstFetched && state.status.isLoading) ||
-                    state.status.isLoadingJoinedInEvent) {
+                    state.status.isLoadingJoinedInEvent ||
+                    state.status.isLoadingEventByStatus ||
+                    state.status.isLoadingEventTopic) {
                   return Column(
                     children: <Widget>[
                       SizedBox(
@@ -319,73 +349,111 @@ class _EventsScreenState extends State<EventsScreen>
                       LoadingView(message: 'Loading...')
                     ],
                   );
-                }
-                bool isLoading = false;
-                if (state.status.isLoading) {
-                  events = state.oldEvents;
-                  isLoading = true;
-                } else if (state.status.isLoaded) {
-                  events = state.events;
-                  currentPage = state.page;
-                } else if (state.status.isLoadJoinedInEventSuccess) {
-                  events = state.joinedEvents;
-                } 
-                return Container(
-                  height: SizeConfig.blockSizeVertical * 69.6,
-                  child: RefreshIndicator(
-                    onRefresh: () async {
-                      setState(() {
+                } else if (state.status.isLoadJoinedInEventFailed ||
+                    state.status.isLoadEventByStatusFailed ||
+                    state.status.isLoadError) {
+                  return DisplayError(
+                      message: 'A problem occurs while loading events',
+                      reload: () {
                         currentPage = 0;
-                        isLoading = false;
                         events.clear();
                         checkFilterJoined = false;
+                        checkFilterStatus = false;
+                        statusLable = "Status";
+                        canPressFilter = false;
+                        topicLable = "Category";
+                        checkFilterTopic = false;
+                        BlocProvider.of<EventsCubit>(context)
+                            .loadEvents(currentPage);
                       });
-                      BlocProvider.of<EventsCubit>(context)
-                          .loadEvents(currentPage);
-                    },
-                    child: ListView.separated(
-                      padding: EdgeInsets.only(
-                          left: SizeConfig.blockSizeHorizontal * 2,
-                          right: SizeConfig.blockSizeHorizontal * 2,
-                          top: SizeConfig.blockSizeVertical * 2),
-                      controller:
-                          checkFilterJoined == false ? scrollController : null,
-                      separatorBuilder: (context, index) => SizedBox(
-                        height: SizeConfig.blockSizeVertical * 2,
-                      ),
-                      itemCount: events.length + (isLoading ? 1 : 0),
-                      itemBuilder: (context, index) {
-                        if (index < events.length) {
-                          return EventCard(
-                            content: events[index],
-                            eventAction: () {
-                              EventBusUtils.getInstance()
-                                  .on<JoinedInEvent>()
-                                  .listen((event) {
-                                setState(() {
-                                  events[index].isJoined = event.joinedIn;
-                                });
-                              });
-                              Navigator.pushNamed(
-                                  context, RouteName.EVENT_DETAILS,
-                                  arguments: EventDetailsScreenArguments(
-                                      events[index].content.eventId));
-                            },
-                          );
-                        } else {
-                          Timer(Duration(milliseconds: 30), () {
-                            scrollController.jumpTo(
-                                scrollController.position.maxScrollExtent);
-                          });
-                          return Padding(
-                            padding: const EdgeInsets.all(30.0),
-                            child: Center(child: CupertinoActivityIndicator()),
-                          );
-                        }
+                      
+                } else {
+                  bool isLoading = false;
+                  if (state.status.isLoading) {
+                    events = state.oldEvents;
+                    isLoading = true;
+                  } else if (state.status.isLoaded) {
+                    events = state.events;
+                    currentPage = state.page;
+                    canPressFilter = true;
+                  } else if (state.status.isLoadJoinedInEventSuccess) {
+                    events = state.joinedEvents;
+                  } else if (state.status.isLoadEventByStatusSuccess) {
+                    events = state.eventsByStatus;
+                  } else if (state.status.isLoadedEventTopic) {
+                    events = state.eventsByTopic;
+                  }
+                  return Container(
+                    child: RefreshIndicator(
+                      onRefresh: () async {
+                        setState(() {
+                          currentPage = 0;
+                          isLoading = false;
+                          events.clear();
+                          checkFilterJoined = false;
+                          checkFilterStatus = false;
+                          statusLable = "Status";
+                          canPressFilter = false;
+                          topicLable = "Category";
+                          checkFilterTopic = false;
+                        });
+                        BlocProvider.of<EventsCubit>(context)
+                            .loadEvents(currentPage);
                       },
+                      child: LimitedBox(
+                        maxHeight: SizeConfig.blockSizeVertical * 69.6,
+                        child: ListView.separated(
+                          padding: EdgeInsets.only(
+                              left: SizeConfig.blockSizeHorizontal * 2,
+                              right: SizeConfig.blockSizeHorizontal * 2,
+                              top: SizeConfig.blockSizeVertical * 2),
+                          controller: checkFilterJoined == false ||
+                                  checkFilterStatus == false ||
+                                  checkFilterTopic == false
+                              ? scrollController
+                              : null,
+                          separatorBuilder: (context, index) => SizedBox(
+                            height: SizeConfig.blockSizeVertical * 2,
+                          ),
+                          itemCount: events.length + (isLoading ? 1 : 0),
+                          itemBuilder: (context, index) {
+                            if (index < events.length) {
+                              return EventCard(
+                                content: events[index],
+                                eventAction: () {
+                                  EventBusUtils.getInstance()
+                                      .on<JoinedInEvent>()
+                                      .listen((event) {
+                                    if (events[index].content.eventId ==
+                                        event.eventId) {
+                                      setState(() {
+                                        events[index].isJoined = event.joinedIn;
+                                      });
+                                    }
+                                  });
+                                  Navigator.pushNamed(
+                                      context, RouteName.EVENT_DETAILS,
+                                      arguments: EventDetailsScreenArguments(
+                                          events[index].content.eventId));
+                                },
+                              );
+                            } else {
+                              Timer(Duration(milliseconds: 30), () {
+                                scrollController.jumpTo(
+                                    scrollController.position.maxScrollExtent);
+                              });
+                              return Padding(
+                                padding: const EdgeInsets.all(30.0),
+                                child:
+                                    Center(child: CupertinoActivityIndicator()),
+                              );
+                            }
+                          },
+                        ),
+                      ),
                     ),
-                  ),
-                );
+                  );
+                }
               })
             ],
           ),

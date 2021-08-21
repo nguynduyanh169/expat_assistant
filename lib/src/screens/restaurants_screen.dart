@@ -13,6 +13,7 @@ import 'package:expat_assistant/src/screens/restaurant_by_food_screen.dart';
 import 'package:expat_assistant/src/screens/restaurant_details_screen.dart';
 import 'package:expat_assistant/src/states/restaurants_state.dart';
 import 'package:expat_assistant/src/widgets/alert_dialog_vocabulary.dart';
+import 'package:expat_assistant/src/widgets/error.dart';
 import 'package:expat_assistant/src/widgets/loading.dart';
 import 'package:expat_assistant/src/widgets/loading_dialog.dart';
 import 'package:expat_assistant/src/widgets/restaurant_card.dart';
@@ -116,7 +117,7 @@ class _RestaurantsScreenState extends State<RestaurantsScreen>
               Navigator.pop(context);
               CustomSnackBar.showSnackBar(
                   context: context,
-                  message: 'An error occurs while recoginzing food image',
+                  message: state.errorMessage,
                   color: Colors.red);
             } else if (state.status.isLoadingMoreRestaurants) {
               isLoadingMore = true;
@@ -132,14 +133,19 @@ class _RestaurantsScreenState extends State<RestaurantsScreen>
             setupScrollController(context);
             if (state.status.isLoading) {
               return LoadingViewForRestaurant(message: 'Loading...');
+            } else if (state.status.isLoadError) {
+              return DisplayError(
+                  message: 'An error while getting restaurants',
+                  reload: () {
+                    BlocProvider.of<RestaurantsCubit>(context)
+                        .loadDataToScreen();
+                  });
             } else {
               if (state.status.isLoaded) {
                 _addressText = state.currentAddress;
                 restaurantList = state.locations;
                 currentLat = state.currentLat;
                 currentLng = state.currentLng;
-              } else if (state.status.isLoadError) {
-                _addressText = "Error";
               }
               return Container(
                 padding: EdgeInsets.only(
@@ -266,10 +272,14 @@ class _RestaurantsScreenState extends State<RestaurantsScreen>
                                   if (check) {
                                     getImage(context);
                                   } else {
-                                    final cameras = await availableCameras();
                                     Navigator.pushNamed(context, '/foodCamera',
-                                        arguments:
-                                            FoodCameraArguments(cameras));
+                                        arguments: FoodCameraArguments(
+                                          currentLat,
+                                          currentLng,
+                                          currentLat.toString() +
+                                              "," +
+                                              currentLng.toString(),
+                                        ));
                                   }
                                 },
                                 child: Container(
@@ -297,73 +307,9 @@ class _RestaurantsScreenState extends State<RestaurantsScreen>
                       height: SizeConfig.blockSizeVertical * 1,
                     ),
                     Container(
-                      height: SizeConfig.blockSizeVertical * 5,
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: <Widget>[
-                          Container(
-                            padding: EdgeInsets.all(
-                                SizeConfig.blockSizeHorizontal * 2),
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10.0),
-                                boxShadow: [
-                                  BoxShadow(
-                                      color: Colors.black26.withOpacity(0.05),
-                                      offset: Offset(0.0, 6.0),
-                                      blurRadius: 10.0,
-                                      spreadRadius: 0.10)
-                                ]),
-                            child: Row(
-                              children: <Widget>[
-                                Icon(
-                                  LineIcons.star,
-                                ),
-                                SizedBox(
-                                  width: SizeConfig.blockSizeHorizontal * 1,
-                                ),
-                                Text('High Ratings', style: GoogleFonts.lato())
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            width: SizeConfig.blockSizeHorizontal * 2,
-                          ),
-                          Container(
-                            padding: EdgeInsets.all(
-                                SizeConfig.blockSizeHorizontal * 2),
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10.0),
-                                boxShadow: [
-                                  BoxShadow(
-                                      color: Colors.black26.withOpacity(0.05),
-                                      offset: Offset(0.0, 6.0),
-                                      blurRadius: 10.0,
-                                      spreadRadius: 0.10)
-                                ]),
-                            child: Row(
-                              children: <Widget>[
-                                Icon(
-                                  LineIcons.businessTime,
-                                ),
-                                SizedBox(
-                                  width: SizeConfig.blockSizeHorizontal * 1,
-                                ),
-                                Text('Opening Now', style: GoogleFonts.lato())
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: SizeConfig.blockSizeVertical * 1,
-                    ),
-                    Container(
                       padding: EdgeInsets.only(
                           top: SizeConfig.blockSizeHorizontal * 1),
-                      height: SizeConfig.blockSizeVertical * 45.2,
+                      height: SizeConfig.blockSizeVertical * 51,
                       child: ListView.separated(
                         controller: scrollController,
                         itemBuilder: (context, index) {

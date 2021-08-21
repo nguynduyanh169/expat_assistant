@@ -41,6 +41,7 @@ enum CallRoomStatus {
   loadedRoom,
   loadRoomError,
   notInTime,
+  outOfDate,
   appointmentCompleted
 }
 
@@ -52,4 +53,6 @@ extension Explaination on CallRoomStatus {
   bool get isNotInTime => this == CallRoomStatus.notInTime;
   bool get isAppointmentCompleted =>
       this == CallRoomStatus.appointmentCompleted;
+  bool get isOutOfDate =>
+      this == CallRoomStatus.outOfDate;
 }

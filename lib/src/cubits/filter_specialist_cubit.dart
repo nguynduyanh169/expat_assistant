@@ -93,7 +93,7 @@ class FilterSpecialistsCubit extends Cubit<FilterSpecialistState> {
     }
   }
 
-  Future<void> getSpecialistsByCreateDate(int page) async{
+  Future<void> getSpecialistsByCreateDate(int page) async {
     try {
       Map<dynamic, dynamic> loginResponse =
           _hiveUtils.getUserAuth(boxName: HiveBoxName.USER_AUTH);
@@ -110,7 +110,8 @@ class FilterSpecialistsCubit extends Cubit<FilterSpecialistState> {
         oldSpecialistsDate: oldSpecialists,
         isFirstFetch: page == 0,
       ));
-      var specialist = await _specialistRepository.getSpecialistByCreateDate(token: token, page: page);
+      var specialist = await _specialistRepository.getSpecialistByCreateDate(
+          token: token, page: page);
       if (specialist == 204) {
         emit(state.copyWith(
             page: page,
@@ -134,6 +135,7 @@ class FilterSpecialistsCubit extends Cubit<FilterSpecialistState> {
 
   Future<List<SpecialistDetails>> fetchSpecialistsById(
       List<ListSpec> specialists, String token) async {
+    print(specialists.length);
     List<SpecialistDetails> result = [];
     for (ListSpec spec in specialists) {
       SpecialistDetails specialistDetails = await _specialistRepository

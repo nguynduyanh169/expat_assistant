@@ -5,6 +5,7 @@ import 'package:expat_assistant/src/configs/size_config.dart';
 import 'package:expat_assistant/src/cubits/related_news_cubit.dart';
 import 'package:expat_assistant/src/models/blog.dart';
 import 'package:expat_assistant/src/repositories/blog_repository.dart';
+import 'package:expat_assistant/src/screens/blog_details_screen.dart';
 import 'package:expat_assistant/src/states/related_news_state.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
@@ -38,7 +39,7 @@ class RelatedNewsItem extends StatelessWidget {
             ),
             Container(
               padding: EdgeInsets.only(
-                top: SizeConfig.blockSizeVertical * 1,
+                  top: SizeConfig.blockSizeVertical * 1,
                   left: SizeConfig.blockSizeHorizontal * 1.5,
                   right: SizeConfig.blockSizeHorizontal * 1.5,
                   bottom: SizeConfig.blockSizeHorizontal * 2),
@@ -70,7 +71,8 @@ class RelatedNews extends StatefulWidget {
   _RelatedNewsState createState() => _RelatedNewsState();
 }
 
-class _RelatedNewsState extends State<RelatedNews> {
+class _RelatedNewsState extends State<RelatedNews>
+    with AutomaticKeepAliveClientMixin {
   final ScrollController scrollController = ScrollController();
 
   int currentPage = 0;
@@ -135,7 +137,12 @@ class _RelatedNewsState extends State<RelatedNews> {
                       itemBuilder: (context, index) {
                         if (index < relatedBlogs.length) {
                           return InkWell(
-                              onTap: () {},
+                              onTap: () {
+                                Navigator.pushNamed(
+                                    context, RouteName.BLOG_DETAILS,
+                                    arguments: BlogDetailsArguments(
+                                        relatedBlogs[index].blogId));
+                              },
                               child: RelatedNewsItem(
                                 news: relatedBlogs[index],
                               ));
@@ -162,4 +169,8 @@ class _RelatedNewsState extends State<RelatedNews> {
       ),
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }
