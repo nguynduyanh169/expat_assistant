@@ -33,6 +33,7 @@ class AppointmentProvider {
       {@required String token,
       @required int expatId,
       @required int sessionId,
+      @required int majorId,
       @required String channelName}) async {
     ExpatAppointment appointment;
     try {
@@ -42,10 +43,10 @@ class AppointmentProvider {
         'Authorization': 'Bearer $token',
       };
       print(ApiName.REGISTRY_SESSION +
-          "?channelName=$channelName&expatId=$expatId&sessionId=$sessionId");
+          "?channelName=$channelName&expatId=$expatId&majorId=$majorId&sessionId=$sessionId");
       Response response = await _dio.post(
           ApiName.REGISTRY_SESSION +
-              "?channelName=$channelName&expatId=$expatId&sessionId=$sessionId",
+              "?channelName=$channelName&expatId=$expatId&majorId=$majorId&sessionId=$sessionId",
           options: Options(headers: headers));
       print(response.statusCode);
       if (response.statusCode == 200) {

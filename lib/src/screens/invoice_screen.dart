@@ -11,6 +11,7 @@ import 'package:expat_assistant/src/repositories/appointment_repository.dart';
 import 'package:expat_assistant/src/repositories/payment_repository.dart';
 import 'package:expat_assistant/src/screens/payment_done_screen.dart';
 import 'package:expat_assistant/src/states/invoice_state.dart';
+import 'package:expat_assistant/src/utils/date_utils.dart';
 import 'package:expat_assistant/src/utils/rsa_utils.dart';
 import 'package:expat_assistant/src/utils/text_utils.dart';
 import 'package:expat_assistant/src/widgets/loading_dialog.dart';
@@ -91,7 +92,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
                   context: context, message: 'Please wait...');
             } else if (state.status.isPayWithMomoSuccess) {
               BlocProvider.of<InvoiceCubit>(context).registrySessions(
-                  selectedSession, state.paymentRespone, channelName);
+                  selectedSession, specialistDetails.majors.first.majorId, state.paymentRespone, channelName,);
             } else if (state.status.isPayWithMomoFailed) {
               Navigator.pop(context);
               CustomSnackBar.showSnackBar(
@@ -242,8 +243,6 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
                                   GoogleFonts.lato(fontSize: 17))),
                           child: Text("Pay Now"),
                           onPressed: () {
-                            // BlocProvider.of<InvoiceCubit>(context)
-                            //     .registrySessions(sessions);
                             MomoPaymentInfo options = MomoPaymentInfo(
                                 merchantName: "Dịch vụ giải đáp với chuyên gia",
                                 merchantCode: MomoConstants.MERCHANT_CODE,
@@ -254,7 +253,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
                                 merchantNameLabel: "Hẹn tư vấn",
                                 fee: 0,
                                 description:
-                                    'Thanh toán lịch hẹn với chuyên gia ${specialistDetails.specialist.fullname}',
+                                    'Thanh toán lịch hẹn với chuyên gia ${specialistDetails.specialist.fullname} vào ngày ${DateFormat("dd/MM/yyyy HH:mm").format(selectedSession.startDate)}',
                                 partner: 'merchant',
                                 extra:
                                     "{\"key1\":\"value1\",\"key2\":\"value2\"}",
@@ -303,7 +302,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
         partnerRefId: paymentRequest.partnerRefId,
         hash: rsaUtils.encryptStr(utf8.encode(paymentRequesJson)),
         description:
-            'Thanh toán lịch hẹn với chuyên gia ${specialistDetails.specialist.fullname}',
+            'Thanh toán lịch hẹn với chuyên gia ${specialistDetails.specialist.fullname} vào lúc',
         version: 2);
     BlocProvider.of<InvoiceCubit>(screenContext).paymentWithMomo(payment);
   }

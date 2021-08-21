@@ -13,17 +13,17 @@ ExpatAppointment appointmentFromJson(String str) =>
 String appointmentToJson(ExpatAppointment data) => json.encode(data.toJson());
 
 class ExpatAppointment {
-  ExpatAppointment({
-    this.conAppId,
-    this.session,
-    this.expat,
-    this.language,
-    this.major,
-    this.createDate,
-    this.rating,
-    this.comment,
-    this.status,
-  });
+  ExpatAppointment(
+      {this.conAppId,
+      this.session,
+      this.expat,
+      this.language,
+      this.major,
+      this.createDate,
+      this.rating,
+      this.comment,
+      this.status,
+      this.channelName});
 
   int conAppId;
   Session session;
@@ -34,19 +34,20 @@ class ExpatAppointment {
   dynamic rating;
   dynamic comment;
   dynamic status;
+  String channelName;
 
   factory ExpatAppointment.fromJson(Map<String, dynamic> json) =>
       ExpatAppointment(
-        conAppId: json["conAppId"],
-        session: Session.fromJson(json["session"]),
-        expat: ExpatProfile.fromJson(json["expat"]),
-        language: json["language"],
-        major: json["major"],
-        createDate: List<int>.from(json["createDate"].map((x) => x)),
-        rating: json["rating"],
-        comment: json["comment"],
-        status: json["status"],
-      );
+          conAppId: json["conAppId"],
+          session: Session.fromJson(json["session"]),
+          expat: ExpatProfile.fromJson(json["expat"]),
+          language: json["language"],
+          major: json["major"],
+          createDate: List<int>.from(json["createDate"].map((x) => x)),
+          rating: json["rating"],
+          comment: json["comment"],
+          status: json["status"],
+          channelName: json["channelName"]);
 
   Map<String, dynamic> toJson() => {
         "conAppId": conAppId,
@@ -58,5 +59,6 @@ class ExpatAppointment {
         "rating": rating,
         "comment": comment,
         "status": status,
+        "channelName": channelName
       };
 }

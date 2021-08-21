@@ -27,6 +27,8 @@ class FeedBackScreen extends StatelessWidget {
         ..initializeFeedback(args.appointmentId),
       child: Scaffold(
         appBar: AppBar(
+          leading: BackButton(onPressed: () => Navigator.popUntil(
+                      context, ModalRoute.withName(RouteName.HOME_PAGE)),),
           bottom: PreferredSize(
               child: Container(
                 color: Colors.black38,
@@ -48,6 +50,7 @@ class FeedBackScreen extends StatelessWidget {
                 onPressed: () {
                   Navigator.popUntil(
                       context, ModalRoute.withName(RouteName.HOME_PAGE));
+                  
                 },
                 icon: Icon(CupertinoIcons.home)),
             SizedBox(

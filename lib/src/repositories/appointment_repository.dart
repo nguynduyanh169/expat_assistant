@@ -9,10 +9,12 @@ class AppointmentRepository {
       {@required String token,
       @required int expatId,
       @required int sessionId,
+      @required int majorId,
       @required String channelName}) {
     return _appointmentProvider.registrySession(
         token: token,
         expatId: expatId,
+        majorId: majorId,
         sessionId: sessionId,
         channelName: channelName);
   }

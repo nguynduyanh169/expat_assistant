@@ -18,7 +18,7 @@ class InvoiceCubit extends Cubit<InvoiceState> {
   InvoiceCubit(this._appointmentRepository, this._paymentRepository)
       : super(const InvoiceState(status: InvoiceStatus.init));
 
-  Future<void> registrySessions(SessionDisplay session,
+  Future<void> registrySessions(SessionDisplay session, int majorId,
       PaymentRespone paymentRespone, String channelName) async {
     print(channelName);
     emit(state.copyWith(status: InvoiceStatus.registrying));
@@ -32,6 +32,7 @@ class InvoiceCubit extends Cubit<InvoiceState> {
               token: token,
               expatId: expatId,
               sessionId: session.sessionId,
+              majorId: majorId,
               channelName: channelName);
       if (appointment == null) {
         emit(state.copyWith(
@@ -62,9 +63,15 @@ class InvoiceCubit extends Cubit<InvoiceState> {
               'Register Appointment ${DateTimeUtils.getAppointmentDate(startDateTime: appointment.session.startTime)}',
               'You have registered an appointment with ${appointment.session.specialist.fullname} at ${DateTimeUtils.getAppointmentDate(startDateTime: appointment.session.startTime)} successfully');
           NotificationUtils.pushScheduleNotificaton(
-                                  'Upcoming Appointment ${DateTimeUtils.getAppointmentDate(startDateTime: appointment.session.startTime)}',
-                                  'There is an appointment with ${appointment.session.specialist.fullname} at ${DateTimeUtils.getAppointmentDate(startDateTime: appointment.session.startTime)}',
-                                  DateTime(appointment.session.startTime[0], appointment.session.startTime[1], appointment.session.startTime[2], appointment.session.startTime[3], appointment.session.startTime[4]).toUtc());
+              'Upcoming Appointment ${DateTimeUtils.getAppointmentDate(startDateTime: appointment.session.startTime)}',
+              'There is an appointment with ${appointment.session.specialist.fullname} at ${DateTimeUtils.getAppointmentDate(startDateTime: appointment.session.startTime)}',
+              DateTime(
+                      appointment.session.startTime[0],
+                      appointment.session.startTime[1],
+                      appointment.session.startTime[2],
+                      appointment.session.startTime[3],
+                      appointment.session.startTime[4])
+                  .toUtc());
           emit(state.copyWith(status: InvoiceStatus.registrySuccess));
         }
       }

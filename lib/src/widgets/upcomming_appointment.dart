@@ -31,6 +31,8 @@ class _TodayAppointmentState extends State<TodayAppointment> {
       child: BlocBuilder<TodayAppointmentCubit, TodayAppointmentState>(
         builder: (context, state) {
           if (widget.isReload == true) {
+            appointment = null;
+            print(widget.isReload);
             BlocProvider.of<TodayAppointmentCubit>(context)
                 .getTodayAppointment();
           }
@@ -47,7 +49,9 @@ class _TodayAppointmentState extends State<TodayAppointment> {
                 ),
               ),
             );
-          } else if (state.status.isLoadedNoAppointment || state.status.isLoadAppointmentError) {
+          } else if (state.status.isLoadedNoAppointment ||
+              state.status.isLoadAppointmentError ||
+              state.appointment == null) {
             return Container(
               width: SizeConfig.blockSizeHorizontal * 90,
               height: SizeConfig.blockSizeVertical * 22,

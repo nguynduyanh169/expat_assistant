@@ -93,10 +93,9 @@ class SessionUtils {
   bool checkDisableSession(SessionDisplay sessionDisplay) {
     bool cannotChoose = false;
     if (sessionDisplay.isDisable == true) {
-      print('object');
       cannotChoose = true;
     }
-    if (sessionDisplay.startDate.subtract(Duration(minutes: 15)).isBefore(DateTime.now())) {
+    if (sessionDisplay.startDate.subtract(Duration(minutes: 0)).isBefore(DateTime.now())) {
       
       cannotChoose = true;
     }

@@ -34,6 +34,7 @@ class _CallRoomScreenState extends State<CallRoomScreen> {
   bool muted = false;
   bool openSpeaker = false;
   bool isOnline = false;
+  bool checkJoinRoom = false;
   RtcEngine _engine;
   final interval = const Duration(seconds: 1);
   int timerMaxSeconds = 0;
@@ -63,6 +64,7 @@ class _CallRoomScreenState extends State<CallRoomScreen> {
 
   Future<void> initialize(
       String channelName, ClientRole role, int uid, String agoraToken) async {
+    print(channelName);
     if (Agora.APP_ID.isEmpty) {
       setState(() {
         _infoStrings.add(
@@ -112,7 +114,6 @@ class _CallRoomScreenState extends State<CallRoomScreen> {
             color: Colors.green);
         print(info);
       });
-      // startTimeout();
     }, userOffline: (uid, elapsed) {
       setState(() {
         final info = 'userOffline: $uid';
@@ -170,6 +171,11 @@ class _CallRoomScreenState extends State<CallRoomScreen> {
         ..getAppointmentById(args.appointmentId),
       child: Scaffold(
         appBar: AppBar(
+          leading: BackButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
           elevation: 0,
           backgroundColor: Colors.transparent,
           automaticallyImplyLeading: true,
@@ -183,10 +189,11 @@ class _CallRoomScreenState extends State<CallRoomScreen> {
         body: BlocConsumer<CallRoomCubit, CallRoomState>(
           listener: (context, state) {
             if (state.status.isLoadedRoom) {
+              checkJoinRoom = true;
               appointment = state.appointment;
               roomCall = state.roomCall;
               currentContext = context;
-              initialize(Agora.CHANNEL_NAME, ClientRole.Broadcaster,
+              initialize(appointment.channelName, ClientRole.Broadcaster,
                   roomCall.uid, roomCall.token);
             }
           },
@@ -337,9 +344,7 @@ class _CallRoomScreenState extends State<CallRoomScreen> {
   }
 
   void _onCallEnd(BuildContext context, ExpatAppointment appointment) {
-    if (isOnline == false) {
-      Navigator.pop(context);
-    } else if (currentSeconds >= 5) {
+    if (currentSeconds >= 5 || (timerMaxSeconds - currentSeconds <= 60)) {
       showDialog(
           context: context,
           builder: (BuildContext context) {

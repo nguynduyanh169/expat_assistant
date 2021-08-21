@@ -47,9 +47,9 @@ class CallRoomCubit extends Cubit<CallRoomState> {
               RoomCall(uid: int.parse(TextUtils.getUid()), role: 1);
           String agoraToken = await _appointmentRepository.generateToken(
               uid: roomCall.uid,
-              channelName: 'baobao',
+              channelName: appointment.channelName,
               token: token,
-              expiredTime: 10000,
+              expiredTime: 7200,
               role: 1);
           roomCall.token = agoraToken;
           emit(state.copyWith(
