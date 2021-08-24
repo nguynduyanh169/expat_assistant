@@ -35,7 +35,7 @@ class SpecialistCard extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(10.0),
               child: ExtendedImage.network(
-                spec.specialist.avatar,
+                spec.specialist.avatar != null ? spec.specialist.avatar : "https://firebasestorage.googleapis.com/v0/b/master-vietnamese.appspot.com/o/expat%2Fuser.png?alt=media&token=b8ddb06c-347e-419b-95e7-d28a30d93c1a",
                 fit: BoxFit.cover,
                 width: SizeConfig.blockSizeHorizontal * 30,
                 height: SizeConfig.blockSizeVertical * 15,

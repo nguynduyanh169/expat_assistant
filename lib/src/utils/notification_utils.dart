@@ -49,7 +49,7 @@ class NotificationUtils {
           playerIds: [playerId],
           content: content,
           heading: title,
-          sendAfter: schedule));
+          sendAfter: schedule.subtract(Duration(minutes: 5))));
     });
   }
 

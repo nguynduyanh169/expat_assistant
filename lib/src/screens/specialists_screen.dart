@@ -131,7 +131,7 @@ class _SpecialistsScreenState extends State<SpecialistsScreen> {
                         ],
                       ),
                     ),
-                    TodayAppointment(isReload),
+                    TodayAppointment(),
                     SizedBox(
                       height: SizeConfig.blockSizeVertical * 2,
                     ),
@@ -186,9 +186,10 @@ class _SpecialistsScreenState extends State<SpecialistsScreen> {
                                       .on<UpdateAppointment>()
                                       .listen((result) {
                                     if (result.update) {
-                                      setState(() {
-                                        isReload = true;
-                                      });
+                                      currentPage = 0;
+                                      specialists.clear();
+                                      BlocProvider.of<SpecialistCubit>(context)
+                                          .getSpecialists(currentPage);
                                     }
                                   });
                                   Navigator.pushNamed(

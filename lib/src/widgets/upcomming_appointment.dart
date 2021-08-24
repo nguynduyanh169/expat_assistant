@@ -1,3 +1,4 @@
+import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/configs/size_config.dart';
 import 'package:expat_assistant/src/cubits/today_appointment_cubit.dart';
@@ -5,6 +6,7 @@ import 'package:expat_assistant/src/models/appointment.dart';
 import 'package:expat_assistant/src/repositories/appointment_repository.dart';
 import 'package:expat_assistant/src/screens/call_room_screen.dart';
 import 'package:expat_assistant/src/states/today_appointment_state.dart';
+import 'package:expat_assistant/src/utils/value_notifier_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -13,9 +15,7 @@ import 'appointment_card.dart';
 
 // ignore: must_be_immutable
 class TodayAppointment extends StatefulWidget {
-  bool isReload = false;
-
-  TodayAppointment(this.isReload);
+  TodayAppointment();
   @override
   _TodayAppointmentState createState() => _TodayAppointmentState();
 }
@@ -30,16 +30,10 @@ class _TodayAppointmentState extends State<TodayAppointment> {
           TodayAppointmentCubit(AppointmentRepository())..getTodayAppointment(),
       child: BlocBuilder<TodayAppointmentCubit, TodayAppointmentState>(
         builder: (context, state) {
-          if (widget.isReload == true) {
-            appointment = null;
-            print(widget.isReload);
-            BlocProvider.of<TodayAppointmentCubit>(context)
-                .getTodayAppointment();
-          }
           if (state.status.isLoadingAppointment) {
             return Container(
               width: SizeConfig.blockSizeHorizontal * 90,
-              height: SizeConfig.blockSizeVertical * 15,
+              height: SizeConfig.blockSizeVertical * 22,
               padding: EdgeInsets.only(
                   left: SizeConfig.blockSizeHorizontal * 2,
                   right: SizeConfig.blockSizeHorizontal * 2),
@@ -78,7 +72,6 @@ class _TodayAppointmentState extends State<TodayAppointment> {
           } else {
             if (state.status.isLoadedAppointment) {
               appointment = state.appointment;
-              widget.isReload = false;
             }
             return Container(
               padding: EdgeInsets.only(

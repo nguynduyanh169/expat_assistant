@@ -113,7 +113,7 @@ class AppColors {
 }
 
 class GooglePlaces {
-  static const String API_KEY = "AIzaSyBxw5zB_V76V0K1yQgu-oCKeXvcnGNkh_g";
+  static const String API_KEY = "AIzaSyAqjmStsgt1UYL3ezHfzPOJ8aeaf97GlNs";
 }
 
 class Agora {

@@ -13,7 +13,7 @@ class ServicesCubit extends Cubit<ServiceState> {
       : super(const ServiceState(status: ServicesStatus.init));
 
   Future<void> getPaymentsHistory() async {
-    emit(state.copyWith(status: ServicesStatus.init));
+    emit(state.copyWith(status: ServicesStatus.loading));
     try {
       Map<dynamic, dynamic> loginResponse =
           _hiveUtils.getUserAuth(boxName: HiveBoxName.USER_AUTH);

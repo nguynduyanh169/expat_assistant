@@ -39,7 +39,9 @@ class AppointmentCard extends StatelessWidget {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10.0),
                     child: ExtendedImage.network(
-                      appointment.session.specialist.avatar,
+                      appointment.session.specialist.avatar == null
+                          ? 'https://firebasestorage.googleapis.com/v0/b/master-vietnamese.appspot.com/o/expat%2Fuser.png?alt=media&token=b8ddb06c-347e-419b-95e7-d28a30d93c1a'
+                          : appointment.session.specialist.avatar,
                       fit: BoxFit.cover,
                       width: SizeConfig.blockSizeHorizontal * 18,
                       height: SizeConfig.blockSizeVertical * 9,
@@ -59,12 +61,14 @@ class AppointmentCard extends StatelessWidget {
                             fontSize: 18),
                       ),
                       Text(
-                        "Doctor",
+                        appointment.major == null
+                            ? "Not available"
+                            : appointment.major.name,
                         style: GoogleFonts.lato(color: Colors.white),
                       ),
                       SizedBox(
-                    height: SizeConfig.blockSizeVertical * 2,
-                  ),  
+                        height: SizeConfig.blockSizeVertical * 2,
+                      ),
                     ],
                   )
                 ],

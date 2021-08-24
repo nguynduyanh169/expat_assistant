@@ -47,8 +47,7 @@ class PaymentDoneScreen extends StatelessWidget {
             Container(
               width: SizeConfig.blockSizeHorizontal * 70,
               child: Text(
-                'You have registry an consultant appointment with Dr. ${args.specialistDetails.specialist.fullname} on ${DateFormat.yMMMMd()
-                              .format(args.sessionDisplay.dateOfSession)}. Here is the details of the appointment.',
+                'You have registry an consultant appointment with Dr. ${args.specialistDetails.specialist.fullname} on ${DateFormat.yMMMMd().format(args.sessionDisplay.dateOfSession)}. Here is the details of the appointment.',
                 style:
                     GoogleFonts.lato(fontSize: 16, fontWeight: FontWeight.w500),
                 textAlign: TextAlign.center,

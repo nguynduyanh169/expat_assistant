@@ -221,67 +221,7 @@ class _BlogsScreenState extends State<BlogsScreen> {
                             SizedBox(
                               width: SizeConfig.blockSizeHorizontal * 2,
                             ),
-                            InkWell(
-                              onTap: () async {
-                                final DateTime picked = await showDatePicker(
-                                    context: context,
-                                    initialDate: selectedDate,
-                                    firstDate: DateTime(2015, 8),
-                                    lastDate: DateTime(2101));
-                                if (picked != null && picked != selectedDate)
-                                  setState(() {
-                                    selectedDate = picked;
-                                    currentPage = 0;
-                                    isFilterByCategory = false;
-                                    isFilterByDate = true;
-                                    news.clear();
-                                  });
-                                BlocProvider.of<BlogsCubit>(context)
-                                    .getBlogByDate(
-                                        currentPage,
-                                        DateFormat('yyyy-MM-dd')
-                                            .format(selectedDate));
-                              },
-                              child: Container(
-                                padding: EdgeInsets.all(
-                                    SizeConfig.blockSizeHorizontal * 3),
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.black12),
-                                  color: isFilterByDate == true
-                                      ? AppColors.MAIN_COLOR
-                                      : Colors.white,
-                                  borderRadius: BorderRadius.circular(20.0),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: <Widget>[
-                                    Icon(
-                                      CupertinoIcons.calendar,
-                                      size: 16,
-                                      color: isFilterByDate == true
-                                          ? Colors.white
-                                          : AppColors.MAIN_COLOR,
-                                    ),
-                                    SizedBox(
-                                      width: SizeConfig.blockSizeHorizontal * 1,
-                                    ),
-                                    Text(
-                                        isFilterByDate == true
-                                            ? DateFormat('yyyy-MM-dd')
-                                                .format(selectedDate)
-                                            : 'Date',
-                                        style: GoogleFonts.lato(
-                                            color: isFilterByDate == true
-                                                ? Colors.white
-                                                : Colors.black))
-                                  ],
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              width: SizeConfig.blockSizeHorizontal * 2,
-                            ),
+                            
                             InkWell(
                               onTap: () {
                                 setState(() {

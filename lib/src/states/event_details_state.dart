@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:expat_assistant/src/models/event.dart';
+import 'package:expat_assistant/src/models/event_details.dart';
 
 enum EventDetailsStatus {
   loadingContent,
@@ -33,7 +34,7 @@ extension Explanation on EventDetailsStatus {
 }
 
 class EventDetailsState extends Equatable {
-  final EventShow eventContent;
+  final EventShowDetails eventContent;
   final String message;
   final EventDetailsStatus status;
 
@@ -45,7 +46,7 @@ class EventDetailsState extends Equatable {
   List<Object> get props => [eventContent, message, status];
 
   EventDetailsState copyWith(
-      {EventShow eventContent, String message, EventDetailsStatus status}) {
+      {EventShowDetails eventContent, String message, EventDetailsStatus status}) {
     return EventDetailsState(
         eventContent: eventContent ?? this.eventContent,
         message: message ?? this.message,

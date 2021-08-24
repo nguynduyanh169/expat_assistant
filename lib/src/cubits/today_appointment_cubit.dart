@@ -56,21 +56,39 @@ class TodayAppointmentCubit extends Cubit<TodayAppointmentState> {
         nextAppointments.add(appointment);
       }
     }
-    nextAppointments.sort((a, b) => DateTime(
-            a.session.startTime[0],
-            a.session.startTime[1],
-            a.session.startTime[2],
-            a.session.startTime[3],
-            a.session.startTime[4])
-        .compareTo(DateTime(
-            a.session.startTime[0],
-            a.session.startTime[1],
-            a.session.startTime[2],
-            a.session.startTime[3],
-            a.session.startTime[4])));
+    print(nextAppointments.length);
+    // nextAppointments.sort((a, b) => DateTime(
+    //         a.session.startTime[0],
+    //         a.session.startTime[1],
+    //         a.session.startTime[2],
+    //         a.session.startTime[3],
+    //         a.session.startTime[4]).microsecondsSinceEpoch
+    //     .compareTo(DateTime(
+    //         a.session.startTime[0],
+    //         a.session.startTime[1],
+    //         a.session.startTime[2],
+    //         a.session.startTime[3],
+    //         a.session.startTime[4]).microsecondsSinceEpoch));
     var nextAppointment;
     if (nextAppointments.length != 0) {
-      nextAppointment = nextAppointments.last;
+      nextAppointment = nextAppointments.reduce((a, b) => DateTime(
+                      a.session.startTime[0],
+                      a.session.startTime[1],
+                      a.session.startTime[2],
+                      a.session.startTime[3],
+                      a.session.startTime[4])
+                  .difference(now)
+                  .abs() <
+              DateTime(
+                      b.session.startTime[0],
+                      b.session.startTime[1],
+                      b.session.startTime[2],
+                      b.session.startTime[3],
+                      b.session.startTime[4])
+                  .difference(now)
+                  .abs()
+          ? a
+          : b);
     }
 
     return nextAppointment;

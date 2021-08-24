@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/models/event.dart';
+import 'package:expat_assistant/src/models/event_details.dart';
 import 'package:expat_assistant/src/models/location.dart';
 import 'package:expat_assistant/src/models/topic.dart';
 import 'package:expat_assistant/src/repositories/event_repository.dart';
@@ -22,13 +23,14 @@ class EventDetailsCubit extends Cubit<EventDetailsState> {
 
   Future<void> getEventContent({@required int eventId}) async {
     emit(state.copyWith(status: EventDetailsStatus.loadingContent));
+    print(eventId);
     try {
       Map<dynamic, dynamic> loginResponse =
           _hiveUtils.getUserAuth(boxName: HiveBoxName.USER_AUTH);
       String token = loginResponse['token'].toString();
       int expatId = loginResponse['id'];
-      EventShow event;
-      Content content = await _eventRepository.getEventContentById(
+      EventShowDetails event;
+      EventDetails content = await _eventRepository.getEventContentById(
           eventId: eventId, token: token);
       if (content != null) {
         List<Location> locations = await _locationRepository
@@ -40,19 +42,15 @@ class EventDetailsCubit extends Cubit<EventDetailsState> {
         Content contentExpatId;
         if (contentsExpatId != null) {
           contentExpatId = contentsExpatId.firstWhere(
-              (element) => content.eventId == element.eventId,
+              (element) => content.event.eventId == element.eventId,
               orElse: () => null);
         }
         if (contentExpatId == null) {
-          event = EventShow(
-              location: locations[0],
-              topic: topics[0],
+          event = EventShowDetails(
               content: content,
               isJoined: false);
         } else {
-          event = EventShow(
-              location: locations[0],
-              topic: topics[0],
+          event = EventShowDetails(
               content: content,
               isJoined: true);
         }
@@ -66,7 +64,7 @@ class EventDetailsCubit extends Cubit<EventDetailsState> {
     }
   }
 
-  Future<void> joinEvent({@required EventShow event}) async {
+  Future<void> joinEvent({@required EventShowDetails event}) async {
     emit(state.copyWith(status: EventDetailsStatus.joiningEvent));
     try {
       bool check = EventUtils.checkJoinEvent(event);
@@ -78,7 +76,7 @@ class EventDetailsCubit extends Cubit<EventDetailsState> {
         String token = loginResponse['token'].toString();
         int expatId = loginResponse['id'];
         EventExpat eventExpat = await _eventRepository.joinAnEvent(
-            token: token, expatId: expatId, eventId: event.content.eventId);
+            token: token, expatId: expatId, eventId: event.content.event.eventId);
         if (eventExpat == null) {
           emit(state.copyWith(status: EventDetailsStatus.joinEventFailed));
         } else {
@@ -90,7 +88,7 @@ class EventDetailsCubit extends Cubit<EventDetailsState> {
     }
   }
 
-  Future<void> unJoinEvent({@required EventShow event}) async {
+  Future<void> unJoinEvent({@required EventShowDetails event}) async {
     emit(state.copyWith(status: EventDetailsStatus.unjoiningEvent));
     try {
       bool check = EventUtils.checkJoinEvent(event);
@@ -102,7 +100,7 @@ class EventDetailsCubit extends Cubit<EventDetailsState> {
         String token = loginResponse['token'].toString();
         int expatId = loginResponse['id'];
         int result = await _eventRepository.unjoinAnEvent(
-            token: token, expatId: expatId, eventId: event.content.eventId);
+            token: token, expatId: expatId, eventId: event.content.event.eventId);
         if (result == 0) {
           emit(state.copyWith(status: EventDetailsStatus.unjoinEventFailed));
         } else {

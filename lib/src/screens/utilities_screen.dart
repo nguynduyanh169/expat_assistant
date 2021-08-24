@@ -43,8 +43,8 @@ class UtilitiesScreen extends StatelessWidget {
             } else if (state.status.isLoaded) {
               totalPrice = state.totalPrice;
               totalPrice = totalPrice + " VNĐ";
-            } else if(state.status.isLoadError){
-              totalPrice = 'Error';
+            } else if (state.status.isLoadError) {
+              totalPrice = 'caculate error';
             }
           },
           builder: (context, state) {
@@ -59,58 +59,80 @@ class UtilitiesScreen extends StatelessWidget {
                   Container(
                     child: Column(
                       children: <Widget>[
-                        Container(
-                          padding: EdgeInsets.only(
-                              left: SizeConfig.blockSizeHorizontal * 5,
-                              right: SizeConfig.blockSizeHorizontal * 5),
-                          width: SizeConfig.blockSizeHorizontal * 95,
-                          height: SizeConfig.blockSizeVertical * 23,
-                          decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  const Color.fromRGBO(64, 201, 162, 1),
-                                  const Color.fromRGBO(64, 201, 162, 1),
-                                  const Color.fromRGBO(30, 193, 194, 30),
-                                ],
-                              ),
-                              borderRadius: BorderRadius.circular(10.0),
-                              boxShadow: [
-                                BoxShadow(
-                                    color: Colors.black26.withOpacity(0.1),
-                                    offset: Offset(0.0, 6.0),
-                                    blurRadius: 10.0,
-                                    spreadRadius: 0.10)
-                              ]),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Container(
-                                width: SizeConfig.blockSizeHorizontal * 15,
-                                height: SizeConfig.blockSizeVertical * 10,
-                                child:
-                                    Image.asset("assets/images/app_logo.png"),
-                              ),
-                              Container(
-                                child: Text(
-                                  'Your spendings on this year',
-                                  style: GoogleFonts.lato(
-                                      fontSize: 20, color: Colors.white),
+                        InkWell(
+                          onTap: () {
+                            Navigator.pushNamed(context, RouteName.WALLET);
+                          },
+                          child: Container(
+                            padding: EdgeInsets.only(
+                                left: SizeConfig.blockSizeHorizontal * 5,
+                                right: SizeConfig.blockSizeHorizontal * 5),
+                            width: SizeConfig.blockSizeHorizontal * 95,
+                            height: SizeConfig.blockSizeVertical * 23,
+                            decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    const Color.fromRGBO(64, 201, 162, 1),
+                                    const Color.fromRGBO(64, 201, 162, 1),
+                                    const Color.fromRGBO(30, 193, 194, 30),
+                                  ],
                                 ),
-                              ),
-                              SizedBox(
-                                height: SizeConfig.blockSizeVertical * 1.5,
-                              ),
-                              Container(
-                                child: Text(
-                                  totalPrice,
-                                  style: GoogleFonts.lato(
-                                      fontSize: 25, color: Colors.white),
+                                borderRadius: BorderRadius.circular(10.0),
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: Colors.black26.withOpacity(0.1),
+                                      offset: Offset(0.0, 6.0),
+                                      blurRadius: 10.0,
+                                      spreadRadius: 0.10)
+                                ]),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Container(
+                                  width: SizeConfig.blockSizeHorizontal * 15,
+                                  height: SizeConfig.blockSizeVertical * 10,
+                                  child:
+                                      Image.asset("assets/images/app_logo.png"),
                                 ),
-                              ),
-                            ],
+                                Container(
+                                  child: Text(
+                                    'Your spendings on this year',
+                                    style: GoogleFonts.lato(
+                                        fontSize: 20, color: Colors.white),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: SizeConfig.blockSizeVertical * 1.5,
+                                ),
+                                Container(
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        totalPrice,
+                                        style: GoogleFonts.lato(
+                                            fontSize: 25, color: Colors.white),
+                                      ),
+                                      IconButton(
+                                          onPressed: () {
+                                            BlocProvider.of<ServicesCubit>(
+                                                    context)
+                                                .getPaymentsHistory();
+                                          },
+                                          icon: Icon(
+                                            CupertinoIcons.refresh,
+                                            color: Colors.white,
+                                          )
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                         SizedBox(

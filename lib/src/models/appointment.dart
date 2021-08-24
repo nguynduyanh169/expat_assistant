@@ -1,6 +1,4 @@
-// To parse this JSON data, do
-//
-//     final appointment = appointmentFromJson(jsonString);
+
 
 import 'dart:convert';
 
@@ -11,6 +9,27 @@ ExpatAppointment appointmentFromJson(String str) =>
     ExpatAppointment.fromJson(json.decode(str));
 
 String appointmentToJson(ExpatAppointment data) => json.encode(data.toJson());
+
+class AppointmentMajor {
+  AppointmentMajor({
+    this.majorId,
+    this.name,
+  });
+
+  int majorId;
+  String name;
+
+  factory AppointmentMajor.fromJson(Map<String, dynamic> json) =>
+      AppointmentMajor(
+        majorId: json["majorId"],
+        name: json["name"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "majorId": majorId,
+        "name": name,
+      };
+}
 
 class ExpatAppointment {
   ExpatAppointment(
@@ -29,7 +48,7 @@ class ExpatAppointment {
   Session session;
   ExpatProfile expat;
   dynamic language;
-  dynamic major;
+  AppointmentMajor major;
   List<int> createDate;
   dynamic rating;
   dynamic comment;
@@ -42,7 +61,9 @@ class ExpatAppointment {
           session: Session.fromJson(json["session"]),
           expat: ExpatProfile.fromJson(json["expat"]),
           language: json["language"],
-          major: json["major"],
+          major: json["major"] == null
+              ? null
+              : AppointmentMajor.fromJson(json["major"]),
           createDate: List<int>.from(json["createDate"].map((x) => x)),
           rating: json["rating"],
           comment: json["comment"],
@@ -54,7 +75,7 @@ class ExpatAppointment {
         "session": session.toJson(),
         "expat": expat.toJson(),
         "language": language,
-        "major": major,
+        "major": major.toJson(),
         "createDate": List<dynamic>.from(createDate.map((x) => x)),
         "rating": rating,
         "comment": comment,

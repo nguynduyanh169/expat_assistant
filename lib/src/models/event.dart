@@ -1,5 +1,6 @@
 import 'dart:collection';
 import 'dart:convert';
+import 'package:expat_assistant/src/models/event_details.dart';
 import 'package:expat_assistant/src/models/location.dart';
 import 'package:expat_assistant/src/models/topic.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -135,10 +136,16 @@ class Content {
       eventDesc: json["eventDesc"],
       eventCoverImage: json["eventCoverImage"],
       eventStatus: json["eventStatus"],
-      eventStartDate: List<int>.from(json["eventStartDate"].map((x) => x)),
-      eventEndDate: List<int>.from(json["eventEndDate"].map((x) => x)),
+      eventStartDate: json["eventStartDate"] == null
+          ? null
+          : List<int>.from(json["eventStartDate"].map((x) => x)),
+      eventEndDate: json["eventEndDate"] == null
+          ? null
+          : List<int>.from(json["eventEndDate"].map((x) => x)),
       createBy: json["createBy"],
-      createDate: List<int>.from(json["createDate"].map((x) => x)),
+      createDate: json["createDate"] == null
+          ? null
+          : List<int>.from(json["createDate"].map((x) => x)),
       organizers: json["organizers"]);
 
   Map<String, dynamic> toJson() => {
@@ -382,6 +389,13 @@ class EventShow {
   bool isJoined;
 
   EventShow({this.content, this.topic, this.location, this.isJoined});
+}
+
+class EventShowDetails {
+  EventDetails content;
+  bool isJoined;
+
+  EventShowDetails({this.content, this.isJoined});
 }
 
 class EventStatus {

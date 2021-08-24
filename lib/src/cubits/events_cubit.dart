@@ -64,6 +64,7 @@ class EventsCubit extends Cubit<EventsState> {
               orElse: () => null);
         }
         if (contentExpatId == null) {
+          print(content.eventId);
           event = EventShow(
               location: locations[0],
               topic: topics[0],
@@ -136,25 +137,25 @@ class EventsCubit extends Cubit<EventsState> {
       List<EventShow> events = [];
       contentsExpatId = await _eventRepository.getEventByExpatId(
           token: token, expatId: expatId);
-      if(contentsExpatId == null || contentsExpatId.isEmpty){
+      if (contentsExpatId == null || contentsExpatId.isEmpty) {
         emit(state.copyWith(status: EventsStatus.loadJoinedInEventFailed));
-      }else{
+      } else {
         for (Content content in contentsExpatId) {
-        locations = await _locationRepository.getLocationsByEventId(
-            token: token, eventId: content.eventId);
-        topics = await _topicRepository.getTopicByEventId(
-            token: token, eventId: content.eventId);
-        EventShow event = EventShow(
-            content: content,
-            topic: topics[0],
-            location: locations[0],
-            isJoined: true);
-        events.add(event);
+          locations = await _locationRepository.getLocationsByEventId(
+              token: token, eventId: content.eventId);
+          topics = await _topicRepository.getTopicByEventId(
+              token: token, eventId: content.eventId);
+          EventShow event = EventShow(
+              content: content,
+              topic: topics[0],
+              location: locations[0],
+              isJoined: true);
+          events.add(event);
+        }
+        emit(state.copyWith(
+            status: EventsStatus.loadJoinedInEventSuccess,
+            joinedEvents: events));
       }
-      emit(state.copyWith(
-          status: EventsStatus.loadJoinedInEventSuccess, joinedEvents: events));
-      }
-      
     } on Exception catch (e) {
       emit(state.copyWith(status: EventsStatus.loadJoinedInEventFailed));
     }

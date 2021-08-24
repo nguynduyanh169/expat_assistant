@@ -1,7 +1,7 @@
-
 import 'package:dio/dio.dart';
 import 'package:expat_assistant/src/configs/constants.dart';
 import 'package:expat_assistant/src/models/event.dart';
+import 'package:expat_assistant/src/models/event_details.dart';
 import 'package:flutter/material.dart';
 
 class EventProvider {
@@ -28,9 +28,9 @@ class EventProvider {
     return result;
   }
 
-  Future<Content> getEventContentById(
+  Future<EventDetails> getEventContentById(
       {@required int eventId, @required String token}) async {
-    Content result;
+    EventDetails result;
     try {
       Map<String, dynamic> headers = {
         Headers.contentTypeHeader: "application/json",
@@ -40,9 +40,9 @@ class EventProvider {
       Response response = await _dio.get(
           ApiName.GET_EVENT_CONTENT_BY_ID + eventId.toString(),
           options: Options(headers: headers));
-      result = Content.fromJson(response.data);
+      result = EventDetails.fromJson(response.data);
     } catch (e) {
-      print(e.toString());
+      print('error' + e.toString());
     }
     return result;
   }

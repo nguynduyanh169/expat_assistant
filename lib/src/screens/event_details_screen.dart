@@ -24,7 +24,7 @@ import 'package:line_icons/line_icons.dart';
 
 // ignore: must_be_immutable
 class EventDetailsScreen extends StatelessWidget {
-  EventShow event;
+  EventShowDetails event;
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -158,7 +158,7 @@ class EventDetailsScreen extends StatelessWidget {
             Navigator.pop(context);
             event.isJoined = true;
             EventBusUtils.getInstance()
-                .fire(JoinedInEvent(event.content.eventId, true));
+                .fire(JoinedInEvent(event.content.event.eventId, true));
             CustomSnackBar.showSnackBar(
                 context: context,
                 message: 'Join event success!',
@@ -167,7 +167,7 @@ class EventDetailsScreen extends StatelessWidget {
             Navigator.pop(context);
             event.isJoined = false;
             EventBusUtils.getInstance()
-                .fire(JoinedInEvent(event.content.eventId, false));
+                .fire(JoinedInEvent(event.content.event.eventId, false));
             CustomSnackBar.showSnackBar(
                 context: context,
                 message: 'Unjoin event success!',
@@ -209,7 +209,7 @@ class EventDetailsScreen extends StatelessWidget {
                           children: <Widget>[
                             ClipRRect(
                               child: ExtendedImage.network(
-                                event.content.eventCoverImage,
+                                event.content.event.eventCoverImage,
                                 width: SizeConfig.blockSizeHorizontal * 100,
                                 height: SizeConfig.blockSizeVertical * 25,
                                 fit: BoxFit.cover,
@@ -248,7 +248,7 @@ class EventDetailsScreen extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
                                     Text(
-                                      event.content.eventTitle.trim(),
+                                      event.content.event.eventTitle.trim(),
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 2,
                                       style: GoogleFonts.lato(
@@ -266,7 +266,7 @@ class EventDetailsScreen extends StatelessWidget {
                                       children: <Widget>[
                                         Container(
                                             child: Text(
-                                          event.topic.topicDesc,
+                                          event.content.topic.first.topicId.topicDesc,
                                           style: GoogleFonts.lato(
                                               fontSize: 18,
                                               color: Colors.black54),
@@ -290,14 +290,14 @@ class EventDetailsScreen extends StatelessWidget {
                                           alignment: Alignment.center,
                                           width:
                                               SizeConfig.blockSizeHorizontal *
-                                                  20,
+                                                  25,
                                           padding: EdgeInsets.all(
                                               SizeConfig.blockSizeHorizontal *
                                                   1),
                                           height:
                                               SizeConfig.blockSizeVertical * 4,
                                           child: Text(
-                                              EventUtils.getEventStatus(
+                                              EventUtils.getEventStatusForDetails(
                                                   event),
                                               style: GoogleFonts.lato(
                                                 fontSize: 15,
@@ -306,7 +306,7 @@ class EventDetailsScreen extends StatelessWidget {
                                               )),
                                           decoration: BoxDecoration(
                                               color: EventUtils
-                                                  .getEventStatusColor(
+                                                  .getEventStatusColorForDetails(
                                                       event),
                                               borderRadius:
                                                   BorderRadius.circular(5.0),
@@ -333,9 +333,8 @@ class EventDetailsScreen extends StatelessWidget {
                                         Navigator.pushNamed(
                                             context, RouteName.MAP,
                                             arguments: MapScreenArguments(
-                                                event.location.locationLatitude,
-                                                event.location
-                                                    .locationLongitude));
+                                                event.content.location.first.locationId.locationLatitude,
+                                                event.content.location.first.locationId.locationLongitude));
                                       },
                                       contentPadding: EdgeInsets.all(
                                           SizeConfig.blockSizeHorizontal * 0.5),
@@ -345,11 +344,11 @@ class EventDetailsScreen extends StatelessWidget {
                                         color: Colors.green,
                                       ),
                                       title: Text(
-                                        event.location.locationName,
+                                        event.content.location.first.locationId.locationName,
                                         style: GoogleFonts.lato(fontSize: 16),
                                       ),
                                       subtitle: Text(
-                                        event.location.locationAddress,
+                                        event.content.location.first.locationId.locationAddress,
                                         maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
                                         style: GoogleFonts.lato(fontSize: 13),
@@ -374,7 +373,7 @@ class EventDetailsScreen extends StatelessWidget {
                                       title: Text(
                                         _dateUtils.getDateTimeForDetails(
                                             startDateTime:
-                                                event.content.eventStartDate),
+                                                event.content.event.eventStartDate),
                                         style: GoogleFonts.lato(fontSize: 16),
                                       ),
                                     ),
@@ -393,9 +392,9 @@ class EventDetailsScreen extends StatelessWidget {
                                       title: Text(
                                         _dateUtils.getStartEndHour(
                                             startDateTime:
-                                                event.content.eventStartDate,
+                                                event.content.event.eventStartDate,
                                             endDateTime:
-                                                event.content.eventEndDate),
+                                                event.content.event.eventEndDate),
                                         style: GoogleFonts.lato(fontSize: 16),
                                       ),
                                     ),
@@ -416,7 +415,7 @@ class EventDetailsScreen extends StatelessWidget {
                                 height: SizeConfig.blockSizeVertical * 1,
                               ),
                               ExpandableText(
-                                event.content.eventDesc,
+                                event.content.event.eventDesc,
                                 expandText: 'read more',
                                 collapseText: 'read less',
                                 linkStyle: GoogleFonts.lato(fontSize: 13),
@@ -441,7 +440,7 @@ class EventDetailsScreen extends StatelessWidget {
                                 height: SizeConfig.blockSizeVertical * 1,
                               ),
                               ExpandableText(
-                                event.content.organizers,
+                                event.content.event.organizers,
                                 expandText: 'read more',
                                 collapseText: 'read less',
                                 linkStyle: GoogleFonts.lato(fontSize: 13),

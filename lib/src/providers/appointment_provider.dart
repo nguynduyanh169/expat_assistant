@@ -98,7 +98,6 @@ class AppointmentProvider {
           ApiName.FEEDBACK_APPOINTMENT +
               "?comment=$comment&conAppointmentId=$appointmentId&rating=$rating&sessionId=$appointmentId",
           options: Options(headers: headers));
-      print(response.data);
       if (response.statusCode == 200) {
         appointment = ExpatAppointment.fromJson(response.data);
       }

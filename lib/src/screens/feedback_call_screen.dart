@@ -14,9 +14,16 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 // ignore: must_be_immutable
-class FeedBackScreen extends StatelessWidget {
+class FeedBackScreen extends StatefulWidget {
+  @override
+  _FeedBackScreenState createState() => _FeedBackScreenState();
+}
+
+class _FeedBackScreenState extends State<FeedBackScreen> {
   TextEditingController commentController = TextEditingController();
+
   double rating = 1;
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -27,8 +34,10 @@ class FeedBackScreen extends StatelessWidget {
         ..initializeFeedback(args.appointmentId),
       child: Scaffold(
         appBar: AppBar(
-          leading: BackButton(onPressed: () => Navigator.popUntil(
-                      context, ModalRoute.withName(RouteName.HOME_PAGE)),),
+          leading: BackButton(
+            onPressed: () => Navigator.popUntil(
+                context, ModalRoute.withName(RouteName.HOME_PAGE)),
+          ),
           bottom: PreferredSize(
               child: Container(
                 color: Colors.black38,
@@ -50,7 +59,6 @@ class FeedBackScreen extends StatelessWidget {
                 onPressed: () {
                   Navigator.popUntil(
                       context, ModalRoute.withName(RouteName.HOME_PAGE));
-                  
                 },
                 icon: Icon(CupertinoIcons.home)),
             SizedBox(
@@ -112,6 +120,8 @@ class FeedBackScreen extends StatelessWidget {
                   context: context,
                   message: 'Feedback done!',
                   color: Colors.green);
+              Navigator.popUntil(
+                  context, ModalRoute.withName(RouteName.HOME_PAGE));
             } else if (state.status.isFeedbackError) {
               Navigator.pop(context);
               CustomSnackBar.showSnackBar(
@@ -206,8 +216,10 @@ class FeedBackScreen extends StatelessWidget {
                                     size: 20,
                                     color: Colors.amber,
                                   ),
-                                  onRatingUpdate: (rating) {
-                                    rating = rating;
+                                  onRatingUpdate: (rate) {
+                                    setState(() {
+                                      rating = rate;
+                                    });
                                   },
                                 ),
                                 Divider(

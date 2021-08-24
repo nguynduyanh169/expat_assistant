@@ -7,6 +7,7 @@ import 'package:expat_assistant/src/utils/date_utils.dart';
 import 'package:expat_assistant/src/utils/hive_utils.dart';
 import 'package:expat_assistant/src/utils/text_utils.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class CallRoomCubit extends Cubit<CallRoomState> {
   AppointmentRepository _appointmentRepository;
@@ -18,7 +19,13 @@ class CallRoomCubit extends Cubit<CallRoomState> {
   Future<void> getAppointmentById(int appointmentId) async {
     emit(state.copyWith(status: CallRoomStatus.loadingRoom));
     try {
-      print(appointmentId);
+      var permissionStatus = await Permission.microphone.status;
+      if (permissionStatus.isDenied) {
+        permissionStatus = await Permission.microphone.request();
+        if (!permissionStatus.isGranted) {
+          return;
+        }
+      }
       Map<dynamic, dynamic> loginResponse =
           _hiveUtils.getUserAuth(boxName: HiveBoxName.USER_AUTH);
       String token = loginResponse['token'].toString();

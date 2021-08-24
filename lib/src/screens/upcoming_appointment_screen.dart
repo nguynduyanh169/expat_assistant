@@ -67,134 +67,142 @@ class UpcomingAppointmentScreen extends StatelessWidget {
                 events = _DataSource(setupAppointments(appointments));
               }
               return Container(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    SizedBox(
-                      height: SizeConfig.blockSizeVertical * 2,
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(
-                          left: SizeConfig.blockSizeHorizontal * 2),
-                      child: Text(
-                        'Upcoming appointment',
-                        style: GoogleFonts.lato(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w500,
-                            color: Color.fromRGBO(0, 99, 99, 30)),
+                child: RefreshIndicator(
+                  onRefresh: () async {
+                    BlocProvider.of<UpcomingAppointmentCubit>(context)
+                        .getAppointments();
+                  },
+                  child: ListView(
+                    children: <Widget>[
+                      SizedBox(
+                        height: SizeConfig.blockSizeVertical * 2,
                       ),
-                    ),
-                    appointment == null
-                        ? Container(
-                            width: SizeConfig.blockSizeHorizontal * 100,
-                            padding: EdgeInsets.only(
-                                left: SizeConfig.blockSizeHorizontal * 3,
-                                right: SizeConfig.blockSizeHorizontal * 3),
-                            child: Container(
-                              width: SizeConfig.blockSizeHorizontal * 90,
-                              height: SizeConfig.blockSizeVertical * 22,
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: Colors.black26.withOpacity(0.05),
-                                        offset: Offset(0.0, 6.0),
-                                        blurRadius: 10.0,
-                                        spreadRadius: 0.10)
-                                  ]),
+                      Container(
+                        padding: EdgeInsets.only(
+                            left: SizeConfig.blockSizeHorizontal * 2),
+                        child: Text(
+                          'Upcoming appointment',
+                          style: GoogleFonts.lato(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
+                              color: Color.fromRGBO(0, 99, 99, 30)),
+                        ),
+                      ),
+                      appointment == null
+                          ? Container(
+                              width: SizeConfig.blockSizeHorizontal * 100,
+                              padding: EdgeInsets.only(
+                                  left: SizeConfig.blockSizeHorizontal * 3,
+                                  right: SizeConfig.blockSizeHorizontal * 3),
+                              child: Container(
+                                width: SizeConfig.blockSizeHorizontal * 90,
+                                height: SizeConfig.blockSizeVertical * 22,
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color:
+                                              Colors.black26.withOpacity(0.05),
+                                          offset: Offset(0.0, 6.0),
+                                          blurRadius: 10.0,
+                                          spreadRadius: 0.10)
+                                    ]),
+                                padding: EdgeInsets.only(
+                                    left: SizeConfig.blockSizeHorizontal * 2,
+                                    right: SizeConfig.blockSizeHorizontal * 2),
+                                child: Center(
+                                  child: Text(
+                                    'There is no upcomming appointment',
+                                    style: GoogleFonts.lato(fontSize: 20),
+                                  ),
+                                ),
+                              ),
+                            )
+                          : Container(
                               padding: EdgeInsets.only(
                                   left: SizeConfig.blockSizeHorizontal * 2,
                                   right: SizeConfig.blockSizeHorizontal * 2),
-                              child: Center(
-                                child: Text(
-                                  'There is no upcomming appointment',
-                                  style: GoogleFonts.lato(fontSize: 20),
-                                ),
+                              child: AppointmentCard(
+                                appointment: appointment,
+                                action: () {
+                                  Navigator.pushNamed(
+                                      context, RouteName.CALL_ROOM,
+                                      arguments: CallRoomArgs(
+                                          appointmentId: appointment.conAppId));
+                                },
                               ),
                             ),
-                          )
-                        : Container(
-                            padding: EdgeInsets.only(
-                                left: SizeConfig.blockSizeHorizontal * 2,
-                                right: SizeConfig.blockSizeHorizontal * 2),
-                            child: AppointmentCard(
-                              appointment: appointment,
-                              action: () {
-                                Navigator.pushNamed(
-                                    context, RouteName.CALL_ROOM,
-                                    arguments: CallRoomArgs(
-                                        appointmentId: appointment.conAppId));
-                              },
-                            ),
-                          ),
-                    SizedBox(
-                      height: SizeConfig.blockSizeVertical * 2,
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(
-                          left: SizeConfig.blockSizeHorizontal * 2),
-                      child: Text(
-                        'My Schedule',
-                        style: GoogleFonts.lato(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w500,
-                            color: Color.fromRGBO(0, 99, 99, 30)),
+                      SizedBox(
+                        height: SizeConfig.blockSizeVertical * 2,
                       ),
-                    ),
-                    SizedBox(
-                      height: SizeConfig.blockSizeVertical * 2,
-                    ),
-                    Container(
-                      height: SizeConfig.blockSizeVertical * 52,
-                      child: SfCalendar(
-                        backgroundColor: Color.fromRGBO(244, 244, 244, 100),
-                        showDatePickerButton: true,
-                        scheduleViewMonthHeaderBuilder:
-                            (BuildContext buildContext,
-                                ScheduleViewMonthHeaderDetails details) {
-                          final String monthName =
-                              _getMonthDate(details.date.month);
-                          return Stack(
-                            children: [
-                              Image(
-                                  image: AssetImage(
-                                      'assets/images/$monthName.png'),
-                                  fit: BoxFit.cover,
-                                  width: details.bounds.width,
-                                  height: details.bounds.height),
-                              Positioned(
-                                left: 55,
-                                right: 0,
-                                top: 20,
-                                bottom: 0,
-                                child: Text(
-                                  monthName +
-                                      ' ' +
-                                      details.date.year.toString(),
-                                  style: GoogleFonts.lato(fontSize: 18),
-                                ),
-                              )
-                            ],
-                          );
-                        },
-                        view: CalendarView.schedule,
-                        scheduleViewSettings: ScheduleViewSettings(
-                          appointmentTextStyle: GoogleFonts.lato(fontSize: 13),
+                      Container(
+                        padding: EdgeInsets.only(
+                            left: SizeConfig.blockSizeHorizontal * 2),
+                        child: Text(
+                          'My Schedule',
+                          style: GoogleFonts.lato(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
+                              color: Color.fromRGBO(0, 99, 99, 30)),
                         ),
-                        dataSource: events,
-                        appointmentTimeTextFormat: 'kk:mm',
-                        onTap: (CalendarTapDetails details) {
-                          if (details.targetElement ==
-                              CalendarElement.appointment) {
-                            Navigator.pushNamed(context, RouteName.CALL_ROOM,
-                                arguments: CallRoomArgs(
-                                    appointmentId: details.appointments[0].id));
-                          }
-                        },
                       ),
-                    )
-                  ],
+                      SizedBox(
+                        height: SizeConfig.blockSizeVertical * 2,
+                      ),
+                      Container(
+                        height: SizeConfig.blockSizeVertical * 52,
+                        child: SfCalendar(
+                          backgroundColor: Color.fromRGBO(244, 244, 244, 100),
+                          showDatePickerButton: true,
+                          scheduleViewMonthHeaderBuilder:
+                              (BuildContext buildContext,
+                                  ScheduleViewMonthHeaderDetails details) {
+                            final String monthName =
+                                _getMonthDate(details.date.month);
+                            return Stack(
+                              children: [
+                                Image(
+                                    image: AssetImage(
+                                        'assets/images/$monthName.png'),
+                                    fit: BoxFit.cover,
+                                    width: details.bounds.width,
+                                    height: details.bounds.height),
+                                Positioned(
+                                  left: 55,
+                                  right: 0,
+                                  top: 20,
+                                  bottom: 0,
+                                  child: Text(
+                                    monthName +
+                                        ' ' +
+                                        details.date.year.toString(),
+                                    style: GoogleFonts.lato(fontSize: 18),
+                                  ),
+                                )
+                              ],
+                            );
+                          },
+                          view: CalendarView.schedule,
+                          scheduleViewSettings: ScheduleViewSettings(
+                            appointmentTextStyle:
+                                GoogleFonts.lato(fontSize: 13),
+                          ),
+                          dataSource: events,
+                          appointmentTimeTextFormat: 'kk:mm',
+                          onTap: (CalendarTapDetails details) {
+                            if (details.targetElement ==
+                                CalendarElement.appointment) {
+                              Navigator.pushNamed(context, RouteName.CALL_ROOM,
+                                  arguments: CallRoomArgs(
+                                      appointmentId:
+                                          details.appointments[0].id));
+                            }
+                          },
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               );
             }

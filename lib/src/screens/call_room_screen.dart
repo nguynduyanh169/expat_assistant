@@ -64,7 +64,6 @@ class _CallRoomScreenState extends State<CallRoomScreen> {
 
   Future<void> initialize(
       String channelName, ClientRole role, int uid, String agoraToken) async {
-    print(channelName);
     if (Agora.APP_ID.isEmpty) {
       setState(() {
         _infoStrings.add(

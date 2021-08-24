@@ -95,8 +95,7 @@ class SessionUtils {
     if (sessionDisplay.isDisable == true) {
       cannotChoose = true;
     }
-    if (sessionDisplay.startDate.subtract(Duration(minutes: 0)).isBefore(DateTime.now())) {
-      
+    if (sessionDisplay.startDate.isBefore(DateTime.now())) {     
       cannotChoose = true;
     }
     return cannotChoose;
